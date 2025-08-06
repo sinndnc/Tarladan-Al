@@ -1,0 +1,563 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		99FE73332E440FEB00CB73A5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 99FE731D2E440FE900CB73A5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 99FE73242E440FE900CB73A5;
+			remoteInfo = "Tarladan Al";
+		};
+		99FE733D2E440FEB00CB73A5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 99FE731D2E440FE900CB73A5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 99FE73242E440FE900CB73A5;
+			remoteInfo = "Tarladan Al";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		99FE73252E440FE900CB73A5 /* Tarladan Al.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tarladan Al.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		99FE73322E440FEB00CB73A5 /* Tarladan AlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tarladan AlTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		99FE733C2E440FEB00CB73A5 /* Tarladan AlUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tarladan AlUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		99FE73272E440FE900CB73A5 /* Tarladan Al */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Tarladan Al";
+			sourceTree = "<group>";
+		};
+		99FE73352E440FEB00CB73A5 /* Tarladan AlTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Tarladan AlTests";
+			sourceTree = "<group>";
+		};
+		99FE733F2E440FEB00CB73A5 /* Tarladan AlUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Tarladan AlUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		99FE73222E440FE900CB73A5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		99FE732F2E440FEB00CB73A5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		99FE73392E440FEB00CB73A5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		99FE731C2E440FE900CB73A5 = {
+			isa = PBXGroup;
+			children = (
+				99FE73272E440FE900CB73A5 /* Tarladan Al */,
+				99FE73352E440FEB00CB73A5 /* Tarladan AlTests */,
+				99FE733F2E440FEB00CB73A5 /* Tarladan AlUITests */,
+				99FE73262E440FE900CB73A5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		99FE73262E440FE900CB73A5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				99FE73252E440FE900CB73A5 /* Tarladan Al.app */,
+				99FE73322E440FEB00CB73A5 /* Tarladan AlTests.xctest */,
+				99FE733C2E440FEB00CB73A5 /* Tarladan AlUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		99FE73242E440FE900CB73A5 /* Tarladan Al */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 99FE73462E440FEB00CB73A5 /* Build configuration list for PBXNativeTarget "Tarladan Al" */;
+			buildPhases = (
+				99FE73212E440FE900CB73A5 /* Sources */,
+				99FE73222E440FE900CB73A5 /* Frameworks */,
+				99FE73232E440FE900CB73A5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				99FE73272E440FE900CB73A5 /* Tarladan Al */,
+			);
+			name = "Tarladan Al";
+			packageProductDependencies = (
+			);
+			productName = "Tarladan Al";
+			productReference = 99FE73252E440FE900CB73A5 /* Tarladan Al.app */;
+			productType = "com.apple.product-type.application";
+		};
+		99FE73312E440FEB00CB73A5 /* Tarladan AlTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 99FE73492E440FEB00CB73A5 /* Build configuration list for PBXNativeTarget "Tarladan AlTests" */;
+			buildPhases = (
+				99FE732E2E440FEB00CB73A5 /* Sources */,
+				99FE732F2E440FEB00CB73A5 /* Frameworks */,
+				99FE73302E440FEB00CB73A5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				99FE73342E440FEB00CB73A5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				99FE73352E440FEB00CB73A5 /* Tarladan AlTests */,
+			);
+			name = "Tarladan AlTests";
+			packageProductDependencies = (
+			);
+			productName = "Tarladan AlTests";
+			productReference = 99FE73322E440FEB00CB73A5 /* Tarladan AlTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		99FE733B2E440FEB00CB73A5 /* Tarladan AlUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 99FE734C2E440FEB00CB73A5 /* Build configuration list for PBXNativeTarget "Tarladan AlUITests" */;
+			buildPhases = (
+				99FE73382E440FEB00CB73A5 /* Sources */,
+				99FE73392E440FEB00CB73A5 /* Frameworks */,
+				99FE733A2E440FEB00CB73A5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				99FE733E2E440FEB00CB73A5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				99FE733F2E440FEB00CB73A5 /* Tarladan AlUITests */,
+			);
+			name = "Tarladan AlUITests";
+			packageProductDependencies = (
+			);
+			productName = "Tarladan AlUITests";
+			productReference = 99FE733C2E440FEB00CB73A5 /* Tarladan AlUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		99FE731D2E440FE900CB73A5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					99FE73242E440FE900CB73A5 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					99FE73312E440FEB00CB73A5 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 99FE73242E440FE900CB73A5;
+					};
+					99FE733B2E440FEB00CB73A5 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 99FE73242E440FE900CB73A5;
+					};
+				};
+			};
+			buildConfigurationList = 99FE73202E440FE900CB73A5 /* Build configuration list for PBXProject "Tarladan Al" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 99FE731C2E440FE900CB73A5;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 99FE73262E440FE900CB73A5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				99FE73242E440FE900CB73A5 /* Tarladan Al */,
+				99FE73312E440FEB00CB73A5 /* Tarladan AlTests */,
+				99FE733B2E440FEB00CB73A5 /* Tarladan AlUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		99FE73232E440FE900CB73A5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		99FE73302E440FEB00CB73A5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		99FE733A2E440FEB00CB73A5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		99FE73212E440FE900CB73A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		99FE732E2E440FEB00CB73A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		99FE73382E440FEB00CB73A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		99FE73342E440FEB00CB73A5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 99FE73242E440FE900CB73A5 /* Tarladan Al */;
+			targetProxy = 99FE73332E440FEB00CB73A5 /* PBXContainerItemProxy */;
+		};
+		99FE733E2E440FEB00CB73A5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 99FE73242E440FE900CB73A5 /* Tarladan Al */;
+			targetProxy = 99FE733D2E440FEB00CB73A5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		99FE73442E440FEB00CB73A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = A5PNFW5LM9;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		99FE73452E440FEB00CB73A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = A5PNFW5LM9;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		99FE73472E440FEB00CB73A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A5PNFW5LM9;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vision.apple.Tarladan-Al";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		99FE73482E440FEB00CB73A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A5PNFW5LM9;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vision.apple.Tarladan-Al";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		99FE734A2E440FEB00CB73A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A5PNFW5LM9;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vision.apple.Tarladan-AlTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tarladan Al.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tarladan Al";
+			};
+			name = Debug;
+		};
+		99FE734B2E440FEB00CB73A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A5PNFW5LM9;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vision.apple.Tarladan-AlTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tarladan Al.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tarladan Al";
+			};
+			name = Release;
+		};
+		99FE734D2E440FEB00CB73A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A5PNFW5LM9;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vision.apple.Tarladan-AlUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Tarladan Al";
+			};
+			name = Debug;
+		};
+		99FE734E2E440FEB00CB73A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A5PNFW5LM9;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vision.apple.Tarladan-AlUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Tarladan Al";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		99FE73202E440FE900CB73A5 /* Build configuration list for PBXProject "Tarladan Al" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				99FE73442E440FEB00CB73A5 /* Debug */,
+				99FE73452E440FEB00CB73A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		99FE73462E440FEB00CB73A5 /* Build configuration list for PBXNativeTarget "Tarladan Al" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				99FE73472E440FEB00CB73A5 /* Debug */,
+				99FE73482E440FEB00CB73A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		99FE73492E440FEB00CB73A5 /* Build configuration list for PBXNativeTarget "Tarladan AlTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				99FE734A2E440FEB00CB73A5 /* Debug */,
+				99FE734B2E440FEB00CB73A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		99FE734C2E440FEB00CB73A5 /* Build configuration list for PBXNativeTarget "Tarladan AlUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				99FE734D2E440FEB00CB73A5 /* Debug */,
+				99FE734E2E440FEB00CB73A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 99FE731D2E440FE900CB73A5 /* Project object */;
+}
