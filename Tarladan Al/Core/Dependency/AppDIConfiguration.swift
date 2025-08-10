@@ -1,0 +1,92 @@
+//
+//  AppDIConfiguration.swift
+//  Tarladan Al
+//
+//  Created by Sinan Dinç on 8/7/25.
+//
+
+
+class AppDIConfiguration {
+    
+    static let shared = AppDIConfiguration()
+    
+    static func configure() {
+        let container = DIContainer.shared
+        
+        //MARK: Data Sources (Singletons)
+        container.register(AuthRemoteDataSourceProtocol.self,scope: .singleton) { _ in
+            AuthRemoteDataSource(auth: .auth())
+        }
+        container.register(DeliveryRemoteDataSourceProtocol.self, scope: .singleton) { container in
+            DeliveryRemoteDataSource(firestore: .firestore())
+        }
+        container.register(UserRemoteDataSourceProtocol.self, scope: .singleton) { container in
+            UserRemoteDataSource(db: .firestore())
+        }
+        
+        
+        //MARK: Repositories (Singletons)
+        container.register(AuthRepositoryProtocol.self, scope: .singleton) { container in
+            AuthRepository(
+                remoteDataSource:  container.resolve(AuthRemoteDataSourceProtocol.self)
+            )
+        }
+        container.register(DeliveryRepositoryProtocol.self, scope: .singleton) { container in
+            DeliveryRepository(
+                remoteDataSource:  container.resolve(DeliveryRemoteDataSourceProtocol.self)
+            )
+        }
+        container.register(UserRepositoryProtocol.self, scope: .singleton) { container in
+            UserRepository(
+                remoteDataSource: container.resolve(UserRemoteDataSourceProtocol.self)
+            )
+        }
+        
+        
+        //MARK: UseCases (Singletons)
+        container.register(CheckUserUseCaseProtocol.self, scope: .singleton) { container in
+            CheckUserUseCase(
+                repository: container.resolve(AuthRepositoryProtocol.self)
+            )
+        }
+        container.register(SignInUseCaseProtocol.self, scope: .singleton) { container in
+            SignInUseCase(
+                repository: container.resolve(AuthRepositoryProtocol.self)
+            )
+        }
+        
+        //MARK: User Classes
+        container.register(ListenUserUseCaseProtocol.self, scope: .singleton) { container in
+            ListenUserUseCase(
+                repository: container.resolve(UserRepositoryProtocol.self)
+            )
+        }
+        container.register(CreateDeliveryUseCaseProtocol.self, scope: .singleton) { container in
+            CreateDeliveryUseCase(
+                repository: container.resolve(DeliveryRepositoryProtocol.self)
+            )
+        }
+        
+        //MARK: Delivery Classes
+        container.register(ListenDeliveriesUseCaseProtocol.self, scope: .singleton) { container in
+            ListenDeliveriesUseCase(
+                repository: container.resolve(DeliveryRepositoryProtocol.self)
+            )
+        }
+        container.register(CreateDeliveryUseCaseProtocol.self, scope: .singleton) { container in
+            CreateDeliveryUseCase(
+                repository: container.resolve(DeliveryRepositoryProtocol.self)
+            )
+        }
+        container.register(UpdateDeliveryStatusUseCaseProtocol.self, scope: .singleton) { container in
+            UpdateDeliveryStatusUseCase(
+                repository: container.resolve(DeliveryRepositoryProtocol.self)
+            )
+        }
+        
+        
+    }
+    
+    
+    
+}

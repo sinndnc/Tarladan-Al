@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct Tarladan_AlApp: App {
+    
+    @UIApplicationDelegateAdaptor(TarladanAlAppDelegate.self) var delegate
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AuthenticationView()
+                .environmentObject(UserViewModel())
         }
     }
 }
