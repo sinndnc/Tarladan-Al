@@ -52,20 +52,6 @@ class AccountViewModel: ObservableObject {
         )
     }
     
-    // MARK: - Profile Actions
-    func updateProfile(name: String, email: String, phone: String) {
-        isLoading = true
-        
-        // Simulate API call
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.userProfile.name = name
-            self.userProfile.email = email
-            self.userProfile.phone = phone
-            self.isLoading = false
-            self.showEditProfile = false
-        }
-    }
-    
     func updateProfilePhoto() {
         // Handle profile photo update
         print("Profile photo update requested")
@@ -139,21 +125,5 @@ class AccountViewModel: ObservableObject {
     func logout() {
         // Handle logout logic
         print("User logout requested")
-    }
-    
-    // MARK: - Data Loading
-    func loadUserData() {
-        isLoading = true
-        errorMessage = nil
-        
-        // Simulate API call
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            // In real app, load data from API
-            self.isLoading = false
-        }
-    }
-    
-    func refreshData() {
-        loadUserData()
     }
 }
