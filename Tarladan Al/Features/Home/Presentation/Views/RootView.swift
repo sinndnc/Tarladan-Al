@@ -13,7 +13,11 @@ class RootViewModel: ObservableObject {
 struct RootView: View {
     
     @StateObject private var rootViewModel = RootViewModel()
+    @StateObject private var shopViewModel = ShopViewModel()
+    @StateObject private var cartViewModel = CartViewModel()
     @StateObject private var deliveryViewModel = DeliveryViewModel()
+    @StateObject private var categoryViewModel = CategoryProductsViewModel()
+    
     @EnvironmentObject private var userViewModel: UserViewModel
     
     var body: some View {
@@ -22,9 +26,6 @@ struct RootView: View {
                 Tab("Home", systemImage: "house", value: .home) {
                     HomeView()
                         .tag(TabEnum.home)
-                        .environmentObject(rootViewModel)
-                        .environmentObject(userViewModel)
-                        .environmentObject(deliveryViewModel)
                         .toolbarBackgroundVisibility(.visible, for: .tabBar)
                 }
                 Tab("Shops", systemImage:"cart.fill",value: .shop){
@@ -51,6 +52,12 @@ struct RootView: View {
             }
             .navigationBarBackButtonHidden(true)
         }
+        .environmentObject(rootViewModel)
+        .environmentObject(userViewModel)
+        .environmentObject(shopViewModel)
+        .environmentObject(cartViewModel)
+        .environmentObject(deliveryViewModel)
+        .environmentObject(categoryViewModel)
         .onAppear{
             deliveryViewModel.listenDeliveries(by: "")
         }

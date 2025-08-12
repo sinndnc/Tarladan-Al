@@ -10,7 +10,6 @@ import SwiftUI
 struct DeliveryView: View {
     
     @State private var selectedDelivery: Delivery?
-    
     @EnvironmentObject private var deliveryViewModel: DeliveryViewModel
     
     var body: some View {
@@ -163,7 +162,7 @@ struct CurrentDeliveryCard: View {
             VStack(spacing: 15) {
                 HStack {
                     VStack(alignment: .leading, spacing: 8) {
-                        HStack {
+                        HStack(alignment: .top) {
                             Image(systemName: delivery.status.icon)
                                 .foregroundColor(delivery.status.color)
                             Text(delivery.status.displayName)
@@ -303,7 +302,7 @@ struct DeliveryCard: View {
 struct NextDeliveryCard: View {
     var body: some View {
         VStack(spacing: 15) {
-            HStack {
+            HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("5 Ağustos Pazartesi")
                         .font(.title2)
@@ -322,6 +321,9 @@ struct NextDeliveryCard: View {
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundColor(.blue)
+                        .padding(5)
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(8)
                 }
             }
             
@@ -340,6 +342,8 @@ struct NextDeliveryCard: View {
                     .cornerRadius(8)
                 }
                 
+                Spacer()
+                
                 Button(action: {}) {
                     HStack {
                         Image(systemName: "plus")
@@ -353,8 +357,6 @@ struct NextDeliveryCard: View {
                     .background(Color.green.opacity(0.1))
                     .cornerRadius(8)
                 }
-                
-                Spacer()
             }
         }
         .padding(20)
@@ -461,80 +463,80 @@ struct PreferenceRow: View {
     }
 }
 
-struct DeliveryDetailView: View {
-    let delivery: Delivery
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Tracking map placeholder
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.blue.opacity(0.1))
-                        .frame(height: 200)
-                        .overlay(
-                            VStack {
-                                Image(systemName: "map.fill")
-                                    .font(.system(size: 40))
-                                    .foregroundColor(.blue)
-                                Text("Canlı Takip")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.blue)
-                            }
-                        )
-                    
-                    // Delivery details
-                    VStack(alignment: .leading, spacing: 15) {
-                        Text("Teslimat Detayları")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        
-                        VStack(spacing: 12) {
-                            DetailRow(title: "Sipariş No", value: delivery.orderNumber)
-                            DetailRow(title: "Takip Kodu", value: delivery.orderNumber)
-                            DetailRow(title: "Durum", value: delivery.status.displayName)
-                            DetailRow(title: "Tahmini Teslimat", value: delivery.scheduledDeliveryDate.description)
-                            DetailRow(title: "Adres", value: delivery.customer.address.fullAddress)
-                        }
-                    }
-                    
-                    // Items list
-                    VStack(alignment: .leading, spacing: 15) {
-                        Text("Ürünler (\(delivery.items.count))")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        
-                        VStack(spacing: 8) {
-//                            ForEach(delivery.items, id: \.self) { item in
-//                                HStack {
-//                                    Image(systemName: "leaf.fill")
-//                                        .foregroundColor(.green)
-//                                    Text(item.productName)
-//                                        .font(.subheadline)
-//                                    Spacer()
-//                                }
-//                                .padding(.vertical, 4)
+//struct DeliveryDetailView: View {
+//    let delivery: Delivery
+//    @Environment(\.presentationMode) var presentationMode
+//    
+//    var body: some View {
+//        NavigationView {
+//            ScrollView {
+//                VStack(spacing: 20) {
+//                    // Tracking map placeholder
+//                    RoundedRectangle(cornerRadius: 12)
+//                        .fill(Color.blue.opacity(0.1))
+//                        .frame(height: 200)
+//                        .overlay(
+//                            VStack {
+//                                Image(systemName: "map.fill")
+//                                    .font(.system(size: 40))
+//                                    .foregroundColor(.blue)
+//                                Text("Canlı Takip")
+//                                    .font(.headline)
+//                                    .fontWeight(.semibold)
+//                                    .foregroundColor(.blue)
 //                            }
-                        }
-                        .padding(15)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                    }
-                }
-                .padding(20)
-            }
-            .navigationTitle("Teslimat Takibi")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                trailing: Button("Kapat") {
-                    presentationMode.wrappedValue.dismiss()
-                }
-            )
-        }
-    }
-}
+//                        )
+//                    
+//                    // Delivery details
+//                    VStack(alignment: .leading, spacing: 15) {
+//                        Text("Teslimat Detayları")
+//                            .font(.headline)
+//                            .fontWeight(.semibold)
+//                        
+//                        VStack(spacing: 12) {
+//                            DetailRow(title: "Sipariş No", value: delivery.orderNumber)
+//                            DetailRow(title: "Takip Kodu", value: delivery.orderNumber)
+//                            DetailRow(title: "Durum", value: delivery.status.displayName)
+//                            DetailRow(title: "Tahmini Teslimat", value: delivery.scheduledDeliveryDate.description)
+//                            DetailRow(title: "Adres", value: delivery.customer.address.fullAddress)
+//                        }
+//                    }
+//                    
+//                    // Items list
+//                    VStack(alignment: .leading, spacing: 15) {
+//                        Text("Ürünler (\(delivery.items.count))")
+//                            .font(.headline)
+//                            .fontWeight(.semibold)
+//                        
+//                        VStack(spacing: 8) {
+////                            ForEach(delivery.items, id: \.self) { item in
+////                                HStack {
+////                                    Image(systemName: "leaf.fill")
+////                                        .foregroundColor(.green)
+////                                    Text(item.productName)
+////                                        .font(.subheadline)
+////                                    Spacer()
+////                                }
+////                                .padding(.vertical, 4)
+////                            }
+//                        }
+//                        .padding(15)
+//                        .background(Color(.systemGray6))
+//                        .cornerRadius(10)
+//                    }
+//                }
+//                .padding(20)
+//            }
+//            .navigationTitle("Teslimat Takibi")
+//            .navigationBarTitleDisplayMode(.inline)
+//            .navigationBarItems(
+//                trailing: Button("Kapat") {
+//                    presentationMode.wrappedValue.dismiss()
+//                }
+//            )
+//        }
+//    }
+//}
 
 struct DetailRow: View {
     let title: String

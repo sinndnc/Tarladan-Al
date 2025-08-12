@@ -201,9 +201,6 @@ struct SearchView: View {
                 .padding(.horizontal, 16)
             }
         }
-        .refreshable {
-            viewModel.refreshProducts()
-        }
     }
     
     private var loadingView: some View {

@@ -32,13 +32,7 @@ class ShopViewModel: ObservableObject {
     }
     
     func loadInitialData() {
-        isLoading = true
-        
-        // Simulate API call delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.categories = self.createSampleCategories()
-            self.isLoading = false
-        }
+        self.categories = self.createSampleCategories()
     }
     
     private func setupQuickActions() {
@@ -186,3 +180,5 @@ class ShopViewModel: ObservableObject {
         loadInitialData()
     }
 }
+
+

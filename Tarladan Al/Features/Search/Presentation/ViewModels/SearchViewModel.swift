@@ -78,7 +78,6 @@ class SearchViewModel: ObservableObject {
     }
     
     private func filterProducts() {
-        isLoading = true
         errorMessage = nil
         
         var result = allProducts
@@ -103,12 +102,6 @@ class SearchViewModel: ObservableObject {
         
         // Apply sorting
         result = sortProducts(result)
-        
-        // Simulate network delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.filteredProducts = result
-            self.isLoading = false
-        }
     }
     
     private func sortProducts(_ products: [Product]) -> [Product] {
@@ -165,10 +158,6 @@ class SearchViewModel: ObservableObject {
     
     func selectSortOption(_ option: String) {
         sortOption = option
-    }
-    
-    func refreshProducts() {
-        filterProducts()
     }
     
     // MARK: - Computed Properties

@@ -50,7 +50,9 @@ struct HomeView: View {
                 
             }
             .sheet(isPresented: $homeViewModel.showingLocation) {
-                LocationPickerView()
+                if let user =  userViewModel.user {
+                    LocationPickerView(addresses: user.addresses)
+                }
             }
             .alert("Hata", isPresented: $homeViewModel.showingError) {
                 Button("Tamam"){
@@ -73,20 +75,23 @@ struct HomeView: View {
             Button {
                 homeViewModel.showingLocation = true
             }label: {
-                HStack(spacing: 4) {
-                    Image(systemName: "location.fill")
-                        .font(.caption2)
-                        .foregroundColor(.blue)
-                    
-                    Text("\(userViewModel.user?.fullName ?? ""), Beşiktaş")
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.gray)
-                    
-                    Image(systemName: "chevron.down")
-                        .font(.caption2)
-                        .fontWeight(.medium)
-                        .foregroundColor(.secondary)
+                if let user = userViewModel.user,
+                let defaultAddress = user.defaultAddress{
+                    HStack(spacing: 4) {
+                        Image(systemName: "location.fill")
+                            .font(.caption2)
+                            .foregroundColor(.blue)
+                        
+                        Text("\(user.fullName), \(defaultAddress.city)")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.gray)
+                        
+                        Image(systemName: "chevron.down")
+                            .font(.caption2)
+                            .fontWeight(.medium)
+                            .foregroundColor(.secondary)
+                    }
                 }
             }
             .tint(.black)
@@ -354,7 +359,6 @@ struct HomeView: View {
                     ForEach(categories){ category in
                         NavigationLink {
                             CategoryProductsView(category: category)
-                                .environmentObject(ShopViewModel())
                         } label: {
                             CategoryCard(category: category)
                         }
@@ -387,7 +391,13 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(products){ product in
-                        ProductCard(product: product)
+                        NavigationLink {
+                            ProductDetailView(product: product)
+                        } label: {
+                            ProductCard(product: product)
+                        }
+                        .tint(.primary)
+                        .haptic(.medium)
                     }
                 }
                 .padding(.horizontal, 20)

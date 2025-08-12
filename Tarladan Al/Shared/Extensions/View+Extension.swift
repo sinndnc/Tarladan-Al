@@ -22,4 +22,8 @@ extension View {
     func withHaptic(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) -> some View {
         self.buttonStyle(HapticButtonStyle(style: style))
     }
+    
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
 }

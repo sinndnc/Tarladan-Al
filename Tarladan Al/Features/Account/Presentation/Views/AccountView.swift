@@ -19,10 +19,7 @@ struct AccountView: View {
                 Section {
                     profileHeaderView
                 }
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets())
                 
-                // Quick Stats Section
                 Section {
                     quickStatsView
                 } header: {
@@ -31,12 +28,6 @@ struct AccountView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.primary)
                         .textCase(nil)
-                } footer: {
-                    Button(action: viewModel.showAllStats) {
-                        Text("Tüm Tarihleri Gör")
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
-                    }
                 }
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
@@ -266,23 +257,11 @@ struct AccountView: View {
                             .fontWeight(.bold)
                             .foregroundColor(.white)
                     )
-                
-                Button(action: viewModel.updateProfilePhoto) {
-                    Circle()
-                        .fill(Color.blue)
-                        .frame(width: 28, height: 28)
-                        .overlay(
-                            Image(systemName: "camera.fill")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundColor(.white)
-                        )
-                }
             }
             
             VStack(alignment: .leading, spacing: 8) {
                 Text(viewModel.userProfile.name)
-                    .font(.title2)
+                    .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(.primary)
                 
@@ -292,24 +271,18 @@ struct AccountView: View {
                     .lineLimit(1)
                 
                 if viewModel.userProfile.isPremium {
-                    HStack(spacing: 6) {
-                        Image(systemName: "star.fill")
-                            .font(.caption)
-                            .foregroundColor(.yellow)
-                        
-                        Text("Premium Üye")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.orange)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.orange.opacity(0.15))
-                            .cornerRadius(6)
-                    }
+                    Text("Premium Üye")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.orange)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.orange.opacity(0.15))
+                        .cornerRadius(6)
                 }
             }
         }
-        .padding()
+        .padding(5)
     }
     
     private var quickStatsView: some View {

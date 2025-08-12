@@ -11,49 +11,38 @@ import Combine
 
 @MainActor
 class CategoryProductsViewModel: ObservableObject {
+    
     @Published var products: [Product] = []
     @Published var filteredProducts: [Product] = []
-    @Published var sortOption: SortOption = .popularity
-    @Published var selectedSubcategory = "Tümü"
+    
     @Published var viewMode: ViewMode = .grid
-    @Published var showFilters = false
+    @Published var selectedSubcategory = "Tümü"
+    @Published var sortOption: SortOption = .popularity
+    
     @Published var isLoading = false
+    @Published var showFilters = false
     @Published var errorMessage: String?
     
-    let category: Category
+    @Published var category: Category? = nil
     private var cancellables = Set<AnyCancellable>()
     
-    var subcategories: [String] {
-        getSubcategories(for: category.name)
-    }
+    
     
     var sortOptions: [SortOption] {
         SortOption.allCases
     }
     
-    init(category: Category) {
-        self.category = category
+    init() {
         setupBindings()
-        loadProducts()
     }
     
-    private func setupBindings() {
+    func setupBindings() {
         // Update filtered products when sort option or subcategory changes
         Publishers.CombineLatest3($products, $sortOption, $selectedSubcategory)
             .map { [weak self] products, sortOption, subcategory in
                 self?.filterAndSortProducts(products, sortOption: sortOption, subcategory: subcategory) ?? []
             }
             .assign(to: &$filteredProducts)
-    }
-    
-    func loadProducts() {
-        isLoading = true
-        
-        // Simulate API call
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.products = self.createSampleProducts(for: self.category.name)
-            self.isLoading = false
-        }
     }
     
     private func filterAndSortProducts(_ products: [Product], sortOption: SortOption, subcategory: String) -> [Product] {
@@ -82,7 +71,7 @@ class CategoryProductsViewModel: ObservableObject {
         return result
     }
     
-    private func getSubcategories(for categoryName: String) -> [String] {
+     func getSubcategories(for categoryName: String) -> [String] {
         switch categoryName {
         case "vegetables":
             return ["Tümü", "Yapraklı", "Köklü", "Meyveli", "Soğansı"]
@@ -101,7 +90,7 @@ class CategoryProductsViewModel: ObservableObject {
         }
     }
     
-    private func createSampleProducts(for categoryName: String) -> [Product] {
+     func createSampleProducts(for categoryName: String) -> [Product] {
         switch categoryName {
         case "vegetables":
             return [
@@ -235,9 +224,5 @@ class CategoryProductsViewModel: ObservableObject {
     func addToCart(_ product: Product) {
         // Implement add to cart logic
         print("Added \(product.name) to cart")
-    }
-    
-    func refreshProducts() {
-        loadProducts()
     }
 }

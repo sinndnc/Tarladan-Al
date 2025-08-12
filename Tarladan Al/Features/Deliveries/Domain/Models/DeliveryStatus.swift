@@ -28,12 +28,12 @@ enum DeliveryStatus: String, CaseIterable, Codable {
     
     var progressValue: Double {
         switch self {
+        case .pending: return 0.2
+        case .confirmed: return 0.4
         case .preparing: return 0.6
         case .inTransit: return 0.8
         case .delivered: return 1.0
         case .cancelled: return 0.0
-        case .pending: return 0.2
-        case .confirmed: return 0.4
         }
     }
     

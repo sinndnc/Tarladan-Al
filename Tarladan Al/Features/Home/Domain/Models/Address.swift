@@ -9,7 +9,7 @@ import Foundation
 
 
 // MARK: - Address Model
-struct Address: Identifiable, Codable {
+struct Address: Identifiable, Codable , Hashable {
     let id = UUID()
     let title: String
     let fullAddress: String

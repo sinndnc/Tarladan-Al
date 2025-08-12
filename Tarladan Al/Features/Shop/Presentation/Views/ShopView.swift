@@ -9,15 +9,16 @@ import Foundation
 
 struct ShopView: View {
     
-    @StateObject private var viewModel = ShopViewModel()
-    @EnvironmentObject var userViewModel: UserViewModel
+    @EnvironmentObject private var userViewModel: UserViewModel
+    @EnvironmentObject private var shopViewModel : ShopViewModel
+    @EnvironmentObject private var cartViewModel : CartViewModel
     
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     // Featured Banner
-                    if viewModel.showFeaturedBanner {
+                    if shopViewModel.showFeaturedBanner {
                         featuredBanner
                     }
                     
@@ -31,9 +32,6 @@ struct ShopView: View {
                     footerInfo
                 }
             }
-            .refreshable {
-                viewModel.refreshData()
-            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     headerSection
@@ -42,20 +40,15 @@ struct ShopView: View {
                     shopCardSection
                 }
             }
-            .sheet(isPresented: $viewModel.showCart) {
+            .sheet(isPresented: $shopViewModel.showCart) {
                 CartView()
             }
-            .overlay {
-                if viewModel.isLoading {
-                    LoadingView()
-                }
-            }
-            .alert("Hata", isPresented: .constant(viewModel.errorMessage != nil)) {
+            .alert("Hata", isPresented: .constant(shopViewModel.errorMessage != nil)) {
                 Button("Tamam") {
-                    viewModel.errorMessage = nil
+                    shopViewModel.errorMessage = nil
                 }
             } message: {
-                if let errorMessage = viewModel.errorMessage {
+                if let errorMessage = shopViewModel.errorMessage {
                     Text(errorMessage)
                 }
             }
@@ -64,14 +57,14 @@ struct ShopView: View {
     
     private var shopCardSection: some View {
         Button(action: {
-            viewModel.toggleCart()
+            shopViewModel.toggleCart()
         }) {
             ZStack(alignment: .topTrailing) {
                 Image(systemName: "bag")
                     .foregroundColor(.primary)
                 
-                if viewModel.cartItemCount > 0 {
-                    Text("\(viewModel.cartItemCount)")
+                if cartViewModel.uniqueItemsCount > 0 {
+                    Text("\(cartViewModel.uniqueItemsCount)")
                         .font(.system(size: 12, weight: .bold))
                         .foregroundColor(.white)
                         .frame(width: 18, height: 18)
@@ -98,11 +91,11 @@ struct ShopView: View {
     
     private var featuredBanner: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(viewModel.featuredTitle)
+            Text(shopViewModel.featuredTitle)
                 .font(.system(size: 24, weight: .bold))
                 .foregroundColor(.white)
             
-            Text(viewModel.featuredDescription)
+            Text(shopViewModel.featuredDescription)
                 .font(.system(size: 16))
                 .foregroundColor(.white.opacity(0.9))
             
@@ -139,7 +132,7 @@ struct ShopView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(viewModel.quickActions) { quickAction in
+                    ForEach(shopViewModel.quickActions) { quickAction in
                         QuickActionCard(quickAction: quickAction)
                     }
                 }
@@ -159,10 +152,9 @@ struct ShopView: View {
                 GridItem(.flexible(), spacing: 12),
                 GridItem(.flexible(), spacing: 12)
             ], spacing: 16) {
-                ForEach(viewModel.categories) { category in
+                ForEach(shopViewModel.categories) { category in
                     NavigationLink {
                         CategoryProductsView(category: category)
-                            .environmentObject(viewModel)
                     } label: {
                         CategoryCard(category: category)
                     }
@@ -345,20 +337,16 @@ struct FeatureRow: View {
     }
 }
 
-// MARK: - Category Products View
 
+// MARK: - Category Products View
 struct CategoryProductsView: View {
     
-    let category: Category
+    @State var category : Category
     
     @Environment(\.dismiss) var dismiss
-    @StateObject private var viewModel: CategoryProductsViewModel
+    @EnvironmentObject private var cartViewModel: CartViewModel
     @EnvironmentObject private var shopViewModel: ShopViewModel
-    
-    init(category: Category) {
-        self.category = category
-        self._viewModel = StateObject(wrappedValue: CategoryProductsViewModel(category: category))
-    }
+    @EnvironmentObject private var categoryViewModel: CategoryProductsViewModel
     
     var body: some View {
         ScrollView {
@@ -375,6 +363,9 @@ struct CategoryProductsView: View {
                 productsSection
             }
         }
+        .onAppear{
+            categoryViewModel.products = categoryViewModel.createSampleProducts(for: category.name)
+        }
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -388,7 +379,7 @@ struct CategoryProductsView: View {
                         VStack(alignment: .leading) {
                             Text(category.displayName)
                                 .font(.headline)
-                            Text("\(viewModel.products.count) ürün mevcut")
+                            Text("\(categoryViewModel.products.count) ürün mevcut")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
@@ -397,7 +388,7 @@ struct CategoryProductsView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
-                    viewModel.toggleFilters()
+                    categoryViewModel.toggleFilters()
                 }) {
                     Image(systemName: "slider.horizontal.3")
                         .font(.subheadline)
@@ -405,14 +396,11 @@ struct CategoryProductsView: View {
                 }
             }
         }
-        .sheet(isPresented: $viewModel.showFilters) {
-            CategoryFiltersSheet(viewModel: viewModel)
-        }
-        .refreshable {
-            viewModel.refreshProducts()
+        .sheet(isPresented: $categoryViewModel.showFilters) {
+            CategoryFiltersSheet(viewModel: categoryViewModel)
         }
         .overlay {
-            if viewModel.isLoading {
+            if categoryViewModel.isLoading {
                 LoadingView()
             }
         }
@@ -459,28 +447,29 @@ struct CategoryProductsView: View {
                     }
                 }
             }
+            .padding(20)
+            .background(category.color.opacity(0.1))
+            .cornerRadius(16)
+            .padding(.horizontal, 20)
             
             Spacer()
         }
-        .padding(20)
-        .background(category.color.opacity(0.1))
-        .cornerRadius(16)
-        .padding(.horizontal, 20)
     }
     
     private var subcategoriesBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                ForEach(viewModel.subcategories, id: \.self) { subcategory in
+                let subcategories = categoryViewModel.getSubcategories(for: category.name)
+                ForEach(subcategories, id: \.self) { subcategory in
                     Button(action: {
-                        viewModel.selectSubcategory(subcategory)
+                        categoryViewModel.selectSubcategory(subcategory)
                     }) {
                         Text(subcategory)
                             .font(.system(size: 14, weight: .medium))
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
-                            .background(viewModel.selectedSubcategory == subcategory ? category.color : Color(.systemGray6))
-                            .foregroundColor(viewModel.selectedSubcategory == subcategory ? .white : .primary)
+                            .background(categoryViewModel.selectedSubcategory == subcategory ? category.color : Color(.systemGray6))
+                            .foregroundColor(categoryViewModel.selectedSubcategory == subcategory ? .white : .primary)
                             .cornerRadius(20)
                     }
                 }
@@ -496,7 +485,7 @@ struct CategoryProductsView: View {
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
             
-            Text(viewModel.sortOption.rawValue)
+            Text(categoryViewModel.sortOption.rawValue)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(category.color)
             
@@ -504,17 +493,17 @@ struct CategoryProductsView: View {
             
             HStack(spacing: 12) {
                 Button(action: {
-                    viewModel.setViewMode(.grid)
+                    categoryViewModel.setViewMode(.grid)
                 }) {
                     Image(systemName: "square.grid.2x2")
-                        .foregroundColor(viewModel.viewMode == .grid ? category.color : .gray)
+                        .foregroundColor(categoryViewModel.viewMode == .grid ? category.color : .gray)
                 }
                 
                 Button(action: {
-                    viewModel.setViewMode(.list)
+                    categoryViewModel.setViewMode(.list)
                 }) {
                     Image(systemName: "list.bullet")
-                        .foregroundColor(viewModel.viewMode == .list ? category.color : .gray)
+                        .foregroundColor(categoryViewModel.viewMode == .list ? category.color : .gray)
                 }
             }
         }
@@ -524,34 +513,48 @@ struct CategoryProductsView: View {
     
     private var productsSection: some View {
         Group {
-            if viewModel.viewMode == .grid {
+            if categoryViewModel.viewMode == .grid {
                 LazyVGrid(columns: [
                     GridItem(.flexible(), spacing: 12),
                     GridItem(.flexible(), spacing: 12)
                 ], spacing: 16) {
-                    ForEach(viewModel.filteredProducts) { product in
-                        EnhancedProductCard(
-                            product: product,
-                            accentColor: category.color,
-                            onAddToCart: {
-                                viewModel.addToCart(product)
-                                shopViewModel.addToCart(product: product)
-                            }
-                        )
+                    ForEach(categoryViewModel.filteredProducts) { product in
+                        NavigationLink {
+                            ProductDetailView(product: product)
+                        } label: {
+                            EnhancedProductCard(
+                                product: product,
+                                accentColor: category.color,
+                                onAddToCart: {
+                                    categoryViewModel.addToCart(product)
+                                    cartViewModel.addItem(product: product)
+                                    shopViewModel.addToCart(product: product)
+                                }
+                            )
+                        }
+                        .tint(.primary)
+                        .haptic(.medium)
                     }
                 }
                 .padding(.horizontal, 20)
             } else {
                 LazyVStack(spacing: 12) {
-                    ForEach(viewModel.filteredProducts) { product in
-                        EnhancedProductListRow(
-                            product: product,
-                            accentColor: category.color,
-                            onAddToCart: {
-                                viewModel.addToCart(product)
-                                shopViewModel.addToCart(product: product)
-                            }
-                        )
+                    ForEach(categoryViewModel.filteredProducts) { product in
+                        NavigationLink {
+                            ProductDetailView(product: product)
+                        } label: {
+                            EnhancedProductListRow(
+                                product: product,
+                                accentColor: category.color,
+                                onAddToCart: {
+                                    categoryViewModel.addToCart(product)
+                                    cartViewModel.addItem(product: product)
+                                    shopViewModel.addToCart(product: product)
+                                }
+                            )
+                        }
+                        .tint(.primary)
+                        .haptic(.medium)
                     }
                 }
                 .padding(.horizontal, 20)
@@ -569,7 +572,6 @@ struct EnhancedProductCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Product Image with badges
             ZStack(alignment: .topTrailing) {
                 Text(product.image)
                     .font(.system(size: 60))
@@ -603,7 +605,6 @@ struct EnhancedProductCard: View {
             }
             
             VStack(alignment: .leading, spacing: 8) {
-                // Product name and rating
                 VStack(alignment: .leading, spacing: 4) {
                     Text(product.name)
                         .font(.system(size: 16, weight: .semibold))
@@ -815,8 +816,8 @@ struct EnhancedProductListRow: View {
 // MARK: - Category Filters Sheet
 
 struct CategoryFiltersSheet: View {
-    @ObservedObject var viewModel: CategoryProductsViewModel
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: CategoryProductsViewModel
     
     var body: some View {
         NavigationView {
@@ -872,23 +873,6 @@ struct CategoryFiltersSheet: View {
                     .foregroundColor(.green)
                 }
             }
-        }
-    }
-}
-
-
-struct CartView: View {
-    @StateObject private var viewModel = CartViewModel()
-    
-    var body: some View {
-        NavigationView {
-            VStack {
-                // Cart implementation
-                Text("Sepet sayfası")
-                    .font(.title)
-            }
-            .navigationTitle("Sepetim")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DeliveryItem: Identifiable, Codable, Equatable {
+struct DeliveryItem: Identifiable, Codable, Equatable ,Hashable {
     let id: String
     let productName: String
     let productId: String

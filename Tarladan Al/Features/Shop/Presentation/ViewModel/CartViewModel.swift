@@ -7,44 +7,54 @@
 import Foundation
 
 
-@MainActor
 class CartViewModel: ObservableObject {
-    @Published var items: [CartItem] = []
+    
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    var totalPrice: Double {
-        items.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
-    }
+    @Published var items: [CartItem] = []
     
     var totalItems: Int {
         items.reduce(0) { $0 + $1.quantity }
     }
     
-    var hasItems: Bool {
-        !items.isEmpty
+    var uniqueItemsCount: Int {
+        items.count
     }
     
-    func addItem(_ product: Product, quantity: Int = 1) {
-        if let existingIndex = items.firstIndex(where: { $0.product.id == product.id }) {
-            items[existingIndex].quantity += quantity
+    var totalPrice: Double {
+        items.reduce(0) { $0 + $1.totalPrice }
+    }
+    
+    var totalSavings: Double {
+        items.reduce(0) { total, item in
+            if let originalPrice = item.product.originalPrice {
+                return total + (originalPrice - item.product.price) * Double(item.quantity)
+            }
+            return total
+        }
+    }
+    
+    func addItem(product: Product, quantity: Int = 1) {
+        if let index = items.firstIndex(where: { $0.product.name == product.name }) {
+            items[index].quantity += quantity
         } else {
             items.append(CartItem(product: product, quantity: quantity))
         }
     }
     
-    func removeItem(_ product: Product) {
-        items.removeAll { $0.product.id == product.id }
-    }
-    
-    func updateQuantity(for product: Product, quantity: Int) {
-        if let index = items.firstIndex(where: { $0.product.id == product.id }) {
-            if quantity <= 0 {
-                items.remove(at: index)
-            } else {
+    func updateQuantity(for item: CartItem, quantity: Int) {
+        if let index = items.firstIndex(where: { $0.id == item.id }) {
+            if quantity > 0 {
                 items[index].quantity = quantity
+            } else {
+                items.remove(at: index)
             }
         }
+    }
+    
+    func removeItem(_ item: CartItem) {
+        items.removeAll { $0.id == item.id }
     }
     
     func clearCart() {
