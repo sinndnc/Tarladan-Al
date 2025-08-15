@@ -15,8 +15,9 @@ struct RootView: View {
     @StateObject private var rootViewModel = RootViewModel()
     @StateObject private var shopViewModel = ShopViewModel()
     @StateObject private var cartViewModel = CartViewModel()
+    @StateObject private var searchViewModel = SearchViewModel()
     @StateObject private var deliveryViewModel = DeliveryViewModel()
-    @StateObject private var categoryViewModel = CategoryProductsViewModel()
+    
     
     @EnvironmentObject private var userViewModel: UserViewModel
     
@@ -56,8 +57,8 @@ struct RootView: View {
         .environmentObject(userViewModel)
         .environmentObject(shopViewModel)
         .environmentObject(cartViewModel)
+        .environmentObject(searchViewModel)
         .environmentObject(deliveryViewModel)
-        .environmentObject(categoryViewModel)
         .onAppear{
             deliveryViewModel.listenDeliveries(by: "")
         }

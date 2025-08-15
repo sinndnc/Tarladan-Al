@@ -36,7 +36,6 @@ final class UserRepository : UserRepositoryProtocol {
     func listenUserById(_ id: String) -> AnyPublisher<User, UserError> {
         return remoteDataSource.listenUserById(id)
             .map { user in
-                Logger.log("REPOSITORY: \(user)")
                 return user
             }
             .mapError { error in

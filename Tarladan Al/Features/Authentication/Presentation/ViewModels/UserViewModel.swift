@@ -46,13 +46,12 @@ class UserViewModel : ObservableObject{
                 receiveCompletion: { completion in
                     switch completion {
                     case .finished:
-                        Logger.log("VIEW MODEL: Finished")
+                        Logger.log("")
                     case .failure(let error):
                         Logger.log("VIEW MODEL: Error: \(error)")
                     }
                 },
                 receiveValue: { [weak self] user in
-                    Logger.log("VIEW MODEL: Received user: \(user)")
                     self?.user = user
                 }
             )

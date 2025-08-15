@@ -25,9 +25,8 @@ final class TarladanAlAppDelegate : NSObject, UIApplicationDelegate {
 extension TarladanAlAppDelegate  {
     
     func setupDependencyContainer() {
-        FirebaseAppConfiguration.shared.configure()
+        FirebaseDIConfiguration.shared.configure()
         AppDIConfiguration.configure()
-        
     }
     
 }

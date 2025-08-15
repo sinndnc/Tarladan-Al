@@ -28,15 +28,15 @@ class CartViewModel: ObservableObject {
     
     var totalSavings: Double {
         items.reduce(0) { total, item in
-            if let originalPrice = item.product.originalPrice {
-                return total + (originalPrice - item.product.price) * Double(item.quantity)
-            }
+//            if let originalPrice = item.product.originalPrice {
+//                return total + (originalPrice - item.product.price) * Double(item.quantity)
+//            }
             return total
         }
     }
     
     func addItem(product: Product, quantity: Int = 1) {
-        if let index = items.firstIndex(where: { $0.product.name == product.name }) {
+        if let index = items.firstIndex(where: { $0.product.title == product.title }) {
             items[index].quantity += quantity
         } else {
             items.append(CartItem(product: product, quantity: quantity))

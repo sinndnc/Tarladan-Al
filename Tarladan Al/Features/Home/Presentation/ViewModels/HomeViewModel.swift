@@ -39,18 +39,17 @@ class HomeViewModel: ObservableObject {
     
     // MARK: - Computed Properties
     var popularProducts: [Product] {
-        products.filter { $0.rating >= 4.5 }.sorted { $0.reviewCount > $1.reviewCount }
+        products.filter { $0.price >= 4.5 }
     }
     
     var seasonalProducts: [Product] {
-        products.filter { $0.seasonality != nil }.prefix(6).map { $0 }
+        products.filter { $0.expiryDate != nil }.prefix(6).map { $0 }
     }
     
     var onSaleProducts: [Product] {
-        products.filter { $0.isOnSale }
+        products.filter { $0.isOrganic }
     }
     
-    func toggleBell() {}
     
 }
 

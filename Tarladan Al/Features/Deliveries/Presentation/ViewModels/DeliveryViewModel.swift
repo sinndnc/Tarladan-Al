@@ -24,6 +24,15 @@ final class DeliveryViewModel: ObservableObject {
     @Injected private var listenDeliveriesUseCase: ListenDeliveriesUseCaseProtocol
     @Injected private var updateDeliveryStatusUseCase: UpdateDeliveryStatusUseCaseProtocol
     
+    var currentDeliveries : [Delivery] {
+        deliveries.filter{ $0.status != .delivered && $0.status != .cancelled }
+    }
+    
+    var currentDelivery: Delivery? {
+        deliveries.filter{ $0.status != .delivered && $0.status != .cancelled }
+            .first
+    }
+    
     func listenDeliveries(by id: String) {
         listenDeliveriesUseCase.execute()
             .receive(on: DispatchQueue.main)
@@ -37,7 +46,6 @@ final class DeliveryViewModel: ObservableObject {
                     }
                 },
                 receiveValue: { [weak self] deliveries in
-                    Logger.log("VIEW MODEL: Received Deliveries: \(deliveries)")
                     self?.deliveries = deliveries
                 }
             )

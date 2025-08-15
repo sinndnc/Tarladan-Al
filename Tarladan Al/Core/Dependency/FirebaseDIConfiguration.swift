@@ -10,9 +10,9 @@ import Foundation
 import Firebase
 import FirebaseAuth
 
-class FirebaseAppConfiguration {
+class FirebaseDIConfiguration {
     
-    static let shared = FirebaseAppConfiguration()
+    static let shared = FirebaseDIConfiguration()
     
     private init() {}
     

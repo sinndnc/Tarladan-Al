@@ -12,27 +12,30 @@ struct LocationPickerView: View {
     let addresses: [Address]
     
     var body: some View {
-        VStack(alignment:.leading){
-            Text("Siparişinizi nereye göndermek istediğinizi seçiniz.")
-                .font(.headline)
-            Divider()
-            Spacer()
-            VStack(alignment:.leading,spacing: 20){
-                ForEach(addresses) { address in
-                   LocationPickerRow(address: address)
+        NavigationStack{
+            VStack(alignment:.leading){
+                Text("Siparişinizi nereye göndermek istediğinizi seçiniz.")
+                    .font(.headline)
+                Divider()
+                Spacer()
+                VStack(alignment:.leading,spacing: 20){
+                    ForEach(addresses.sortedByDefault) { address in
+                        LocationPickerRow(address: address)
+                    }
                 }
+                Spacer()
+                Button {
+                    
+                } label: {
+                    AddNewLocationRow()
+                }
+                .haptic()
             }
-            Spacer()
-            NavigationLink {
-                
-            } label: {
-                AddNewLocationRow()
-            }
-            .haptic()
+            .padding()
+            .presentationDragIndicator(.visible)
+            .presentationDetents([.fraction(0.3)])
         }
-        .padding()
-        .presentationDragIndicator(.visible)
-        .presentationDetents([.fraction(0.3)])
+       
     }
 }
 

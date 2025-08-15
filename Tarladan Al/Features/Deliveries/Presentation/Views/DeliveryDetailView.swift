@@ -9,7 +9,6 @@ import Foundation
 
 struct DeliveryDetailView: View {
     let delivery: Delivery
-    @State private var showTrackingView = false
     
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -55,17 +54,11 @@ struct DeliveryDetailView: View {
                     if let notes = delivery.driverNotes {
                         driverNotesSection(notes)
                     }
-                    
-                    // Action Button
-                    actionButton
                 }
                 .padding()
             }
             .navigationTitle("Sipariş Detayı")
             .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $showTrackingView) {
-                DeliveryTrackingView(delivery: delivery)
-            }
         }
     }
     
@@ -73,10 +66,11 @@ struct DeliveryDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 VStack(alignment: .leading) {
-                    Text("Sipariş #\(delivery.orderNumber)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    
+                    HStack{
+                        Text("#\(delivery.orderNumber)")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                    }
                     Text("Oluşturulma: \(dateFormatter.string(from: delivery.createdAt))")
                         .font(.caption)
                         .foregroundColor(.secondary)
@@ -84,21 +78,22 @@ struct DeliveryDetailView: View {
                 
                 Spacer()
                 
-                VStack(alignment: .trailing) {
-                    Image(systemName: delivery.status.icon)
-                        .font(.title2)
-                        .foregroundColor(delivery.status.color)
-                    
-                    Text(delivery.status.displayName)
-                        .font(.caption)
-                        .foregroundColor(delivery.status.color)
-                        .fontWeight(.medium)
+                NavigationLink {
+                    DeliveryTrackingView(delivery: delivery)
+                } label: {
+                    VStack(alignment: .center,spacing: 3) {
+                        Image(systemName: "location.magnifyingglass")
+                            .font(.title2)
+                            .foregroundStyle(.blue)
+                        
+                        Text("Takip Et")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
                 }
             }
         }
         .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
     }
     
     private var statusSection: some View {
@@ -116,13 +111,11 @@ struct DeliveryDetailView: View {
                                     .fill(delivery.status.progressValue >= status.progressValue ? Color.green : Color.gray.opacity(0.3))
                                     .cornerRadius(5,corners: [UIRectCorner.topRight, UIRectCorner.bottomRight])
                                     .frame(height: 2)
-                            }else {
-                                Rectangle()
-                                    .fill(.clear)
                             }
+                             
                             
                             Circle()
-                                .fill(delivery.status.progressValue >= status.progressValue ? status.color : Color.gray.opacity(0.3))
+                                .fill(delivery.status.progressValue >= status.progressValue ? Color.green : Color.gray.opacity(0.3))
                                 .frame(width: 12, height: 12)
                             
                             if status != .delivered {
@@ -130,9 +123,6 @@ struct DeliveryDetailView: View {
                                     .fill(delivery.status.progressValue > status.progressValue ? Color.green : Color.gray.opacity(0.3))
                                     .cornerRadius(5,corners: [UIRectCorner.topLeft, UIRectCorner.bottomLeft])
                                     .frame(height: 2)
-                            }else {
-                                Rectangle()
-                                    .fill(.clear)
                             }
                         }
                         Text(status.displayName)
@@ -141,9 +131,15 @@ struct DeliveryDetailView: View {
                 }
             }
             
-            Text("Planlanan Teslimat: \(dateFormatter.string(from: delivery.scheduledDeliveryDate))")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+            HStack{
+                Text("Planlanan Teslimat:")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.primary)
+                
+                Text("\(dateFormatter.string(from: delivery.scheduledDeliveryDate))")
+                    .foregroundColor(.primary)
+            }
         }
         .padding()
         .background(Color(.systemBackground))
@@ -204,23 +200,24 @@ struct DeliveryDetailView: View {
             LazyVStack(spacing: 8) {
                 ForEach(delivery.items,id:\.self) { item in
                     HStack {
-//                        AsyncImage(url: URL(string: item.imageURL ?? "")) { image in
+                        Image(systemName: "")
 //                            image
 //                                .resizable()
 //                                .aspectRatio(contentMode: .fill)
 //                        } placeholder: {
 //                            RoundedRectangle(cornerRadius: 8)
 //                                .fill(Color.gray.opacity(0.3))
-//                        }
-//                        .frame(width: 50, height: 50)
-//                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        
+                        .frame(width: 50, height: 50)
+                        .background(Color.gray.opacity(0.3))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         
                         VStack(alignment: .leading, spacing: 4) {
                             Text(item.productName)
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                             
-                            Text("\(item.quantity) adet × \(currencyFormatter.string(from: NSNumber(value: item.pricePerUnit)) ?? "₺0")")
+                            Text("\(Int(item.quantity)) adet × \(currencyFormatter.string(from: NSNumber(value: item.pricePerUnit)) ?? "₺0")")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -280,14 +277,19 @@ struct DeliveryDetailView: View {
     }
     
     private func instructionsSection(_ instructions: String) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading) {
             Text("Özel Talimatlar")
                 .font(.headline)
                 .fontWeight(.semibold)
             
-            Text(instructions)
-                .font(.subheadline)
-                .padding(.vertical)
+            HStack{
+                Text(instructions)
+                    .font(.subheadline)
+                    .padding(.vertical)
+                    .lineLimit(2)
+                
+                Spacer()
+            }
         }
         .padding()
         .background(Color(.systemBackground))
@@ -296,36 +298,22 @@ struct DeliveryDetailView: View {
     }
     
     private func driverNotesSection(_ notes: String) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading) {
             Text("Kurye Notları")
                 .font(.headline)
                 .fontWeight(.semibold)
-            
-            Text(notes)
-                .font(.subheadline)
-                .padding(.vertical)
+            HStack{
+                Text(notes)
+                    .font(.subheadline)
+                    .padding(.vertical)
+                    .lineLimit(2)
+                
+                Spacer()
+            }
         }
         .padding()
         .background(Color(.systemBackground))
         .cornerRadius(12)
         .shadow(color: .gray.opacity(0.1), radius: 2)
-    }
-    
-    private var actionButton: some View {
-        Button(action: {
-            showTrackingView = true
-        }) {
-            HStack {
-                Image(systemName: "location.fill")
-                Text("Siparişi Takip Et")
-            }
-            .font(.headline)
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.blue)
-            .cornerRadius(12)
-        }
-        .disabled(delivery.status == .delivered || delivery.status == .cancelled)
     }
 }

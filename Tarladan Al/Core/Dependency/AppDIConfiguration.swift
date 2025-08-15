@@ -10,10 +10,11 @@ class AppDIConfiguration {
     
     static let shared = AppDIConfiguration()
     
+    
     static func configure() {
         let container = DIContainer.shared
         
-        //MARK: Data Sources (Singletons)
+        //MARK: - Data Sources (Singletons)
         container.register(AuthRemoteDataSourceProtocol.self,scope: .singleton) { _ in
             AuthRemoteDataSource(auth: .auth())
         }
@@ -23,9 +24,12 @@ class AppDIConfiguration {
         container.register(UserRemoteDataSourceProtocol.self, scope: .singleton) { container in
             UserRemoteDataSource(db: .firestore())
         }
+        container.register(ProductRemoteDataSourceProtocol.self, scope: .singleton) { container in
+            ProductRemoteDataSource(db: .firestore())
+        }
         
         
-        //MARK: Repositories (Singletons)
+        //MARK: - Repositories (Singletons)
         container.register(AuthRepositoryProtocol.self, scope: .singleton) { container in
             AuthRepository(
                 remoteDataSource:  container.resolve(AuthRemoteDataSourceProtocol.self)
@@ -41,9 +45,14 @@ class AppDIConfiguration {
                 remoteDataSource: container.resolve(UserRemoteDataSourceProtocol.self)
             )
         }
+        container.register(ProductRepositoryProtocol.self, scope: .singleton) { container in
+            ProductRepository(
+                remoteDataSource: container.resolve(ProductRemoteDataSourceProtocol.self)
+            )
+        }
         
         
-        //MARK: UseCases (Singletons)
+        //MARK: - UseCases (Singletons)
         container.register(CheckUserUseCaseProtocol.self, scope: .singleton) { container in
             CheckUserUseCase(
                 repository: container.resolve(AuthRepositoryProtocol.self)
@@ -55,7 +64,7 @@ class AppDIConfiguration {
             )
         }
         
-        //MARK: User Classes
+        //MARK: - User Classes
         container.register(ListenUserUseCaseProtocol.self, scope: .singleton) { container in
             ListenUserUseCase(
                 repository: container.resolve(UserRepositoryProtocol.self)
@@ -81,6 +90,13 @@ class AppDIConfiguration {
         container.register(UpdateDeliveryStatusUseCaseProtocol.self, scope: .singleton) { container in
             UpdateDeliveryStatusUseCase(
                 repository: container.resolve(DeliveryRepositoryProtocol.self)
+            )
+        }
+        
+        //MARK: - Product Classes
+        container.register(ListenProductsUseCaseProtocol.self, scope: .singleton) { container in
+            ListenProductsUseCase(
+                repository: container.resolve(ProductRepositoryProtocol.self)
             )
         }
         

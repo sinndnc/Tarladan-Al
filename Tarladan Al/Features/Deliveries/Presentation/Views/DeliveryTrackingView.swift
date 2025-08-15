@@ -4,7 +4,9 @@
 //
 //  Created by Sinan Dinç on 8/12/25.
 //
+
 import SwiftUI
+import MapKit
 
 struct TrackingStep {
     let title: String
@@ -16,6 +18,7 @@ struct TrackingStep {
 
 struct DeliveryTrackingView: View {
     let delivery: Delivery
+    
     @Environment(\.dismiss) private var dismiss
     @State private var currentStep: Int = 0
     
@@ -64,34 +67,33 @@ struct DeliveryTrackingView: View {
     }
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    // Header
-                    headerSection
-                    
-                    // Current Status Card
-                    currentStatusCard
-                    
-                    // Tracking Timeline
-                    trackingTimeline
-                    
-                    // Estimated Time
-                    estimatedTimeSection
-                    
-                    // Contact Section
-                    contactSection
-                }
-                .padding()
-            }
-            .navigationTitle("Sipariş Takip")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Kapat") {
-                        dismiss()
+        NavigationStack {
+            GeometryReader { geo in
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 20) {
+                        // Header
+                        headerSection
+                        
+                        // Current Status Card
+                        currentStatusCard
+                            .frame(
+                                width: geo.size.width,
+                                height: geo.size.height * 0.3
+                            )
+                        
+                        // Tracking Timeline
+                        trackingTimeline
+                        
+                        // Estimated Time
+                        estimatedTimeSection
+                        
+                        // Contact Section
+                        contactSection
                     }
                 }
+                .toolbarRole(.editor)
+                .navigationTitle("Sipariş Takip")
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
     }
@@ -105,28 +107,40 @@ struct DeliveryTrackingView: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
+        .padding()
     }
     
     private var currentStatusCard: some View {
-        VStack(spacing: 16) {
-            Image(systemName: delivery.status.icon)
-                .font(.system(size: 50))
-                .foregroundColor(delivery.status.color)
-            
-            Text(delivery.status.rawValue)
-                .font(.title2)
-                .fontWeight(.semibold)
-            
-            if delivery.status == .inTransit {
-                Text("Tahmini kalan süre: 15-25 dk")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+        ZStack(alignment: .bottom) {
+            Button {
+                
+            } label: {
+                Image(systemName: "arrow.down.left.and.arrow.up.right")
             }
+            .zIndex(1)
+            .padding(10)
+            .tint(.white)
+            .frame(maxWidth: .infinity,maxHeight: .infinity, alignment: .topTrailing)
+            
+            if let currentLocation = delivery.currentLocation{
+                Map{
+                    Marker(delivery.orderNumber, coordinate: currentLocation.toLocation2D)
+                }
+            }
+            
+            HStack{
+                if delivery.status == .inTransit {
+                    Text("Tahmini kalan süre: 15-25 dk")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+            }
+            .padding(5)
+            .background(.ultraThinMaterial)
         }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(delivery.status.color.opacity(0.1))
         .cornerRadius(16)
+        .padding()
     }
     
     private var trackingTimeline: some View {
@@ -177,6 +191,7 @@ struct DeliveryTrackingView: View {
         .background(Color(.systemBackground))
         .cornerRadius(12)
         .shadow(color: .gray.opacity(0.1), radius: 2)
+        .padding(.horizontal)
     }
     
     private var estimatedTimeSection: some View {
@@ -213,6 +228,7 @@ struct DeliveryTrackingView: View {
         .background(Color(.systemBackground))
         .cornerRadius(12)
         .shadow(color: .gray.opacity(0.1), radius: 2)
+        .padding()
     }
     
     private var contactSection: some View {
@@ -249,5 +265,6 @@ struct DeliveryTrackingView: View {
                 .cornerRadius(10)
             }
         }
+        .padding()
     }
 }

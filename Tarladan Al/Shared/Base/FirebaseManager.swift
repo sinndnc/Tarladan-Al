@@ -17,9 +17,12 @@ class FirebaseManager<T: FirebaseModel> {
     
     // MARK: - Properties
     private let db = Firestore.firestore()
+    
     private let collectionName: String
     private var cancellables = Set<AnyCancellable>()
+    
     private var listeners: [String: ListenerRegistration] = [:]
+    private var subjects: [String: PassthroughSubject<[T], ServiceError>] = [:]
     
     //MARK: - Error handling configuration
     var enableErrorLogging: Bool = true
@@ -29,10 +32,6 @@ class FirebaseManager<T: FirebaseModel> {
     init(collectionName: String, errorLogger: ((DynamicServiceError) -> Void)? = nil) {
         self.collectionName = collectionName
         self.errorLogger = errorLogger
-    }
-    
-    deinit {
-        cancellables.forEach { $0.cancel() }
     }
     
     // MARK: - Create Operations
@@ -308,42 +307,70 @@ class FirebaseManager<T: FirebaseModel> {
     
     // MARK: - Listen Operations
     func listen() -> AnyPublisher<[T], ServiceError> {
-        return PassthroughSubject<[T], ServiceError>()
-            .handleEvents(receiveSubscription: { [weak self] subscription in
-                guard let self = self else { return }
+        let listenerKey = collectionName // veya unique bir identifier
+        
+        // Eğer bu collection için zaten aktif listener varsa, mevcut subject'i döndür
+        if let existingSubject = subjects[listenerKey] {
+            Logger.log("📡 EXISTING LISTENER: Using existing listener for \(listenerKey)")
+            return existingSubject.eraseToAnyPublisher()
+        }
+        
+        // Yeni subject oluştur
+        let subject = PassthroughSubject<[T], ServiceError>()
+        subjects[listenerKey] = subject
+        
+        // Firebase listener oluştur
+        let listener = db.collection(collectionName).addSnapshotListener { [weak self] snapshot, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                let serviceError = self.handleError(error, operation: "LISTEN_COLLECTION")
+                Logger.log("❌ FIREBASE ERROR (\(listenerKey)): \(serviceError)")
+                subject.send(completion: .failure(serviceError))
                 
-                let listener = self.db.collection(self.collectionName).addSnapshotListener { snapshot, error in
-                    let subject = subscription as? PassthroughSubject<[T], ServiceError>
-                    
-                    if let error = error {
-                        let serviceError = self.handleError(error, operation: "LISTEN_COLLECTION")
-                        subject?.send(completion: .failure(serviceError))
-                        return
-                    }
-                    
-                    guard let documents = snapshot?.documents else {
-                        subject?.send([])
-                        return
-                    }
-                    
-                    do {
-                        let models = try documents.compactMap { document -> T? in
-                            try document.data(as: T.self)
-                        }
-                        subject?.send(models)
-                    } catch {
-                        let serviceError = ServiceErrorFactory.serializationFailed(
-                            for: FirebaseManager<T>.self,
-                            operation: "LISTEN_COLLECTION",
-                            underlyingError: error
-                        )
-                        self.logError(serviceError)
-                        subject?.send(completion: .failure(serviceError))
-                    }
+                // Cleanup
+                self.cleanupListener(for: listenerKey)
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                Logger.log("📝 EMPTY DOCUMENTS (\(listenerKey))")
+                subject.send([])
+                return
+            }
+            
+            do {
+                let models = try documents.compactMap { document -> T? in
+                    try document.data(as: T.self)
                 }
+                Logger.log("✅ MODELS (\(listenerKey)): \(models.count) items")
+                subject.send(models)
+            } catch {
+                let serviceError = ServiceErrorFactory.serializationFailed(
+                    for: FirebaseManager<T>.self,
+                    operation: "LISTEN_COLLECTION",
+                    underlyingError: error
+                )
+                Logger.log("❌ SERIALIZATION ERROR (\(listenerKey)): \(serviceError)")
+                self.logError(serviceError)
+                subject.send(completion: .failure(serviceError))
                 
-                // Store listener for cleanup if needed
-            })
+                // Cleanup
+                self.cleanupListener(for: listenerKey)
+            }
+        }
+        
+        // Listener'ı dictionary'de sakla
+        listeners[listenerKey] = listener
+        Logger.log("🚀 NEW LISTENER: Created listener for \(listenerKey)")
+        
+        return subject
+            .handleEvents(
+                receiveCancel: { [weak self] in
+                    Logger.log("🔴 LISTENER CANCELLED: \(listenerKey)")
+                    self?.cleanupListener(for: listenerKey)
+                }
+            )
             .eraseToAnyPublisher()
     }
     
@@ -373,7 +400,6 @@ class FirebaseManager<T: FirebaseModel> {
             if document.exists {
                 do {
                     let model = try document.data(as: T.self)
-                    Logger.log("MANAGER: \(model)")
                     subject?.send(model)
                 } catch {
                     let serviceError = ServiceErrorFactory.serializationFailed(
@@ -500,6 +526,52 @@ class FirebaseManager<T: FirebaseModel> {
     
     private func logError(_ error: ServiceError) {
         Logger.log("ERROR: \(error)")
+    }
+    
+    // Cleanup helper
+    private func cleanupListener(for key: String) {
+        listeners[key]?.remove()
+        listeners.removeValue(forKey: key)
+        subjects.removeValue(forKey: key)
+        Logger.log("🧹 CLEANUP: Removed listener for \(key)")
+    }
+    
+    // Tüm listener'ları durdur
+    func stopAllListeners() {
+        Logger.log("🛑 STOPPING ALL LISTENERS: \(listeners.count) listeners")
+        
+        listeners.forEach { key, listener in
+            listener.remove()
+            Logger.log("🛑 STOPPED: \(key)")
+        }
+        
+        listeners.removeAll()
+        subjects.removeAll()
+    }
+    
+    // Belirli bir listener'ı durdur
+    func stopListener(for key: String) {
+        if let listener = listeners[key] {
+            listener.remove()
+            listeners.removeValue(forKey: key)
+            subjects.removeValue(forKey: key)
+            Logger.log("🛑 STOPPED SPECIFIC LISTENER: \(key)")
+        } else {
+            Logger.log("⚠️ LISTENER NOT FOUND: \(key)")
+        }
+    }
+    
+    // Aktif listener'ları listele
+    func getActiveListeners() -> [String] {
+        let activeKeys = Array(listeners.keys)
+        Logger.log("📋 ACTIVE LISTENERS: \(activeKeys)")
+        return activeKeys
+    }
+    
+    // Deinit'te cleanup
+    deinit {
+        stopAllListeners()
+        Logger.log("💀 DEINIT: FirebaseManager cleaned up")
     }
     
 }

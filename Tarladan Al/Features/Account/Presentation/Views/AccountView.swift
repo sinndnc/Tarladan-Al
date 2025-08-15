@@ -236,7 +236,7 @@ struct AccountView: View {
         case .language:
             LanguageSelectionView()
         case .notifications:
-            NotificationView()
+            NotificationSettingView()
         }
     }
     

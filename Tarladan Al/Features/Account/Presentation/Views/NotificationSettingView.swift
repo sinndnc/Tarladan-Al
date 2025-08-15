@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct NotificationView: View {
+struct NotificationSettingView: View {
     
     var body : some View{
-        Text("Notification View")
+        Text("Notification Setting View")
     }
     
 }

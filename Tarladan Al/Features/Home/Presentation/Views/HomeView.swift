@@ -12,6 +12,7 @@ struct HomeView: View {
     
     @EnvironmentObject private var rootViewModel: RootViewModel
     @EnvironmentObject private var userViewModel: UserViewModel
+    @EnvironmentObject private var shopViewModel: ShopViewModel
     @EnvironmentObject private var deliveryViewModel: DeliveryViewModel
     
     var body: some View {
@@ -19,9 +20,9 @@ struct HomeView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     
-                    //if let deliveryStatus = viewModel.deliveryStatus {
-                    deliveryStatusCard(deliveryViewModel.deliveries.last)
-                    //}
+                    if let delivery = deliveryViewModel.currentDelivery {
+                        deliveryStatusCard(delivery)
+                    }
                     
                     if let banner = homeViewModel.featuredBanner {
                         featuredBanner(banner)
@@ -101,13 +102,15 @@ struct HomeView: View {
     
     private var tralingSection: some View {
         HStack(spacing: 16) {
-            Button(action: homeViewModel.toggleBell) {
+            NavigationLink {
+                NotificationView()
+            } label: {
                 Image(systemName: "bell")
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundColor(.primary)
             }
-            .withHaptic()
+            .haptic()
             
             Button(action: {}){
                 Image(systemName: "line.3.horizontal")
@@ -119,29 +122,37 @@ struct HomeView: View {
         }
     }
     
-    private func deliveryStatusCard(_ delivery: Delivery?) -> some View {
-        ZStack{
-            if let delivery = delivery{
-                VStack(spacing: 12) {
-                    HStack {
-                        Image(systemName: "truck.box.fill")
-                            .foregroundColor(.green)
-                            .font(.title3)
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Sonraki Teslimat")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                            
-                            Text("\(delivery.scheduledDeliveryDate), \(delivery.actualDeliveryDate ?? .now)")
+    private func deliveryStatusCard(_ delivery: Delivery) -> some View {
+        VStack(alignment: .leading){
+            Text("Sonraki Teslimat")
+                .font(.headline)
+                .fontWeight(.bold)
+            VStack(spacing: 12) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        HStack{
+                            Text("Güncel Teslimat Tarihi:")
+                                .font(.footnote)
+                                .foregroundColor(.primary)
+                            Text("\(DateFormatter.shortFormatter.string(from: delivery.actualDeliveryDate ?? .now))")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
-                        
-                        Spacer()
-                        
+                        HStack{
+                            Text("Planlanan Teslimat Tarihi:")
+                                .font(.footnote)
+                                .foregroundColor(.primary)
+                            Text("\(DateFormatter.shortFormatter.string(from: delivery.scheduledDeliveryDate))")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    if delivery.status != .inTransit {
                         Button("Değiştir") {
-                            //                    viewModel.changeDeliveryTime()
+                            //  viewModel.changeDeliveryTime()
                         }
                         .font(.caption)
                         .fontWeight(.medium)
@@ -151,57 +162,59 @@ struct HomeView: View {
                         .background(Color.green.opacity(0.1))
                         .cornerRadius(8)
                     }
-                    
-                    //            // Delivery Progress
-                    HStack(spacing: 0) {
-                        ForEach(0..<10, id: \.self) { index in
-                            HStack(spacing: 0) {
-                                Circle()
-                                    .fill(index < 5 ? Color.green : Color.gray.opacity(0.3))
-                                    .frame(width: 8, height: 8)
-                                
-                                if index < 10 - 1 {
-                                    Rectangle()
-                                        .fill(index < 5 - 1 ? Color.green : Color.gray.opacity(0.3))
-                                        .frame(height: 2)
-                                        .frame(maxWidth: .infinity)
-                                }
+                   
+                }
+                
+                HStack(spacing: 0) {
+                    ForEach(0..<DeliveryStatus.allCases.count, id: \.self) { index in
+                        HStack(spacing: 0) {
+                            Circle()
+                                .fill(Double(index / 5) < delivery.status.progressValue ? Color.green : Color.gray.opacity(0.3))
+                                .frame(width: 8, height: 8)
+                            
+                            if index < DeliveryStatus.allCases.count - 1 {
+                                Rectangle()
+                                    .fill(Double(index / 5) < delivery.status.progressValue - 0.2 ? Color.green : Color.gray.opacity(0.3))
+                                    .frame(height: 2)
+                                    .frame(maxWidth: .infinity)
                             }
                         }
                     }
-                    .padding(.vertical, 8)
-                    
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(delivery.status.displayName)
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundColor(.green)
-                            
-                            Text(delivery.orderNumber)
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        Spacer()
-                        
-                        Button("Detaylar") {
-                            //                    viewModel.showDeliveryDetails()
-                        }
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundColor(.green)
-                    }
                 }
-                .padding(16)
-                .background(Color(.systemBackground))
-                .cornerRadius(12)
-                .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
-                .padding()
-            }else{
-                ProgressView()
+                .padding(.vertical, 8)
+                
+                HStack {
+                    Image(systemName: "truck.box.fill")
+                        .foregroundColor(.green)
+                        .font(.title3)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(delivery.status.displayName)
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.green)
+                        
+                        Text(delivery.orderNumber)
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                    
+                    NavigationLink("Detaylar") {
+                        DeliveryDetailView(delivery: delivery)
+                    }
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.green)
+                }
             }
+            .padding(16)
+            .background(Color(.systemBackground))
+            .cornerRadius(12)
+            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
         }
+        .padding()
     }
     // MARK: - Featured Banner
     private func featuredBanner(_ banner: Banner) -> some View {
@@ -285,14 +298,18 @@ struct HomeView: View {
                         ){}
                     )
                     
-                    QuickActionCard(
-                        quickAction: QuickAction(
-                            icon: "heart.fill",
-                            title: "Favoriler",
-                            subtitle: "Beğendiğin ürünler",
-                            color: .blue
-                        ){}
-                    )
+                    NavigationLink {
+                        FavoritesView()
+                    } label: {
+                        QuickActionCard(
+                            quickAction: QuickAction(
+                                icon: "heart.fill",
+                                title: "Favoriler",
+                                subtitle: "Beğendiğin ürünler",
+                                color: .blue
+                            ){}
+                        )
+                    }
                     
                     QuickActionCard(
                         quickAction: QuickAction(
@@ -318,27 +335,9 @@ struct HomeView: View {
         .padding(.top, 24)
     }
     
-    let products = [
-        Product(name: "Organik Domates", category: "Sebze", price: 12.50, originalPrice: 15.00, image: "🍅", isOrganic: true, description: "Taze organik domates", rating: 4.8, reviewCount: 124, isOnSale: true, stockStatus: .inStock, seasonality: "Yaz", nutritionHighlights: ["Potasyum", "B6"], origin: "Ekvador"),
-        Product(name: "Yeşil Elma", category: "Meyve", price: 8.75, originalPrice: nil, image: "🍏", isOrganic: true, description: "Crispy yeşil elmalar", rating: 4.6, reviewCount: 89, isOnSale: false, stockStatus: .inStock, seasonality: "Sonbahar", nutritionHighlights: ["Potasyum", "B6"], origin: "Ekvador"),
-        Product(name: "Organik Havuç", category: "Sebze", price: 6.25, originalPrice: nil, image: "🥕", isOrganic: true, description: "Taze organik havuç", rating: 4.9, reviewCount: 156, isOnSale: false, stockStatus: .lowStock, seasonality: nil, nutritionHighlights: ["Potasyum", "B6"], origin: "Ekvador"),
-        Product(name: "Kırmızı Üzüm", category: "Meyve", price: 15.00, originalPrice: 20.00, image: "🍇", isOrganic: false, description: "Tatlı kırmızı üzüm", rating: 4.4, reviewCount: 73, isOnSale: true, stockStatus: .inStock, seasonality: "Yaz", nutritionHighlights: ["Potasyum", "B6"], origin: "Ekvador"),
-        Product(name: "Organik Süt", category: "Süt Ürünleri", price: 18.50, originalPrice: nil, image: "🥛", isOrganic: true, description: "Çiftlik sütü", rating: 4.7, reviewCount: 201, isOnSale: false, stockStatus: .outOfStock, seasonality: nil, nutritionHighlights: ["Potasyum", "B6"], origin: "Ekvador"),
-        Product(name: "Tam Buğday Ekmeği", category: "Tahıl", price: 22.00, originalPrice: 25.00, image: "🍞", isOrganic: true, description: "El yapımı tam buğday ekmeği", rating: 4.5, reviewCount: 95, isOnSale: true, stockStatus: .inStock, seasonality: nil, nutritionHighlights: ["Potasyum", "B6"], origin: "Ekvador")
-    ]
-    
-    private let categories = [
-        Category(name: "vegetables", displayName: "Sebzeler", description: "Taze, organik sebzeler", icon: "🥬", color: .green, productCount: 85, isNew: false, isSeasonal: true, bannerImage: nil),
-        Category(name: "fruits", displayName: "Meyveler", description: "Mevsim meyveleri", icon: "🍎", color: .red, productCount: 62, isNew: false, isSeasonal: true, bannerImage: nil),
-        Category(name: "dairy", displayName: "Süt Ürünleri", description: "Çiftlik sütü ve peynirler", icon: "🥛", color: .blue, productCount: 34, isNew: false, isSeasonal: false, bannerImage: nil),
-        Category(name: "meat", displayName: "Et Ürünleri", description: "Organik et ve tavuk", icon: "🥩", color: .red, productCount: 28, isNew: false, isSeasonal: false, bannerImage: nil),
-        Category(name: "bakery", displayName: "Fırın Ürünleri", description: "Günlük taze ekmekler", icon: "🍞", color: .orange, productCount: 45, isNew: true, isSeasonal: false, bannerImage: nil),
-        Category(name: "pantry", displayName: "Kiler", description: "Tahıllar ve bakliyatlar", icon: "🌾", color: .brown, productCount: 67, isNew: false, isSeasonal: false, bannerImage: nil)
-    ]
-    
     // MARK: - Categories Section
     private var categoriesSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading) {
             HStack {
                 Text("Kategoriler")
                     .font(.headline)
@@ -356,18 +355,19 @@ struct HomeView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(categories){ category in
+                    ForEach(shopViewModel.categories){ category in
                         NavigationLink {
-                            CategoryProductsView(category: category)
+                            SubCategoriesView(category: category)
                         } label: {
-                            CategoryCard(category: category)
+                            CategoryCardView(category: category)
                         }
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.bottom)
+                .padding(.horizontal)
             }
         }
-        .padding(.top, 24)
+        .padding(.top)
     }
     
     // MARK: - Seasonal Highlights
@@ -390,15 +390,15 @@ struct HomeView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(products){ product in
-                        NavigationLink {
-                            ProductDetailView(product: product)
-                        } label: {
-                            ProductCard(product: product)
-                        }
-                        .tint(.primary)
-                        .haptic(.medium)
-                    }
+//                    ForEach(products){ product in
+//                        NavigationLink {
+//                            ProductDetailView(product: product)
+//                        } label: {
+//                            ProductCard(product: product)
+//                        }
+//                        .tint(.primary)
+//                        .haptic(.medium)
+//                    }
                 }
                 .padding(.horizontal, 20)
             }
@@ -636,64 +636,3 @@ struct RecipeCard: View {
     }
 }
 
-struct DeliveryOptionCard: View {
-    let icon: String
-    let title: String
-    let subtitle: String
-    let price: String
-    let isSelected: Bool
-    
-    var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundColor(isSelected ? .white : .green)
-                .frame(width: 40, height: 40)
-                .background(isSelected ? Color.green : Color.green.opacity(0.1))
-                .cornerRadius(20)
-            
-            VStack(spacing: 4) {
-                Text(title)
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(isSelected ? .green : .primary)
-                
-                Text(subtitle)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                
-                Text(price)
-                    .font(.caption2)
-                    .fontWeight(.medium)
-                    .foregroundColor(isSelected ? .green : .orange)
-            }
-        }
-        .frame(width: 90, height: 100)
-        .padding(.vertical, 8)
-        .background(isSelected ? Color.green.opacity(0.05) : Color.clear)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(isSelected ? Color.green : Color.clear, lineWidth: 1.5)
-        )
-        .cornerRadius(12)
-        
-        Image(systemName: icon)
-            .font(.title2)
-            .foregroundColor(.green)
-            .frame(width: 40, height: 40)
-            .background(Color.green.opacity(0.1))
-            .cornerRadius(20)
-        
-        Text(title)
-            .font(.caption)
-            .fontWeight(.medium)
-            .multilineTextAlignment(.center)
-        
-        Text(subtitle)
-            .font(.caption2)
-            .foregroundColor(.secondary)
-            .multilineTextAlignment(.center)   
-    }
-}

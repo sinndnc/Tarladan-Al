@@ -173,29 +173,29 @@ struct CartItemRow: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            // Product Image
-            AsyncImage(url: URL(string: item.product.image)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.3))
-                    .overlay(
-                        Image(systemName: "photo")
-                            .foregroundColor(.gray)
-                    )
-            }
-            .frame(width: 80, height: 80)
-            .cornerRadius(8)
+//            // Product Image
+//            AsyncImage(url: URL(string: item.product.image)) { image in
+//                image
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fill)
+//            } placeholder: {
+//                Rectangle()
+//                    .fill(Color.gray.opacity(0.3))
+//                    .overlay(
+//                        Image(systemName: "photo")
+//                            .foregroundColor(.gray)
+//                    )
+//            }
+//            .frame(width: 80, height: 80)
+//            .cornerRadius(8)
             
             // Product Details
             VStack(alignment: .leading, spacing: 4) {
-                Text(item.product.name)
+                Text(item.product.title)
                     .font(.headline)
                     .lineLimit(2)
                 
-                Text(item.product.category)
+                Text(item.product.category?.name ?? "")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 
@@ -211,7 +211,7 @@ struct CartItemRow: View {
                         }
                     }
                     
-                    if item.product.isOnSale {
+                    if item.product.isOrganic {
                         Text("SALE")
                             .font(.caption)
                             .fontWeight(.bold)
@@ -229,12 +229,12 @@ struct CartItemRow: View {
                             .font(.subheadline)
                             .fontWeight(.medium)
                         
-                        if let originalPrice = item.product.originalPrice {
-                            Text("₺\(originalPrice, specifier: "%.2f")")
-                                .font(.caption)
-                                .strikethrough()
-                                .foregroundColor(.secondary)
-                        }
+//                        if let originalPrice = item.product.originalPrice {
+//                            Text("₺\(originalPrice, specifier: "%.2f")")
+//                                .font(.caption)
+//                                .strikethrough()
+//                                .foregroundColor(.secondary)
+//                        }
                     }
                     
                     Spacer()

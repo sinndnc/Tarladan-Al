@@ -94,51 +94,30 @@ struct PersonalInfoView: View {
                                 title: "Doğrulama Durumu",
                                 value: user.isVerified ? "Doğrulanmış" : "Doğrulanmamış",
                                 icon: user.isVerified ? "shield.checkered" : "shield",
-                                iconColor: user.isVerified ? .blue : .orange
+                                iconColor: user.isVerified ? .orange : .red
+                            )
+                            
+                            SettingsRow(
+                                title: "Abonelik Durumu",
+                                value: user.isLoyalCustomer ? "Premium Abone" : "Ücretsiz Abone",
+                                icon: user.isLoyalCustomer ? "star.fill" : "star.slash",
+                                iconColor: user.isLoyalCustomer ? .blue : .red
                             )
                         }
                     }
-                    .padding(.horizontal)
-                    
-                    Spacer(minLength: 30)
-                    
-                    // Action Buttons
-                    VStack(spacing: 12) {
-                        Button(action: {
-                            showingEditView = true
-                        }) {
-                            HStack {
-                                Image(systemName: "pencil")
-                                Text("Bilgileri Düzenle")
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                        }
-                        
-                        Button(action: {
-                            // Şifre değiştir
-                        }) {
-                            HStack {
-                                Image(systemName: "key")
-                                Text("Şifre Değiştir")
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.orange)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                        }
-                    }
-                    .padding(.horizontal)
+                    .padding()
                 }
             }
             .navigationTitle("Kişisel Bilgiler")
             .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $showingEditView) {
-                EditPersonalInfoView()
+            .toolbar{
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button{
+                        showingEditView.toggle()
+                    }label: {
+                        Text(showingEditView ? "Done" : "Edit")
+                    }
+                }
             }
             .sheet(isPresented: $showingImagePicker) {
                 ImagePickerView()
@@ -318,9 +297,12 @@ struct PersonalInfoRow: View {
                 
                 if let isVerified = isVerified {
                     if isVerified {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
+                        Text("Onaylandı")
                             .font(.caption)
+                            .foregroundStyle(.green)
+                            .padding(3)
+                            .background(.green.opacity(0.3))
+                            .clipShape(Capsule())
                     } else if let onVerifyTap = onVerifyTap {
                         Button("Doğrula") {
                             onVerifyTap()
@@ -329,17 +311,19 @@ struct PersonalInfoRow: View {
                         .foregroundColor(.blue)
                     }
                 }
+            }
+            HStack{
+                Text(value)
+                    .font(.body)
+                    .padding(.leading, 28)
+                
+                Spacer()
                 
                 if isEditable {
                     Image(systemName: "pencil")
                         .foregroundColor(.blue)
-                        .font(.caption)
                 }
             }
-            
-            Text(value)
-                .font(.body)
-                .padding(.leading, 28)
         }
         .padding(.vertical, 12)
         .padding(.horizontal, 16)
@@ -379,42 +363,6 @@ struct SettingsRow: View {
     }
 }
 
-// MARK: - Placeholder Views
-struct EditPersonalInfoView: View {
-    
-    @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var userViewModel : UserViewModel
-    
-    var body: some View {
-        NavigationView {
-            VStack {
-                Text("Kişisel Bilgileri Düzenle")
-                    .font(.title2)
-                    .padding()
-                
-                // Form alanları burada olacak
-                
-                Spacer()
-            }
-            .navigationTitle("Düzenle")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("İptal") {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Kaydet") {
-                        // Save changes
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                }
-            }
-        }
-    }
-}
 
 struct ImagePickerView: View {
     @Environment(\.presentationMode) var presentationMode
