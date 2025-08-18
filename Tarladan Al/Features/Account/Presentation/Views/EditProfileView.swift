@@ -65,7 +65,7 @@ struct EditProfileView: View {
                         Spacer()
                         
                         Button("Değiştir") {
-                            viewModel.updateProfilePhoto()
+                            
                         }
                         .foregroundColor(.blue)
                     }

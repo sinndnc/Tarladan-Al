@@ -132,7 +132,6 @@ struct SubCategoriesView: View {
                         SubCategoryCardView(subCategory: subCategory)
                     }
                     .tint(.primary)
-                    .haptic(.medium)
                 }
             }
             .padding(.horizontal, 20)

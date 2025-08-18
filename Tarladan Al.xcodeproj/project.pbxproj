@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9922CE382E53D246002BD092 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 9922CE372E53D246002BD092 /* BottomSheet */; };
 		997BD8AC2E44AED100262883 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 997BD8AB2E44AED100262883 /* FirebaseAuth */; };
 		997BD8AE2E44AED100262883 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 997BD8AD2E44AED100262883 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
@@ -58,6 +59,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				997BD8AC2E44AED100262883 /* FirebaseAuth in Frameworks */,
+				9922CE382E53D246002BD092 /* BottomSheet in Frameworks */,
 				997BD8AE2E44AED100262883 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -121,6 +123,7 @@
 			packageProductDependencies = (
 				997BD8AB2E44AED100262883 /* FirebaseAuth */,
 				997BD8AD2E44AED100262883 /* FirebaseFirestore */,
+				9922CE372E53D246002BD092 /* BottomSheet */,
 			);
 			productName = "Tarladan Al";
 			productReference = 99FE73252E440FE900CB73A5 /* Tarladan Al.app */;
@@ -206,6 +209,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				997BD8AA2E44AED100262883 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				9922CE362E53D246002BD092 /* XCRemoteSwiftPackageReference "BottomSheet" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 99FE73262E440FE900CB73A5 /* Products */;
@@ -412,6 +416,9 @@
 				DEVELOPMENT_TEAM = A5PNFW5LM9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Tarladan-Al-Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take a picture for the profile or scan a QR code when you need it.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "This app requires access to the camera to take a picture for the profile or scan a QR code when you need it.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -440,6 +447,9 @@
 				DEVELOPMENT_TEAM = A5PNFW5LM9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Tarladan-Al-Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take a picture for the profile or scan a QR code when you need it.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "This app requires access to the camera to take a picture for the profile or scan a QR code when you need it.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -572,6 +582,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		9922CE362E53D246002BD092 /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lucaszischka/BottomSheet";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
 		997BD8AA2E44AED100262883 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -583,6 +601,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		9922CE372E53D246002BD092 /* BottomSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9922CE362E53D246002BD092 /* XCRemoteSwiftPackageReference "BottomSheet" */;
+			productName = BottomSheet;
+		};
 		997BD8AB2E44AED100262883 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 997BD8AA2E44AED100262883 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

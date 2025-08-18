@@ -94,6 +94,7 @@ struct CartItemRow: View {
                     Button("+") {
                         onQuantityChange(item.quantity + 1)
                     }
+                    .haptic()
                     .frame(width: 32, height: 32)
                     .background(Color.blue.opacity(0.1))
                     .cornerRadius(6)
@@ -109,6 +110,7 @@ struct CartItemRow: View {
                             onRemove()
                         }
                     }
+                    .haptic()
                     .frame(width: 32, height: 32)
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(6)

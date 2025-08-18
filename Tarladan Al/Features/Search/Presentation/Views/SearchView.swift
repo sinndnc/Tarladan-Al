@@ -46,15 +46,15 @@ struct SearchView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: { }) {
+                    Button(action: { viewModel.showScan.toggle() }) {
                         Image(systemName: "qrcode.viewfinder")
                             .foregroundColor(.primary)
                     }
                     .withHaptic()
                 }
             }
-            .sheet(isPresented: $viewModel.showFilters) {
-                FilterSheet(viewModel: viewModel)
+            .sheet(isPresented: $viewModel.showScan) {
+                ScanView()
             }
         }
     }

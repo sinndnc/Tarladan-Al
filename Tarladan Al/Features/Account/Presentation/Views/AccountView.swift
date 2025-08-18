@@ -20,18 +20,6 @@ struct AccountView: View {
                     profileHeaderView
                 }
                 
-                Section {
-                    quickStatsView
-                } header: {
-                    Text("Bu Ay")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                        .textCase(nil)
-                }
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets())
-                
                 // Account Section
                 Section("Hesap") {
                     NavigationMenuRow(
@@ -134,6 +122,18 @@ struct AccountView: View {
                 
                 // Sustainability Score Section
                 Section {
+                    quickStatsView
+                } header: {
+                    Text("Bu Ay")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                        .textCase(nil)
+                }
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
+                
+                Section {
                     sustainabilityScoreView
                 } header: {
                     Text("Sürdürülebilirlik Skorun")
@@ -144,6 +144,7 @@ struct AccountView: View {
                 }
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
+                
                 
                 // Support Section
                 Section("Destek") {
@@ -177,14 +178,14 @@ struct AccountView: View {
                             .foregroundColor(.secondary)
                     }
                     .contentShape(Rectangle())
-                    .onTapGesture {
-                        viewModel.rateApp()
-                    }
+                   
                 }
                 
                 // Logout Section
                 Section {
-                    Button(action: viewModel.logout) {
+                    Button{
+                        
+                    }label:{
                         HStack(spacing: 15) {
                             Image(systemName: "arrow.right.square")
                                 .font(.title3)
@@ -208,9 +209,6 @@ struct AccountView: View {
             .navigationDestination(for: AccountDestination.self) { destination in
                 destinationView(for: destination)
             }
-        }
-        .sheet(isPresented: $viewModel.showEditProfile) {
-            EditProfileView(viewModel: viewModel)
         }
     }
     

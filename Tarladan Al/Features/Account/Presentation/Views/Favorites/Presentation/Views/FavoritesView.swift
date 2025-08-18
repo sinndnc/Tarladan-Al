@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct FavoritesView: View {
+    
     @StateObject private var viewModel = FavoritesViewModel()
     @State private var searchText = ""
     @State private var selectedCategory = "Tümü"
@@ -37,34 +38,32 @@ struct FavoritesView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // Search Bar
-                searchSection
-                
-                // Category Filter
-                categoryFilterSection
-                
-                // View Toggle
-                viewToggleSection
-                
-                // Products
-                if viewModel.isLoading {
-                    loadingView
-                } else if filteredProducts.isEmpty {
-                    emptyStateView
-                } else {
-                    productsSection
-                }
+        VStack(spacing: 0) {
+            // Search Bar
+            searchSection
+            
+            // Category Filter
+            categoryFilterSection
+            
+            // View Toggle
+            viewToggleSection
+            
+            // Products
+            if viewModel.isLoading {
+                loadingView
+            } else if filteredProducts.isEmpty {
+                emptyStateView
+            } else {
+                productsSection
             }
-            .navigationTitle("Favorilerim")
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                viewModel.loadFavorites()
-            }
-            .sheet(item: $showingProductDetail) { product in
-                ProductDetailView(product: product)
-            }
+        }
+        .navigationTitle("Favorilerim")
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            viewModel.loadFavorites()
+        }
+        .sheet(item: $showingProductDetail) { product in
+            ProductDetailView(product: product)
         }
     }
     
@@ -85,7 +84,7 @@ struct FavoritesView: View {
                 .foregroundColor(.blue)
             }
         }
-        .padding()
+        .padding(7)
         .background(Color(.systemGray6))
         .cornerRadius(12)
         .padding(.horizontal)
@@ -97,8 +96,8 @@ struct FavoritesView: View {
             HStack(spacing: 12) {
                 ForEach(categories,id:\.self){ category in
                     let count = category == "Tümü" ?
-                        viewModel.favoriteProducts.count :
-                        viewModel.favoriteProducts.filter { $0.categoryName == category }.count
+                    viewModel.favoriteProducts.count :
+                    viewModel.favoriteProducts.filter { $0.categoryName == category }.count
                     
                     if count > 0 || category == "Tümü" {
                         CategoryChip(
@@ -118,28 +117,32 @@ struct FavoritesView: View {
     
     // MARK: - View Toggle
     private var viewToggleSection: some View {
-        HStack {
-            Text("\(filteredProducts.count) favori ürün")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
-            Spacer()
-            
-            HStack(spacing: 8) {
-                Button(action: { showingGrid = false }) {
-                    Image(systemName: "list.bullet")
-                        .foregroundColor(showingGrid ? .gray : .blue)
-                        .font(.title3)
-                }
+        VStack{
+            HStack {
+                Text("\(filteredProducts.count) favori ürün")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
                 
-                Button(action: { showingGrid = true }) {
-                    Image(systemName: "square.grid.2x2")
-                        .foregroundColor(showingGrid ? .blue : .gray)
-                        .font(.title3)
+                Spacer()
+                
+                HStack(spacing: 8) {
+                    Button(action: { showingGrid = false }) {
+                        Image(systemName: "list.bullet")
+                            .foregroundColor(showingGrid ? .gray : .blue)
+                            .font(.title3)
+                    }
+                    
+                    Button(action: { showingGrid = true }) {
+                        Image(systemName: "square.grid.2x2")
+                            .foregroundColor(showingGrid ? .blue : .gray)
+                            .font(.title3)
+                    }
                 }
             }
+            .padding(.horizontal)
+            .padding(.vertical,10)
+            Divider()
         }
-        .padding(.horizontal)
     }
     
     // MARK: - Loading View
@@ -219,7 +222,7 @@ struct FavoritesView: View {
     private var listLayout: some View {
         LazyVStack(spacing: 12) {
             ForEach(filteredProducts) { product in
-                ProductListCard(product: product, viewModel: viewModel) {
+                ProductCard(product: product, viewModel: viewModel) {
                     showingProductDetail = product
                 }
             }
@@ -228,37 +231,6 @@ struct FavoritesView: View {
     }
 }
 
-// MARK: - Category Chip
-struct CategoryChip: View {
-    let title: String
-    let count: Int
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                
-                if count > 0 {
-                    Text("(\(count))")
-                        .font(.caption)
-                        .foregroundColor(isSelected ? .white.opacity(0.8) : .secondary)
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(isSelected ? Color.blue : Color(.systemGray6))
-            )
-            .foregroundColor(isSelected ? .white : .primary)
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-}
 
 // MARK: - Product Grid Card
 struct ProductGridCard: View {
@@ -382,132 +354,3 @@ struct ProductGridCard: View {
 }
 
 // MARK: - Product List Card
-struct ProductListCard: View {
-    let product: Product
-    @ObservedObject var viewModel: FavoritesViewModel
-    let onTap: () -> Void
-    @State private var showingAddedToCart = false
-    
-    var body: some View {
-        Button(action: onTap) {
-            HStack(spacing: 12) {
-                // Product Image
-                ZStack {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.gray.opacity(0.2))
-                        .frame(width: 80, height: 80)
-                        .overlay(
-                            VStack {
-                                if product.isOrganic {
-                                    Image(systemName: "leaf.fill")
-                                        .foregroundColor(.green)
-                                        .font(.title2)
-                                } else {
-                                    Image(systemName: "photo")
-                                        .foregroundColor(.gray)
-                                        .font(.title2)
-                                }
-                            }
-                        )
-                }
-                
-                // Product Details
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text(product.title)
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.primary)
-                            .lineLimit(1)
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                viewModel.toggleFavorite(product)
-                            }
-                        }) {
-                            Image(systemName: "heart.fill")
-                                .foregroundColor(.red)
-                                .font(.title3)
-                        }
-                    }
-                    
-                    HStack {
-                        Image(systemName: "person.fill")
-                            .foregroundColor(.blue)
-                            .font(.caption)
-                        
-                        Text(product.farmerName)
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
-                        
-                        Spacer()
-                    }
-                    
-                    HStack {
-                        Image(systemName: "location.fill")
-                            .foregroundColor(.gray)
-                            .font(.caption)
-                        
-                        Text(product.locationName)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        
-                        Spacer()
-                        
-                        if product.isOrganic {
-                            HStack(spacing: 2) {
-                                Image(systemName: "leaf.fill")
-                                    .foregroundColor(.green)
-                                    .font(.caption)
-                                Text("Organik")
-                                    .font(.caption)
-                                    .foregroundColor(.green)
-                            }
-                        }
-                    }
-                    
-                    HStack {
-                        Text("₺\(product.price, specifier: "%.0f")/\(product.unit)")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .foregroundColor(.primary)
-                        
-                        Text("• \(product.quantity, specifier: "%.0f") \(product.unit) stok")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        
-                        Spacer()
-                        
-                        Button(action: addToCart) {
-                            Image(systemName: showingAddedToCart ? "checkmark.circle.fill" : "cart.badge.plus")
-                                .foregroundColor(showingAddedToCart ? .green : .blue)
-                                .font(.title2)
-                        }
-                        .disabled(showingAddedToCart)
-                    }
-                }
-                
-                Spacer()
-            }
-        }
-        .buttonStyle(PlainButtonStyle())
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(16)
-        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
-    }
-    
-    private func addToCart() {
-        withAnimation(.easeInOut(duration: 0.3)) {
-            showingAddedToCart = true
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            withAnimation(.easeInOut(duration: 0.3)) {
-                showingAddedToCart = false
-            }
-        }
-    }
-}

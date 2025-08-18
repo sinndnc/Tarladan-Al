@@ -9,6 +9,7 @@ import SwiftUI
 struct ProductCardView: View {
     let product: Product
     let action : () -> Void
+    @State private var showingAddedToCart = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -84,8 +85,12 @@ struct ProductCardView: View {
                     
                     Spacer()
                     
-                    Button(action: action) {
-                        Image(systemName: "plus")
+                    Button(action: {
+                        action()
+                        addToCart()
+                    }) {
+                        Image(systemName: showingAddedToCart ? "checkmark.seal" : "cart.badge.plus")
+                            .font(.subheadline)
                     }
                     .padding(10)
                     .withHaptic()
@@ -107,4 +112,17 @@ struct ProductCardView: View {
         formatter.dateFormat = "dd/MM"
         return formatter.string(from: date)
     }
+    
+    private func addToCart() {
+        withAnimation(.easeInOut(duration: 0.3)) {
+            showingAddedToCart = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            withAnimation(.easeInOut(duration: 0.3)) {
+                showingAddedToCart = false
+            }
+        }
+    }
+    
 }

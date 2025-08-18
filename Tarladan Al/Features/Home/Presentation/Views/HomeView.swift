@@ -216,6 +216,7 @@ struct HomeView: View {
         }
         .padding()
     }
+    
     // MARK: - Featured Banner
     private func featuredBanner(_ banner: Banner) -> some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -289,14 +290,18 @@ struct HomeView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    QuickActionCard(
-                        quickAction: QuickAction(
-                            icon: "clock.arrow.circlepath",
-                            title: "Tekrar Sipariş",
-                            subtitle: "Önceki siparişin",
-                            color: .blue
-                        ){}
-                    )
+                    NavigationLink {
+                        OrderHistoryView()
+                    } label: {
+                        QuickActionCard(
+                            quickAction: QuickAction(
+                                icon: "clock.arrow.circlepath",
+                                title: "Tekrar Sipariş",
+                                subtitle: "Önceki siparişin",
+                                color: .blue
+                            ){}
+                        )
+                    }
                     
                     NavigationLink {
                         FavoritesView()

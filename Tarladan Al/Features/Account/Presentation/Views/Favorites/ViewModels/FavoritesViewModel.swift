@@ -9,6 +9,7 @@ import FirebaseFirestore
 
 // MARK: - Favorites View Model
 class FavoritesViewModel: ObservableObject {
+    
     @Published var favoriteProducts: [Product] = []
     @Published var isLoading = false
     

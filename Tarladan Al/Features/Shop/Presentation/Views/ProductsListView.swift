@@ -16,6 +16,8 @@ struct ProductsListView: View {
     @EnvironmentObject private var cartViewModel: CartViewModel
     @EnvironmentObject private var shopViewModel: ShopViewModel
     
+    @State private var selectedVarient : String? = nil
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -97,23 +99,27 @@ struct ProductsListView: View {
     private var subcategoriesBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                ForEach(subCategory.variants,id: \.self) { product in
-                    Button(action: {
-//                        selectedCategory = selectedCategory?.name == category.name ? nil : category
-                    }) {
-                        CategoryChip(
-                            title: "Tümü",
-                            count: 13,
-                            isSelected: false
-                        ){
-                            
-                        }
+                CategoryChip(
+                    title: "Tümü",
+                    count: 0,
+                    isSelected: selectedVarient == nil
+                ){
+                    selectedVarient = nil
+                }
+                
+                ForEach(subCategory.variants,id: \.self) { varient in
+                    CategoryChip(
+                        title: varient,
+                        count: 0,
+                        isSelected: selectedVarient == varient
+                    ){
+                        selectedVarient = varient
                     }
                 }
             }
             .padding(.horizontal, 20)
         }
-        .padding(.vertical, 16)
+        .padding(.bottom)
     }
     
     private var productsViewSection: some View{

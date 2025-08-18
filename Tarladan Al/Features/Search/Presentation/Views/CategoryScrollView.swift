@@ -14,29 +14,21 @@ struct CategoryScrollView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                // Tümü butonu
-                Button(action: { selectedCategory = nil }) {
-                    CategoryChip(
-                        title: "Tümü",
-                        count: viewModel.products.count,
-                        isSelected: selectedCategory == nil
-                    ){
-                        
-                    }
+                CategoryChip(
+                    title: "Tümü",
+                    count: viewModel.products.count,
+                    isSelected: selectedCategory == nil
+                ){
+                    selectedCategory = nil
                 }
                 
-                // Kategori butonları
                 ForEach(categories, id: \.name) { category in
-                    Button(action: { 
-                        selectedCategory = selectedCategory?.name == category.name ? nil : category 
-                    }) {
-                        CategoryChip(
-                            title: "Tümü",
-                            count: viewModel.products.count,
-                            isSelected: selectedCategory == nil
-                        ){
-                            
-                        }
+                    CategoryChip(
+                        title: category.name,
+                        count: category.subCategories.count,
+                        isSelected: selectedCategory?.name == category.name
+                    ){
+                        selectedCategory = category
                     }
                 }
             }

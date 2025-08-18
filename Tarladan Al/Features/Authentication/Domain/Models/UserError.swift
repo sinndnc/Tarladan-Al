@@ -20,8 +20,6 @@ enum UserError : Error {
             return "Network error while fetching user data"
         case .firebaseError(let error):
             return "Firebase error: \(error)"
-        default:
-            return "Bilinmeyen hata"
         }
     }
 }

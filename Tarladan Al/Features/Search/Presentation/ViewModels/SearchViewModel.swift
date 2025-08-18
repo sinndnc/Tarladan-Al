@@ -11,7 +11,7 @@ import Combine
 class SearchViewModel: ObservableObject {
   
     @Published var isLoading = false
-    @Published var showFilters = false
+    @Published var showScan = false
     @Published var errorMessage: String?
     @Published var isShowingSearchable = false
     @Published var showRecentSearches = false

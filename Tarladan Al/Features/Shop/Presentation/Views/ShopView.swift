@@ -53,9 +53,6 @@ struct ShopView: View {
                 }
             }
         }
-        .task {
-            
-        }
     }
     
     private var shopCardSection: some View {
