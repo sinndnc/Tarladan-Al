@@ -7,7 +7,8 @@
 import SwiftUI
 
 struct EditProfileView: View {
-    @Environment(\.presentationMode) var presentationMode
+    
+    @Environment(\.dismiss) private var  dismiss
     @StateObject var viewModel: AccountViewModel
     
     var body: some View {
@@ -77,7 +78,7 @@ struct EditProfileView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("İptal") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }

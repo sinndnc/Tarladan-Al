@@ -25,7 +25,9 @@ struct SearchView: View {
                             category: viewModel.selectedCategory,
                             searchText: viewModel.searchText
                         )
-                    )
+                    ){
+                        
+                    }
                 }
                 .padding(.horizontal)
             }
@@ -99,8 +101,9 @@ struct SearchView: View {
 
 
 struct FilterSheet: View {
+    
     @ObservedObject var viewModel: SearchViewModel
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var  dismiss
     
     var body: some View {
         NavigationView {
@@ -170,10 +173,10 @@ struct FilterSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button("İptal") {
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 },
                 trailing: Button("Uygula") {
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 }
                 .fontWeight(.semibold)
                 .foregroundColor(.green)

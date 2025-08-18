@@ -60,7 +60,6 @@ class ShopViewModel: ObservableObject {
                     }
                 },
                 receiveValue: { [weak self] products in
-                    Logger.log("📥 VIEW MODEL: Received \(products.first) products")
                     self?.products = products
                 }
             )
@@ -116,7 +115,6 @@ extension ShopViewModel{
     
     func getProductsSubCategory(by name: String) -> [Product] {
         return products.filter({
-            Logger.log("subCategoryId:\($0.subCategoryName) -- \(name)")
             return $0.subCategoryName == name
         })
     }

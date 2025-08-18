@@ -55,15 +55,16 @@ struct ProductDetailView: View {
                         
                         Spacer()
                         
-                        VStack(alignment: .trailing) {
-                            Text("Stok: \(product.quantity, specifier: "%.0f")")
-                                .font(.subheadline)
-                                .bold()
+                        Button{
                             
-                            Text(product.unit)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                        }label: {
+                            Image(systemName: "plus")
                         }
+                        .padding(10)
+                        .background(.green)
+                        .foregroundStyle(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        
                     }
                     .padding()
                     .background(Color.gray.opacity(0.1))

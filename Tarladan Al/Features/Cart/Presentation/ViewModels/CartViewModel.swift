@@ -6,7 +6,6 @@
 //
 import Foundation
 
-
 class CartViewModel: ObservableObject {
     
     @Published var isLoading = false

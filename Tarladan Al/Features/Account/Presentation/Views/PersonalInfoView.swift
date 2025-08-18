@@ -365,7 +365,7 @@ struct SettingsRow: View {
 
 
 struct ImagePickerView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var  dismiss
     
     var body: some View {
         NavigationView {
@@ -381,7 +381,7 @@ struct ImagePickerView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("İptal") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }
@@ -391,7 +391,7 @@ struct ImagePickerView: View {
 
 struct PhoneVerificationView: View {
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var  dismiss
     @EnvironmentObject var userViewModel : UserViewModel
     
     var body: some View {
@@ -414,7 +414,7 @@ struct PhoneVerificationView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button("İptal") {
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 }
             }
         }
@@ -423,7 +423,7 @@ struct PhoneVerificationView: View {
 
 struct EmailVerificationView: View {
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var  dismiss
     @EnvironmentObject var userViewModel : UserViewModel
     
     var body: some View {
@@ -447,7 +447,7 @@ struct EmailVerificationView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("İptal") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }

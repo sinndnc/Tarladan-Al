@@ -9,15 +9,15 @@ import SwiftUI
 struct LanguageSelectionView: View {
     
     @EnvironmentObject private var languageManager: LanguageManager
-    @Environment(\.presentationMode) private var presentationMode
-    
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
         List {
             Section("Choose Language") {
                 ForEach(Language.allCases, id: \.self) { language in
                     Button{
                         languageManager.setLanguage(language)
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }label: {
                         HStack {
                             Text(language.displayName)

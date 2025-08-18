@@ -26,6 +26,40 @@ struct ProductsListView: View {
         }
         .navigationTitle(subCategory.name)
         .navigationBarTitleDisplayMode(.inline)
+        .searchable(text: .constant(""),prompt: Text("Search Productscard"))
+        .toolbar{
+            ToolbarItem(placement: .topBarTrailing) {
+                shopCardSection
+            }
+        }
+        .sheet(isPresented: $shopViewModel.showFilters) {
+            CategoryFiltersSheet(viewModel: shopViewModel)
+        }
+        .sheet(isPresented: $shopViewModel.showCart) {
+            CartView()
+        }
+    }
+    
+    private var shopCardSection: some View {
+        Button(action: {
+            shopViewModel.toggleCart()
+        }) {
+            ZStack(alignment: .topTrailing) {
+                Image(systemName: "bag")
+                    .foregroundColor(.primary)
+                
+                if cartViewModel.uniqueItemsCount > 0 {
+                    Text("\(cartViewModel.uniqueItemsCount)")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(width: 18, height: 18)
+                        .background(Color.red)
+                        .clipShape(Circle())
+                        .offset(x: 8, y: -8)
+                }
+            }
+        }
+        .withHaptic(.medium)
     }
     
     private var sortAndViewBar: some View {
@@ -45,14 +79,14 @@ struct ProductsListView: View {
                     shopViewModel.setViewMode(.grid)
                 }) {
                     Image(systemName: "square.grid.2x2")
-                        .foregroundColor(.gray)
+                        .foregroundColor(shopViewModel.viewMode == .grid  ? .green : .gray)
                 }
                 
                 Button(action: {
                     shopViewModel.setViewMode(.list)
                 }) {
                     Image(systemName: "list.bullet")
-                        .foregroundColor(.gray)
+                        .foregroundColor(shopViewModel.viewMode == .list  ? .green : .gray)
                 }
             }
         }
@@ -65,15 +99,15 @@ struct ProductsListView: View {
             HStack(spacing: 12) {
                 ForEach(subCategory.variants,id: \.self) { product in
                     Button(action: {
-//                        categoryViewModel.selectSubcategory(subcategory)
+//                        selectedCategory = selectedCategory?.name == category.name ? nil : category
                     }) {
-                        Text(product)
-                            .font(.system(size: 14, weight: .medium))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-//                            .background(categoryViewModel.selectedSubcategory == subcategory ? category.color : Color(.systemGray6))
-//                            .foregroundColor(categoryViewModel.selectedSubcategory == subcategory ? .white : .primary)
-                            .cornerRadius(20)
+                        CategoryChip(
+                            title: "Tümü",
+                            count: 13,
+                            isSelected: false
+                        ){
+                            
+                        }
                     }
                 }
             }
@@ -95,7 +129,10 @@ struct ProductsListView: View {
                         NavigationLink {
                             ProductDetailView(product: product)
                         } label: {
-                            ProductCardView(product: product)
+                            ProductCardView(product: product){
+                                cartViewModel.addItem(product: product)
+                                shopViewModel.addToCart(product: product)
+                            }
                         }
                         .tint(.primary)
                         .haptic(.medium)
@@ -109,7 +146,10 @@ struct ProductsListView: View {
                         NavigationLink {
                             ProductDetailView(product: product)
                         } label: {
-                            ProductCardView(product: product)
+                            ProductCardView(product: product){
+                                cartViewModel.addItem(product: product)
+                                shopViewModel.addToCart(product: product)
+                            }
                         }
                         .tint(.primary)
                         .haptic(.medium)

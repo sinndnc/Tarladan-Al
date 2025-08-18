@@ -18,10 +18,11 @@ struct CategoryScrollView: View {
                 Button(action: { selectedCategory = nil }) {
                     CategoryChip(
                         title: "Tümü",
-                        icon: "square.grid.2x2",
-                        isSelected: selectedCategory == nil,
-                        count: viewModel.products.count
-                    )
+                        count: viewModel.products.count,
+                        isSelected: selectedCategory == nil
+                    ){
+                        
+                    }
                 }
                 
                 // Kategori butonları
@@ -30,11 +31,12 @@ struct CategoryScrollView: View {
                         selectedCategory = selectedCategory?.name == category.name ? nil : category 
                     }) {
                         CategoryChip(
-                            title: category.name,
-                            icon: category.icon,
-                            isSelected: selectedCategory?.name == category.name,
-                            count: viewModel.productCount(for: category)
-                        )
+                            title: "Tümü",
+                            count: viewModel.products.count,
+                            isSelected: selectedCategory == nil
+                        ){
+                            
+                        }
                     }
                 }
             }

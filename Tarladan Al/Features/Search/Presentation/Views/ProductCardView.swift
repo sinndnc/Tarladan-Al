@@ -8,6 +8,7 @@ import SwiftUI
 
 struct ProductCardView: View {
     let product: Product
+    let action : () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -83,12 +84,14 @@ struct ProductCardView: View {
                     
                     Spacer()
                     
-                    // Hasat/Son kullanma tarihi
-                    if let harvestDate = product.harvestDate {
-                        Label(formatDate(harvestDate), systemImage: "calendar")
-                            .font(.caption2)
-                            .foregroundColor(.green)
+                    Button(action: action) {
+                        Image(systemName: "plus")
                     }
+                    .padding(10)
+                    .withHaptic()
+                    .background(.green)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
             .padding(.horizontal, 8)

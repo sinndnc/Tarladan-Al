@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-import SwiftUI
-
-struct PaymentMethodsView: View {
+struct PaymentsView: View {
     
     @State private var showingAddPaymentMethod = false
     @EnvironmentObject private var userViewModel: UserViewModel
@@ -21,8 +19,8 @@ struct PaymentMethodsView: View {
                     Text("No Payment Method Found")
                 }else{
                     ForEach(user.paymentMethods) { method in
-                        NavigationLink(destination: PaymentMethodDetailView(paymentMethod: method)) {
-                            PaymentMethodRowView(paymentMethod: method)
+                        NavigationLink(destination: PaymentDetailView(paymentMethod: method)) {
+                            PaymentsRowView(paymentMethod: method)
                         }
                     }
                     .onDelete(perform: deletePaymentMethods)
@@ -41,7 +39,7 @@ struct PaymentMethodsView: View {
             }
         }
         .sheet(isPresented: $showingAddPaymentMethod) {
-            AddPaymentMethodView()
+            AddPaymentView()
         }
     }
     
@@ -53,7 +51,7 @@ struct PaymentMethodsView: View {
 }
 
 // MARK: - Payment Method Row View
-struct PaymentMethodRowView: View {
+struct PaymentsRowView: View {
     let paymentMethod: PaymentMethod
     
     var body: some View {
@@ -145,7 +143,7 @@ struct PaymentMethodRowView: View {
 }
 
 // MARK: - Payment Method Detail View
-struct PaymentMethodDetailView: View {
+struct PaymentDetailView: View {
     let paymentMethod: PaymentMethod
     @State private var showingEditView = false
     @State private var showingDeleteAlert = false
@@ -154,7 +152,7 @@ struct PaymentMethodDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 // Header Card
-                PaymentMethodCardView(paymentMethod: paymentMethod)
+                PaymentCardView(paymentMethod: paymentMethod)
                     .padding(.horizontal)
                 
                 Divider()
@@ -255,7 +253,7 @@ struct PaymentMethodDetailView: View {
         .navigationTitle("Ödeme Detayı")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingEditView) {
-            EditPaymentMethodView(paymentMethod: paymentMethod)
+            EditPaymentView(paymentMethod: paymentMethod)
         }
         .alert("Ödeme Yöntemini Sil", isPresented: $showingDeleteAlert) {
             Button("İptal", role: .cancel) { }
@@ -280,7 +278,7 @@ struct PaymentMethodDetailView: View {
 }
 
 // MARK: - Payment Method Card View
-struct PaymentMethodCardView: View {
+struct PaymentCardView: View {
     let paymentMethod: PaymentMethod
     
     var body: some View {
@@ -401,8 +399,8 @@ struct PaymentInfoRow: View {
 }
 
 // MARK: - Add Payment Method View
-struct AddPaymentMethodView: View {
-    @Environment(\.presentationMode) var presentationMode
+struct AddPaymentView: View {
+    @Environment(\.dismiss) private var  dismiss
     
     var body: some View {
         NavigationView {
@@ -418,14 +416,14 @@ struct AddPaymentMethodView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("İptal") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Kaydet") {
                         // Save new payment method
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }
@@ -434,9 +432,10 @@ struct AddPaymentMethodView: View {
 }
 
 // MARK: - Edit Payment Method View
-struct EditPaymentMethodView: View {
+struct EditPaymentView: View {
+    
     let paymentMethod: PaymentMethod
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var  dismiss
     
     var body: some View {
         NavigationView {
@@ -452,14 +451,14 @@ struct EditPaymentMethodView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("İptal") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Kaydet") {
                         // Save changes
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }
@@ -467,26 +466,3 @@ struct EditPaymentMethodView: View {
     }
 }
 
-// MARK: - Previews
-struct PaymentMethodsView_Previews: PreviewProvider {
-    static var previews: some View {
-        PaymentMethodsView()
-    }
-}
-
-struct PaymentMethodDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            PaymentMethodDetailView(paymentMethod: PaymentMethod(
-                id: 1,
-                type: .card,
-                lastFour: "4532",
-                expiryMonth: 12,
-                expiryYear: 2026,
-                cardHolderName: "Ahmet Yılmaz",
-                isDefault: true,
-                tokenID: "tok_1234567890"
-            ))
-        }
-    }
-}

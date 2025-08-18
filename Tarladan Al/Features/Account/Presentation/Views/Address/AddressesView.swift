@@ -41,8 +41,7 @@ struct AddressesView: View {
             }
         }
         .sheet(isPresented: $showingAddAddress) {
-            Text("Yeni Adres Ekleme Ekranı")
-                .navigationTitle("Yeni Adres")
+            NewAddressFormView()
         }
     }
     

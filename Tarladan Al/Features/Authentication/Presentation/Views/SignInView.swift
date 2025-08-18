@@ -14,7 +14,7 @@ struct SignInView: View {
     @State private var password: String = ""
     @State private var isPasswordVisible = false
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var  dismiss
     @StateObject private var viewModel : SignInViewModel = SignInViewModel()
     
     var body: some View {

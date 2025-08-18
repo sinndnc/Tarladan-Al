@@ -44,18 +44,34 @@ struct SubCategoriesView: View {
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Button(action: {
-//                    categoryViewModel.toggleFilters()
-                }) {
-                    Image(systemName: "slider.horizontal.3")
-                        .font(.subheadline)
-                        .foregroundColor(.primary)
+                shopCardSection
+            }
+        }
+        .sheet(isPresented: $shopViewModel.showCart) {
+            CartView()
+        }
+    }
+    
+    private var shopCardSection: some View {
+        Button(action: {
+            shopViewModel.toggleCart()
+        }) {
+            ZStack(alignment: .topTrailing) {
+                Image(systemName: "bag")
+                    .foregroundColor(.primary)
+                
+                if cartViewModel.uniqueItemsCount > 0 {
+                    Text("\(cartViewModel.uniqueItemsCount)")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(width: 18, height: 18)
+                        .background(Color.red)
+                        .clipShape(Circle())
+                        .offset(x: 8, y: -8)
                 }
             }
         }
-        .sheet(isPresented: $shopViewModel.showFilters) {
-            CategoryFiltersSheet(viewModel: shopViewModel)
-        }
+        .withHaptic(.medium)
     }
     
     private var categoryInfoBanner: some View {
@@ -108,36 +124,18 @@ struct SubCategoriesView: View {
     
     private var subCategoriesSection: some View {
         Group {
-            if shopViewModel.viewMode == .grid {
-                LazyVGrid(columns: [
-                    GridItem(.flexible(), spacing: 12),
-                    GridItem(.flexible(), spacing: 12)
-                ], spacing: 16) {
-                    ForEach(category.subCategories) { subCategory in
-                        NavigationLink {
-                            ProductsListView(category:category ,subCategory: subCategory)
-                        } label: {
-                            SubCategoryCardView(subCategory: subCategory)
-                        }
-                        .tint(.primary)
-                        .haptic(.medium)
+            LazyVStack(spacing: 12) {
+                ForEach(category.subCategories) { subCategory in
+                    NavigationLink {
+                        ProductsListView(category:category ,subCategory: subCategory)
+                    } label: {
+                        SubCategoryCardView(subCategory: subCategory)
                     }
+                    .tint(.primary)
+                    .haptic(.medium)
                 }
-                .padding(.horizontal, 20)
-            } else {
-                LazyVStack(spacing: 12) {
-                    ForEach(category.subCategories) { subCategory in
-                        NavigationLink {
-                            ProductsListView(category:category ,subCategory: subCategory)
-                        } label: {
-                            SubCategoryCardView(subCategory: subCategory)
-                        }
-                        .tint(.primary)
-                        .haptic(.medium)
-                    }
-                }
-                .padding(.horizontal, 20)
             }
+            .padding(.horizontal, 20)
         }
     }
 }

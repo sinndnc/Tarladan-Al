@@ -8,6 +8,8 @@ import SwiftUI
 
 struct ProductGridView: View {
     let products: [Product]
+    let action: () -> Void
+    
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
@@ -17,7 +19,7 @@ struct ProductGridView: View {
         LazyVGrid(columns: columns, spacing: 16) {
             ForEach(products, id: \.id) { product in
                 NavigationLink(destination: ProductDetailView(product: product)) {
-                    ProductCardView(product: product)
+                    ProductCardView(product: product,action: action)
                 }
                 .buttonStyle(PlainButtonStyle())
             }

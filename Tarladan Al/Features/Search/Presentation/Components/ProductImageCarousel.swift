@@ -31,7 +31,7 @@ struct ProductImageCarousel: View {
                 }
             }
             .frame(height: 250)
-            .tabViewStyle(PageTabViewStyle())
+            .tabViewStyle(.page)
             
             // Resim sayfa göstergesi
             if images.count > 1 {

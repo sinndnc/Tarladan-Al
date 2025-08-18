@@ -222,7 +222,7 @@ struct AccountView: View {
         case .addresses:
             AddressesView()
         case .paymentMethods:
-            PaymentMethodsView()
+            PaymentsView()
         case .orderHistory:
             OrderHistoryView()
         case .favorites:
