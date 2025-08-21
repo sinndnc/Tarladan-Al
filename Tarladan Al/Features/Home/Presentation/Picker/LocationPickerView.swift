@@ -10,6 +10,7 @@ import SwiftUI
 struct LocationPickerView: View {
     
     let addresses: [Address]
+    @EnvironmentObject private var userViewModel: UserViewModel
     
     var body: some View {
         NavigationStack{
@@ -20,12 +21,20 @@ struct LocationPickerView: View {
                 Spacer()
                 VStack(alignment:.leading,spacing: 20){
                     ForEach(addresses.sortedByDefault) { address in
-                        LocationPickerRow(address: address)
+                        Button {
+                            withAnimation{
+                                userViewModel.updateDefaultAddress(address)
+                            }
+                        } label: {
+                            LocationPickerRow(address: address)
+                        }
+                        .haptic()
+                        .tint(.primary)
                     }
                 }
                 Spacer()
-                Button {
-                    
+                NavigationLink{
+                    NewAddressFormView()
                 } label: {
                     AddNewLocationRow()
                 }
@@ -33,7 +42,7 @@ struct LocationPickerView: View {
             }
             .padding()
             .presentationDragIndicator(.visible)
-            .presentationDetents([.fraction(0.3)])
+            .presentationDetents([.fraction(0.35)])
         }
        
     }
@@ -74,7 +83,6 @@ struct LocationPickerRow : View{
                     .foregroundStyle(.blue)
                     .cornerRadius(8)
             }
-            Spacer()
             
             Button {
                 

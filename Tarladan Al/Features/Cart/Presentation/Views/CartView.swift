@@ -63,8 +63,11 @@ struct CartView: View {
                         dismiss()
                     }label: {
                         HStack{
-                            Image(systemName: "arrow.left")
-                            Text("To Shop")
+                            Image(systemName: "chevron.left")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            Text("Shop")
+                            .font(.subheadline)
                         }
                     }
                 }

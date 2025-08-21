@@ -33,6 +33,10 @@ final class DeliveryViewModel: ObservableObject {
             .first
     }
     
+    init(){
+        listenDeliveries(by: "")
+    }
+    
     func listenDeliveries(by id: String) {
         listenDeliveriesUseCase.execute()
             .receive(on: DispatchQueue.main)

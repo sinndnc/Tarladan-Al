@@ -225,6 +225,31 @@ class FirebaseManager<T: FirebaseModel> {
         .eraseToAnyPublisher()
     }
     
+    func updateArray(id: String, data: [String: Any]) -> AnyPublisher<Void, ServiceError> {
+        return Future<Void, ServiceError> { [weak self] promise in
+            guard let self = self else {
+                let error = ServiceErrorFactory.serviceUnavailable(
+                    for: FirebaseManager<T>.self,
+                    operation: "UPDATE"
+                )
+                promise(.failure(error))
+                return
+            }
+            
+            self.db.collection(self.collectionName).document(id)
+                .updateData(data){ error in
+                    if let error = error {
+                        let serviceError = self.handleError(error, operation: "UPDATE")
+                        promise(.failure(serviceError))
+                    } else {
+                        promise(.success(()))
+                    }
+                }
+        }
+        .eraseToAnyPublisher()
+    }
+    
+   
     func update(_ model: T) -> AnyPublisher<Void, ServiceError> {
         return Future<Void, ServiceError> { [weak self] promise in
             guard let self = self else {

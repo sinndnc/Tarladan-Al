@@ -20,6 +20,7 @@ class UserViewModel : ObservableObject{
     
     @Injected private var checkUserUseCase: CheckUserUseCaseProtocol
     @Injected private var listenUserUseCase: ListenUserUseCaseProtocol
+    @Injected private var updatedefaultAddressUseCase: UpdateDefaultAddressUseCaseProtocol
     
     private let userID = "02BFE90C-5079-4D24-ACA7-3993B40E6CEB"
     
@@ -36,6 +37,26 @@ class UserViewModel : ObservableObject{
                 self.isLoading = false
                 self.isAuthenticated = true
             }
+            .store(in: &cancellables)
+    }
+    
+    func updateDefaultAddress(_ address: Address) {
+        guard let userId = user?.id else { return }
+        
+        updatedefaultAddressUseCase.execute(of: userId, for: address.id.uuidString)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    self?.isLoading = false
+                    
+                    if case .failure(let error) = completion {
+                        Logger.log("VIEWMODEL: \(error)")
+                    }
+                },
+                receiveValue: { _ in
+                   
+                }
+            )
             .store(in: &cancellables)
     }
     

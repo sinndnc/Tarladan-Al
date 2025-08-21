@@ -127,7 +127,7 @@ struct SubCategoriesView: View {
             LazyVStack(spacing: 12) {
                 ForEach(category.subCategories) { subCategory in
                     NavigationLink {
-                        ProductsListView(category:category ,subCategory: subCategory)
+                        ProductsView(category:category ,subCategory: subCategory)
                     } label: {
                         SubCategoryCardView(subCategory: subCategory)
                     }

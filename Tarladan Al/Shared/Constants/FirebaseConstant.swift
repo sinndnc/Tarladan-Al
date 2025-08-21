@@ -8,8 +8,11 @@
 
 struct FirebaseConstants {
     
+    //MARK: - Collection
     static let users = "users"
-    static let deliveries = "deliveries"
+    static let farmers = "farmers"
     static let products = "products"
+    static let favorites = "favorites"
+    static let deliveries = "deliveries"
     
 }

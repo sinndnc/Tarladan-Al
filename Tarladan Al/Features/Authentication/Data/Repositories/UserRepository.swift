@@ -19,20 +19,6 @@ final class UserRepository : UserRepositoryProtocol {
         self.remoteDataSource = remoteDataSource
     }
     
-//    func getAllUsers() -> AnyPublisher<[User], UserError> {
-//       return remoteDataSource.getAllUsers()
-//            .tryMap { users in
-//                return users
-//            }
-//            .mapError { error in
-//                if let UserError = error as? UserError {
-//                    return UserError
-//                }
-//                return UserError.internalError
-//            }
-//            .eraseToAnyPublisher()
-//    }
-    
     func listenUserById(_ id: String) -> AnyPublisher<User, UserError> {
         return remoteDataSource.listenUserById(id)
             .map { user in
@@ -45,37 +31,31 @@ final class UserRepository : UserRepositoryProtocol {
             .eraseToAnyPublisher()
     }
     
-//
-//    func createUser(_ user: User) -> AnyPublisher<User, UserError> {
-//        return remoteDataSource.createUser(user)
-//            .tryMap { user in
-//                return user
-//            }
-//            .mapError { error in
-//                if let UserError = error as? UserError {
-//                    return UserError
-//                }
-//                return UserError.internalError
-//            }
-//            .eraseToAnyPublisher()
-//    }
-//    
-//    func updateUser(_ user: User) -> AnyPublisher<User, UserError> {
-//        return remoteDataSource.updateUser(user)
-//             .tryMap { user in
-//                 return user
-//             }
-//             .mapError { error in
-//                 if let UserError = error as? UserError {
-//                     return UserError
-//                 }
-//                 return UserError.internalError
-//             }
-//             .eraseToAnyPublisher()
-//    }
-//    
-//    func deleteUser(_ id: String) {
-//        return remoteDataSource.deleteUser(id)
-//    }
+    func updateDefaultAddress(_ id: String, _ addressId: String) -> AnyPublisher<Void, UserError> {
+        return remoteDataSource.updateDefaultAddress(id: id, addressId: addressId)
+            .mapError { error in
+                Logger.log(error.localizedDescription)
+                return UserError.internalError
+            }
+            .eraseToAnyPublisher()
+    }
     
+    
+    func addToFavorites(id: String, data: [String: Any]) -> AnyPublisher<Void,UserError>{
+        
+        return remoteDataSource.addToFavorites(id: id, data: data)
+            .handleEvents(
+                receiveSubscription: { _ in
+                    Logger.log("📡 REPOSITORY: Subscribed to remote data source")
+                },
+                receiveOutput: { _ in
+                    Logger.log("📥 REPOSITORY: Received ")
+                }
+            )
+            .mapError { error in
+                Logger.log("❌ REPOSITORY ERROR: \(error)")
+                return UserError.internalError
+            }
+            .eraseToAnyPublisher()
+    }
 }

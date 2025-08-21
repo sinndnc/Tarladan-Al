@@ -24,14 +24,17 @@ class ShopViewModel: ObservableObject {
     @Published var quickActions: [QuickAction] = []
     @Published var categories: [ProductCategory] = []
     @Published var selectedCategory: ProductCategory?
-
+    
     @Published var featuredTitle = "🌱 Yaz Sezonu Özel"
     @Published var featuredDescription = "Taze yaz sebzeleri ve meyvelerinde %30'a varan indirimler"
     @Published var showFeaturedBanner = true
     
     private var cancellables = Set<AnyCancellable>()
     
+    private let userID = "02BFE90C-5079-4D24-ACA7-3993B40E6CEB"
+    
     @Injected private var listenProductsUseCase: ListenProductsUseCaseProtocol
+    @Injected private var addToFavoritesUseCase: AddToFavoritesUseCaseProtocol
     
     var sortOptions: [SortOption] {
         SortOption.allCases
@@ -92,6 +95,26 @@ class ShopViewModel: ObservableObject {
     func setViewMode(_ mode: ViewMode) {
         viewMode = mode
     }
+    
+    
+    func addToFavorites(for product:Product){
+        addToFavoritesUseCase.execute(id: userID, data: product.toDictionary())
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        Logger.log("✅ VIEW MODEL: Completed successfully")
+                    case .failure(let error):
+                        Logger.log("❌ VIEW MODEL: Error: \(error)")
+                    }
+                },
+                receiveValue: { _ in
+                }
+            )
+            .store(in: &cancellables)
+    }
+    
 }
 
 extension ShopViewModel{

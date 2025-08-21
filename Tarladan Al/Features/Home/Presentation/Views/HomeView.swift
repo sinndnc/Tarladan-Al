@@ -82,8 +82,7 @@ struct HomeView: View {
                         Image(systemName: "location.fill")
                             .font(.caption2)
                             .foregroundColor(.blue)
-                        
-                        Text("\(user.fullName), \(defaultAddress.city)")
+                        Text("\(defaultAddress.fullAddress)")
                             .font(.caption)
                             .fontWeight(.medium)
                             .foregroundStyle(.gray)
@@ -122,91 +121,99 @@ struct HomeView: View {
         }
     }
     
-    private func deliveryStatusCard(_ delivery: Delivery) -> some View {
+    private func deliveryStatusCard(_ delivery: Delivery?) -> some View {
         VStack(alignment: .leading){
             Text("Sonraki Teslimat")
                 .font(.headline)
                 .fontWeight(.bold)
             VStack(spacing: 12) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        HStack{
-                            Text("Güncel Teslimat Tarihi:")
-                                .font(.footnote)
-                                .foregroundColor(.primary)
-                            Text("\(DateFormatter.shortFormatter.string(from: delivery.actualDeliveryDate ?? .now))")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                if let delivery = delivery{
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack{
+                                Text("Güncel Teslimat Tarihi:")
+                                    .font(.footnote)
+                                    .foregroundColor(.primary)
+                                Text("\(DateFormatter.shortFormatter.string(from: delivery.actualDeliveryDate ?? .now))")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            HStack{
+                                Text("Planlanan Teslimat Tarihi:")
+                                    .font(.footnote)
+                                    .foregroundColor(.primary)
+                                Text("\(DateFormatter.shortFormatter.string(from: delivery.scheduledDeliveryDate))")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
-                        HStack{
-                            Text("Planlanan Teslimat Tarihi:")
-                                .font(.footnote)
-                                .foregroundColor(.primary)
-                            Text("\(DateFormatter.shortFormatter.string(from: delivery.scheduledDeliveryDate))")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                        
+                        Spacer()
+                        
+                        if delivery.status != .inTransit {
+                            Button("Değiştir") {
+                                //  viewModel.changeDeliveryTime()
+                            }
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.green)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.green.opacity(0.1))
+                            .cornerRadius(8)
                         }
+                        
                     }
                     
-                    Spacer()
+                    HStack(spacing: 0) {
+                        ForEach(0..<DeliveryStatus.allCases.count, id: \.self) { index in
+                            HStack(spacing: 0) {
+                                Circle()
+                                    .fill(Double(index / 5) < delivery.status.progressValue ? Color.green : Color.gray.opacity(0.3))
+                                    .frame(width: 8, height: 8)
+                                
+                                if index < DeliveryStatus.allCases.count - 1 {
+                                    Rectangle()
+                                        .fill(Double(index / 5) < delivery.status.progressValue - 0.2 ? Color.green : Color.gray.opacity(0.3))
+                                        .frame(height: 2)
+                                        .frame(maxWidth: .infinity)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.vertical, 8)
                     
-                    if delivery.status != .inTransit {
-                        Button("Değiştir") {
-                            //  viewModel.changeDeliveryTime()
+                    HStack {
+                        Image(systemName: "truck.box.fill")
+                            .foregroundColor(.green)
+                            .font(.title3)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(delivery.status.displayName)
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundColor(.green)
+                            
+                            Text(delivery.orderNumber)
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        NavigationLink("Detaylar") {
+                            DeliveryDetailView(delivery: delivery)
                         }
                         .font(.caption)
                         .fontWeight(.medium)
                         .foregroundColor(.green)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Color.green.opacity(0.1))
-                        .cornerRadius(8)
                     }
-                   
-                }
-                
-                HStack(spacing: 0) {
-                    ForEach(0..<DeliveryStatus.allCases.count, id: \.self) { index in
-                        HStack(spacing: 0) {
-                            Circle()
-                                .fill(Double(index / 5) < delivery.status.progressValue ? Color.green : Color.gray.opacity(0.3))
-                                .frame(width: 8, height: 8)
-                            
-                            if index < DeliveryStatus.allCases.count - 1 {
-                                Rectangle()
-                                    .fill(Double(index / 5) < delivery.status.progressValue - 0.2 ? Color.green : Color.gray.opacity(0.3))
-                                    .frame(height: 2)
-                                    .frame(maxWidth: .infinity)
-                            }
-                        }
+                }else{
+                    HStack{
+                        Spacer()
+                        Text("You have no pending deliveries 😔")
+                        Spacer()
                     }
-                }
-                .padding(.vertical, 8)
-                
-                HStack {
-                    Image(systemName: "truck.box.fill")
-                        .foregroundColor(.green)
-                        .font(.title3)
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(delivery.status.displayName)
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .foregroundColor(.green)
-                        
-                        Text(delivery.orderNumber)
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    Spacer()
-                    
-                    NavigationLink("Detaylar") {
-                        DeliveryDetailView(delivery: delivery)
-                    }
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(.green)
                 }
             }
             .padding(16)

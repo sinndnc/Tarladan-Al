@@ -31,9 +31,11 @@ struct User : FirebaseModel{
     var newsletterOptIn: Bool
     var smsOptIn: Bool
     
+    var reviews: [String] = []
     var addresses: [Address] = []
-    var subscription: Subscription?
+    var favorites: [Product] = []
     var paymentMethods: [PaymentMethod] = []
+    var subscription: Subscription?
     
     var dietaryPrefs: DietaryPreference = DietaryPreference()
     
@@ -56,8 +58,8 @@ struct User : FirebaseModel{
         case lastName = "last_name"
         case isActive = "is_active"
         case isVerified = "is_verified"
-        case profileImageUrl = "profile_image_url"
         case emailVerified = "email_verified"
+        case profileImageUrl = "profile_image_url"
         case phoneVerified = "phone_verified"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
@@ -65,7 +67,7 @@ struct User : FirebaseModel{
         case timeZone = "timezone"
         case newsletterOptIn = "newsletter_opt_in"
         case smsOptIn = "sms_opt_in"
-        case addresses, paymentMethods, subscription
+        case addresses, paymentMethods, subscription, favorites, reviews
         case dietaryPrefs = "dietary_preferences"
         case customerNotes = "customer_notes"
         case loyaltyPoints = "loyalty_points"

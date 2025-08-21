@@ -75,6 +75,17 @@ class AppDIConfiguration {
                 repository: container.resolve(DeliveryRepositoryProtocol.self)
             )
         }
+        container.register(UpdateDefaultAddressUseCaseProtocol.self, scope: .singleton) { container in
+            UpdateDefaultAddressUseCase(
+                repository: container.resolve(UserRepositoryProtocol.self)
+            )
+        }
+        container.register(AddToFavoritesUseCaseProtocol.self, scope: .singleton) { container in
+            AddToFavoritesUseCase(
+                repository: container.resolve(UserRepositoryProtocol.self)
+            )
+        }
+        
         
         //MARK: Delivery Classes
         container.register(ListenDeliveriesUseCaseProtocol.self, scope: .singleton) { container in
@@ -99,8 +110,6 @@ class AppDIConfiguration {
                 repository: container.resolve(ProductRepositoryProtocol.self)
             )
         }
-        
-        
     }
     
     

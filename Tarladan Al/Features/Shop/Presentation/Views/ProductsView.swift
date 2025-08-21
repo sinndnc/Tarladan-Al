@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProductsListView: View {
+struct ProductsView: View {
     
     @State var category: ProductCategory
     @State var subCategory : ProductSubCategory

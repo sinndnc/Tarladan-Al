@@ -34,6 +34,7 @@ struct RootView: View {
                         .tag(TabEnum.shop)
                         .toolbarBackgroundVisibility(.visible, for: .tabBar)
                 }
+                .badge(cartViewModel.uniqueItemsCount)
                 Tab("Search",systemImage: "magnifyingglass",value: .search){
                     SearchView()
                         .tag(TabEnum.search)
@@ -59,9 +60,6 @@ struct RootView: View {
         .environmentObject(cartViewModel)
         .environmentObject(searchViewModel)
         .environmentObject(deliveryViewModel)
-        .onAppear{
-            deliveryViewModel.listenDeliveries(by: "")
-        }
     }
 }
 

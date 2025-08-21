@@ -188,6 +188,7 @@ struct OrderHistoryView: View {
         ]
         
         let sampleAddress = Address(
+            id: UUID(),
             title: "Ev",
             fullAddress: "Atatürk Mahallesi, Cumhuriyet Caddesi No: 45/7",
             city: "İstanbul",

@@ -8,7 +8,10 @@ import SwiftUI
 
 struct ProductDetailView: View {
     let product: Product
+    
     @State private var selectedImageIndex = 0
+    @EnvironmentObject private var userViewModel: UserViewModel
+    @EnvironmentObject private var shopViewModel: ShopViewModel
     
     var body: some View {
         ScrollView {
@@ -101,8 +104,15 @@ struct ProductDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {}) {
-                    Image(systemName: "heart")
+                Button(action: {
+                    shopViewModel.addToFavorites(for: product)
+                }) {
+                    if let user = userViewModel.user{
+                        let isFavorite =  user.favorites.filter{ $0.title == product.title }
+                        Image(systemName:  !isFavorite.isEmpty ? "heart.fill" : "heart")
+                    }else{
+                        Image(systemName: "heart")
+                    }
                 }
             }
         }

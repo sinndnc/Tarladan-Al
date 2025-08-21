@@ -24,5 +24,4 @@ final class ProductRemoteDataSource: FirebaseManager<Product> ,ProductRemoteData
             .eraseToAnyPublisher()
     }
     
-    
 }

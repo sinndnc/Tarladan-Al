@@ -14,10 +14,12 @@ struct FavoritesView: View {
     @State private var showingGrid = false
     @State private var showingProductDetail: Product? = nil
     
+    @EnvironmentObject private var userViewModel: UserViewModel
+    
     private let categories = ["Tümü", "Sebze", "Meyve", "Tahıl", "Süt Ürünleri"]
     
     private var filteredProducts: [Product] {
-        var filtered = viewModel.favoriteProducts
+        var filtered = userViewModel.user?.favorites ?? []
         
         // Kategori filtresi
         if selectedCategory != "Tümü" {

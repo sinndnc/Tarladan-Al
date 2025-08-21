@@ -6,6 +6,27 @@
 //
 import Foundation
 
+enum ServiceScope {
+    case singleton
+    case transient
+    case scoped(String)
+}
+
+@propertyWrapper
+struct Injected<T> {
+    let wrappedValue: T
+    
+    init() {
+        self.wrappedValue = DIContainer.shared.resolve(T.self)
+    }
+}
+
+struct ServiceFactory {
+    let scope: ServiceScope
+    let factory: (DIContainer) -> Any
+}
+
+
 class DIContainer {
     static let shared = DIContainer()
     
