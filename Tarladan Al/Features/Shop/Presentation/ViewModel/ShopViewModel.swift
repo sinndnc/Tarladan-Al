@@ -36,14 +36,14 @@ class ShopViewModel: ObservableObject {
     @Injected private var listenProductsUseCase: ListenProductsUseCaseProtocol
     @Injected private var addToFavoritesUseCase: AddToFavoritesUseCaseProtocol
     
-    var sortOptions: [SortOption] {
-        SortOption.allCases
-    }
-    
     init() {
         self.loadProducts()
         self.categories = setupCategories()
         self.quickActions = setupQuickActions()
+    }
+    
+    var sortOptions: [SortOption] {
+        SortOption.allCases
     }
     
     func toggleCart() {
@@ -97,8 +97,8 @@ class ShopViewModel: ObservableObject {
     }
     
     
-    func addToFavorites(for product:Product){
-        addToFavoritesUseCase.execute(id: userID, data: product.toDictionary())
+    func addToFavorites(for productId: String){
+        addToFavoritesUseCase.execute(id: userID, productId: productId)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { completion in

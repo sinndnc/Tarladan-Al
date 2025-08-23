@@ -20,6 +20,11 @@ struct AccountView: View {
                     profileHeaderView
                 }
                 
+                Section("Bu Ay"){
+                    quickStatsView
+                }
+                .listRowBackground(Color.clear)
+                
                 // Account Section
                 Section("Hesap") {
                     NavigationMenuRow(
@@ -120,31 +125,6 @@ struct AccountView: View {
                     )
                 }
                 
-                // Sustainability Score Section
-                Section {
-                    quickStatsView
-                } header: {
-                    Text("Bu Ay")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                        .textCase(nil)
-                }
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets())
-                
-                Section {
-                    sustainabilityScoreView
-                } header: {
-                    Text("Sürdürülebilirlik Skorun")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                        .textCase(nil)
-                }
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets())
-                
                 
                 // Support Section
                 Section("Destek") {
@@ -181,6 +161,21 @@ struct AccountView: View {
                    
                 }
                 
+                // Sustainability Score Section
+                Section {
+                    sustainabilityScoreView
+                } header: {
+                    Text("Sürdürülebilirlik Skorun")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                        .textCase(nil)
+                }
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
+                
+                
+                
                 // Logout Section
                 Section {
                     Button{
@@ -216,7 +211,7 @@ struct AccountView: View {
     private func destinationView(for destination: AccountDestination) -> some View {
         switch destination {
         case .personalInfo:
-            PersonalInfoView()
+            PersonInfoView()
         case .addresses:
             AddressesView()
         case .paymentMethods:
@@ -232,7 +227,7 @@ struct AccountView: View {
         case .contactSupport:
             ContactSupportView()
         case .language:
-            LanguageSelectionView()
+            LanguagesView()
         case .notifications:
             NotificationSettingView()
         }
@@ -315,7 +310,6 @@ struct AccountView: View {
                 color: .red
             )
         }
-        .padding(.vertical, 16)
     }
     
     private var sustainabilityScoreView: some View {

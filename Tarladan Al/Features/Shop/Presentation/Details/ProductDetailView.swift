@@ -105,7 +105,7 @@ struct ProductDetailView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    shopViewModel.addToFavorites(for: product)
+                    shopViewModel.addToFavorites(for: product.id ?? "")
                 }) {
                     if let user = userViewModel.user{
                         let isFavorite =  user.favorites.filter{ $0.title == product.title }

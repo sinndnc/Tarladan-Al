@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-// MARK: - Personal Info View
-struct PersonalInfoView: View {
+
+struct PersonInfoView: View {
   
     @State private var showingEditView = false
     @State private var showingImagePicker = false
@@ -458,6 +458,6 @@ struct EmailVerificationView: View {
 // MARK: - Preview
 struct PersonalInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        PersonalInfoView()
+        PersonInfoView()
     }
 }

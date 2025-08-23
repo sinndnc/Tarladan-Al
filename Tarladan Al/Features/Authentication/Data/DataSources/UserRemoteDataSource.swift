@@ -10,12 +10,12 @@ import Combine
 import FirebaseFirestore
 
 protocol UserRemoteDataSourceProtocol{
-    func listenUserById(_ id: String) -> AnyPublisher<User, BaseServiceError<FirebaseManager<User>>>
-    func updateDefaultAddress(id: String, addressId: String) -> AnyPublisher<Void, BaseServiceError<FirebaseManager<User>>>
-    func addToFavorites(id: String, data: [String: Any]) -> AnyPublisher<Void, BaseServiceError<FirebaseManager<User>>>
+    func listenUserById(_ id: String) -> AnyPublisher<UserDTO, BaseServiceError<FirebaseManager<UserDTO>>>
+    func updateDefaultAddress(id: String, addressId: String) -> AnyPublisher<Void, BaseServiceError<FirebaseManager<UserDTO>>>
+    func addToFavorites(id: String, productId: String) -> AnyPublisher<Void, BaseServiceError<FirebaseManager<UserDTO>>>
 }
 
-class UserRemoteDataSource: FirebaseManager<User>, UserRemoteDataSourceProtocol {
+class UserRemoteDataSource: FirebaseManager<UserDTO>, UserRemoteDataSourceProtocol {
     
     private let collection = FirebaseConstants.users
     
@@ -23,23 +23,24 @@ class UserRemoteDataSource: FirebaseManager<User>, UserRemoteDataSourceProtocol 
         super.init(collectionName: collection)
     }
     
-    func listenUserById(_ id: String) -> AnyPublisher<User, BaseServiceError<FirebaseManager<User>>>{
+    func listenUserById(_ id: String) -> AnyPublisher<UserDTO, BaseServiceError<FirebaseManager<UserDTO>>>{
         self.listen(id: id)
             .eraseToAnyPublisher()
     }
     
-    func updateDefaultAddress(id: String, addressId: String) -> AnyPublisher<Void, BaseServiceError<FirebaseManager<User>>> {
+    func updateDefaultAddress(id: String, addressId: String) -> AnyPublisher<Void, BaseServiceError<FirebaseManager<UserDTO>>> {
         return self.get(id: id)
-            .flatMap { [weak self] user -> AnyPublisher<Void, BaseServiceError<FirebaseManager<User>>> in
+            .flatMap { [weak self] user -> AnyPublisher<Void, BaseServiceError<FirebaseManager<UserDTO>>> in
                 guard let self = self else {
-                    return Fail(error: ServiceErrorFactory.serviceUnavailable(for: FirebaseManager<User>.self, operation: ""))
+                    return Fail(error: ServiceErrorFactory.serviceUnavailable(for: FirebaseManager<UserDTO>.self, operation: ""))
                         .eraseToAnyPublisher()
                 }
                 
-                guard var mutableUser = user else {
-                    return Fail(error: ServiceErrorFactory.missingDocumentId(for: FirebaseManager<User>.self, operation: ""))
-                        .eraseToAnyPublisher()
-                }
+                var mutableUser = user
+//                else {
+//                    return Fail(error: ServiceErrorFactory.missingDocumentId(for: FirebaseManager<UserDTO>.self, operation: ""))
+//                        .eraseToAnyPublisher()
+//                }
                 
                 // Tüm adresleri default olmayan yap
                 for i in 0..<mutableUser.addresses.count {
@@ -50,7 +51,7 @@ class UserRemoteDataSource: FirebaseManager<User>, UserRemoteDataSourceProtocol 
                 guard let index = mutableUser.addresses.firstIndex(where: { address in
                     return address.id.uuidString == addressId
                 }) else {
-                    return Fail(error: ServiceErrorFactory.documentNotFound(for: FirebaseManager<User>.self, id: "", operation: ""))
+                    return Fail(error: ServiceErrorFactory.documentNotFound(for: FirebaseManager<UserDTO>.self, id: "", operation: ""))
                         .eraseToAnyPublisher()
                 }
                 
@@ -66,9 +67,9 @@ class UserRemoteDataSource: FirebaseManager<User>, UserRemoteDataSourceProtocol 
             .eraseToAnyPublisher()
     }
     
-    func addToFavorites(id: String, data: [String: Any]) -> AnyPublisher<Void, BaseServiceError<FirebaseManager<User>>>{
+    func addToFavorites(id: String, productId: String) -> AnyPublisher<Void, BaseServiceError<FirebaseManager<UserDTO>>>{
         self.updateArray(id: id, data: [
-            FirebaseConstants.favorites: [data]
+            FirebaseConstants.favorites: FieldValue.arrayUnion([productId])
         ])
         .eraseToAnyPublisher()
     }

@@ -8,9 +8,10 @@ import SwiftUI
 
 struct ProductCard: View {
     let product: Product
-    @ObservedObject var viewModel: FavoritesViewModel
     let onTap: () -> Void
+    
     @State private var showingAddedToCart = false
+    @EnvironmentObject private var userViewModel: UserViewModel
     
     var body: some View {
         Button(action: onTap) {
@@ -48,7 +49,7 @@ struct ProductCard: View {
                         
                         Button(action: {
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                viewModel.toggleFavorite(product)
+//                                viewModel.toggleFavorite(product)
                             }
                         }) {
                             Image(systemName: "heart.fill")

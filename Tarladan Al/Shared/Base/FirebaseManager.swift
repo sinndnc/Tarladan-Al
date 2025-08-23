@@ -109,8 +109,8 @@ class FirebaseManager<T: FirebaseModel> {
     }
     
     // MARK: - Read Operations
-    func get(id: String) -> AnyPublisher<T?, ServiceError> {
-        return Future<T?, ServiceError> { [weak self] promise in
+    func get(id: String) -> AnyPublisher<T, ServiceError> {
+        return Future<T, ServiceError> { [weak self] promise in
             guard let self = self else {
                 let error = ServiceErrorFactory.serviceUnavailable(
                     for: FirebaseManager<T>.self,
@@ -151,8 +151,6 @@ class FirebaseManager<T: FirebaseModel> {
                         self.logError(serviceError)
                         promise(.failure(serviceError))
                     }
-                } else {
-                    promise(.success(nil))
                 }
             }
         }
@@ -336,7 +334,6 @@ class FirebaseManager<T: FirebaseModel> {
         
         // Eğer bu collection için zaten aktif listener varsa, mevcut subject'i döndür
         if let existingSubject = subjects[listenerKey] {
-            Logger.log("📡 EXISTING LISTENER: Using existing listener for \(listenerKey)")
             return existingSubject.eraseToAnyPublisher()
         }
         
@@ -368,7 +365,6 @@ class FirebaseManager<T: FirebaseModel> {
                 let models = try documents.compactMap { document -> T? in
                     try document.data(as: T.self)
                 }
-                Logger.log("✅ MODELS (\(listenerKey)): \(models.count) items")
                 subject.send(models)
             } catch {
                 let serviceError = ServiceErrorFactory.serializationFailed(
@@ -387,7 +383,6 @@ class FirebaseManager<T: FirebaseModel> {
         
         // Listener'ı dictionary'de sakla
         listeners[listenerKey] = listener
-        Logger.log("🚀 NEW LISTENER: Created listener for \(listenerKey)")
         
         return subject
             .handleEvents(

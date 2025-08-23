@@ -74,6 +74,7 @@ class UserViewModel : ObservableObject{
                 },
                 receiveValue: { [weak self] user in
                     self?.user = user
+                    Logger.log("USERVIEWMODEL: \(user)")
                 }
             )
             .store(in: &cancellables)

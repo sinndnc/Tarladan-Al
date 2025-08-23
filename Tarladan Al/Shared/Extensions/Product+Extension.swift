@@ -9,6 +9,10 @@ import Foundation
 
 extension Product {
     
+    func isFavorite(_ products : [Product]) -> Bool {
+        products.contains(where: { $0.id == self.id })
+    }
+    
     func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
         

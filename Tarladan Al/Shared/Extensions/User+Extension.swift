@@ -10,8 +10,6 @@ import Foundation
 
 extension User {
     
-    
-  
     init(fromDTO dto: SignInResponseDTO) {
         let now = Date()
         let displayNameParts = dto.displayName?.components(separatedBy: " ") ?? ["", ""]

@@ -42,12 +42,7 @@ final class DeliveryViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { completion in
-                    switch completion {
-                    case .finished:
-                        Logger.log("VIEW MODEL: Finished")
-                    case .failure(let error):
-                        Logger.log("VIEW MODEL: Error: \(error)")
-                    }
+                    
                 },
                 receiveValue: { [weak self] deliveries in
                     self?.deliveries = deliveries

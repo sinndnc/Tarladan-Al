@@ -45,7 +45,6 @@ class SearchViewModel: ObservableObject {
                     }
                 },
                 receiveValue: { [weak self] products in
-                    Logger.log("📥 VIEW MODEL: \(products.first) products")
                     self?.products = products
                 }
             )

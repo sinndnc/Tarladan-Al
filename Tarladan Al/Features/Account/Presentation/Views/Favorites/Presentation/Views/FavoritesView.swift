@@ -8,7 +8,6 @@ import SwiftUI
 
 struct FavoritesView: View {
     
-    @StateObject private var viewModel = FavoritesViewModel()
     @State private var searchText = ""
     @State private var selectedCategory = "Tümü"
     @State private var showingGrid = false
@@ -16,7 +15,12 @@ struct FavoritesView: View {
     
     @EnvironmentObject private var userViewModel: UserViewModel
     
-    private let categories = ["Tümü", "Sebze", "Meyve", "Tahıl", "Süt Ürünleri"]
+    private let categories = [
+        "Tümü", "Meyveler", "Sebzeler", "Tahıllar & Baklagiller",
+        "Süt Ürünleri Ürünleri","Et & Su Ürünleri","Bal & Arıcılık",
+        "Baharat & Çeşniler","Kuru Meyve & Kuruyemiş","Zeytin & Zeytinyağı",
+        "İçecekler & Şıra","Mantarlar","Çiçek & Süs Bitkileri", "Tıbbi & Aromatik Bitkiler"
+    ]
     
     private var filteredProducts: [Product] {
         var filtered = userViewModel.user?.favorites ?? []
@@ -36,7 +40,7 @@ struct FavoritesView: View {
             }
         }
         
-        return filtered.sorted { $0.createdAt > $1.createdAt }
+        return filtered
     }
     
     var body: some View {
@@ -51,9 +55,7 @@ struct FavoritesView: View {
             viewToggleSection
             
             // Products
-            if viewModel.isLoading {
-                loadingView
-            } else if filteredProducts.isEmpty {
+            if filteredProducts.isEmpty {
                 emptyStateView
             } else {
                 productsSection
@@ -61,9 +63,6 @@ struct FavoritesView: View {
         }
         .navigationTitle("Favorilerim")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            viewModel.loadFavorites()
-        }
         .sheet(item: $showingProductDetail) { product in
             ProductDetailView(product: product)
         }
@@ -97,15 +96,16 @@ struct FavoritesView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 ForEach(categories,id:\.self){ category in
-                    let count = category == "Tümü" ?
-                    viewModel.favoriteProducts.count :
-                    viewModel.favoriteProducts.filter { $0.categoryName == category }.count
-                    
-                    if count > 0 || category == "Tümü" {
+                    if let user = userViewModel.user{
+                        let count = category == "Tümü" ?
+                        user.favorites.count :
+                        user.favorites.filter { $0.categoryName == category }.count
+                        
                         CategoryChip(
                             title: category,
                             count: count,
-                            isSelected: selectedCategory == category
+                            isSelected: selectedCategory == category,
+                            showZeroCount: true
                         ) {
                             selectedCategory = category
                         }
@@ -211,8 +211,8 @@ struct FavoritesView: View {
             GridItem(.flexible(), spacing: 12),
             GridItem(.flexible(), spacing: 12)
         ], spacing: 16) {
-            ForEach(filteredProducts) { product in
-                ProductGridCard(product: product, viewModel: viewModel) {
+            ForEach(filteredProducts,id:\.id) { product in
+                ProductGridCard(product: product) {
                     showingProductDetail = product
                 }
             }
@@ -223,8 +223,8 @@ struct FavoritesView: View {
     // MARK: - List Layout
     private var listLayout: some View {
         LazyVStack(spacing: 12) {
-            ForEach(filteredProducts) { product in
-                ProductCard(product: product, viewModel: viewModel) {
+            ForEach(filteredProducts,id:\.id) { product in
+                ProductCard(product: product) {
                     showingProductDetail = product
                 }
             }
@@ -232,127 +232,3 @@ struct FavoritesView: View {
         .padding()
     }
 }
-
-
-// MARK: - Product Grid Card
-struct ProductGridCard: View {
-    let product: Product
-    @ObservedObject var viewModel: FavoritesViewModel
-    let onTap: () -> Void
-    @State private var showingAddedToCart = false
-    
-    var body: some View {
-        Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 8) {
-                // Product Image
-                ZStack(alignment: .topTrailing) {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.gray.opacity(0.2))
-                        .frame(height: 120)
-                        .overlay(
-                            VStack {
-                                if product.isOrganic {
-                                    Image(systemName: "leaf.fill")
-                                        .foregroundColor(.green)
-                                        .font(.title)
-                                } else {
-                                    Image(systemName: "photo")
-                                        .foregroundColor(.gray)
-                                        .font(.title)
-                                }
-                            }
-                        )
-                    
-                    // Favorite Button
-                    Button(action: {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            viewModel.toggleFavorite(product)
-                        }
-                    }) {
-                        Image(systemName: "heart.fill")
-                            .foregroundColor(.red)
-                            .font(.title3)
-                            .padding(8)
-                            .background(Color.white.opacity(0.9))
-                            .clipShape(Circle())
-                    }
-                    .padding(8)
-                }
-                
-                // Product Info
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(product.title)
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .lineLimit(2)
-                        .foregroundColor(.primary)
-                    
-                    Text(product.farmerName)
-                        .font(.caption)
-                        .foregroundColor(.blue)
-                    
-                    Text(product.locationName)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    
-                    HStack {
-                        if product.isOrganic {
-                            HStack(spacing: 2) {
-                                Image(systemName: "leaf.fill")
-                                    .foregroundColor(.green)
-                                    .font(.caption)
-                                Text("Organik")
-                                    .font(.caption)
-                                    .foregroundColor(.green)
-                            }
-                        }
-                        
-                        Spacer()
-                        
-                        Text("₺\(product.price, specifier: "%.0f")/\(product.unit)")
-                            .font(.subheadline)
-                            .fontWeight(.bold)
-                            .foregroundColor(.primary)
-                    }
-                }
-                
-                // Add to Cart Button
-                Button(action: addToCart) {
-                    HStack {
-                        Image(systemName: showingAddedToCart ? "checkmark" : "cart.badge.plus")
-                            .font(.caption)
-                        
-                        Text(showingAddedToCart ? "Eklendi" : "Sepete Ekle")
-                            .font(.caption)
-                            .fontWeight(.medium)
-                    }
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .background(showingAddedToCart ? Color.green : Color.blue)
-                    .cornerRadius(8)
-                }
-                .disabled(showingAddedToCart)
-            }
-        }
-        .buttonStyle(PlainButtonStyle())
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(16)
-        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
-    }
-    
-    private func addToCart() {
-        withAnimation(.easeInOut(duration: 0.3)) {
-            showingAddedToCart = true
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            withAnimation(.easeInOut(duration: 0.3)) {
-                showingAddedToCart = false
-            }
-        }
-    }
-}
-
-// MARK: - Product List Card

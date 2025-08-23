@@ -1,14 +1,14 @@
 //
-//  User 2.swift
+//  UserDTO.swift
 //  Tarladan Al
 //
-//  Created by Sinan Dinç on 8/8/25.
+//  Created by Sinan Dinç on 8/22/25.
 //
 
 import Foundation
 import FirebaseFirestore
 
-struct User : FirebaseModel{
+struct UserDTO : FirebaseModel{
     @DocumentID var id: String?
     let email: String
     var phone: String
@@ -32,8 +32,8 @@ struct User : FirebaseModel{
     var smsOptIn: Bool
     
     var reviews: [String] = []
+    var favorites: [String] = []
     var addresses: [Address] = []
-    var favorites: [Product] = []
     var paymentMethods: [PaymentMethod] = []
     var subscription: Subscription?
     

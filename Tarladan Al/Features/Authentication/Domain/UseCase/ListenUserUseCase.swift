@@ -23,12 +23,6 @@ final class ListenUserUseCase : ListenUserUseCaseProtocol{
     
     func execute(by id: String) -> AnyPublisher<User, UserError> {
         return repository.listenUserById(id)
-            .handleEvents(
-                receiveOutput: { user in
-                },
-                receiveCompletion: { completion in
-                }
-            )
             .eraseToAnyPublisher()
     }
 }

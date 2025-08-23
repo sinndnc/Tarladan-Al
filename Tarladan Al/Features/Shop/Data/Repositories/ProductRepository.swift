@@ -16,18 +16,17 @@ class ProductRepository: ProductRepositoryProtocol {
         self.remoteDataSource = remoteDataSource
     }
     
+    func getProductById(id: String) -> AnyPublisher<Product, ProductError> {
+        return remoteDataSource.getProductById(id: id)
+            .mapError { error in
+                Logger.log("❌ REPOSITORY ERROR: \(error)")
+                return ProductError.emptyItems
+            }
+            .eraseToAnyPublisher()
+    }
+    
     func listenProducts() -> AnyPublisher<[Product], ProductError> {
-        Logger.log("🚀 REPOSITORY: Starting to listen products")
-        
         return remoteDataSource.listenToProducts()
-            .handleEvents(
-                receiveSubscription: { _ in
-                    Logger.log("📡 REPOSITORY: Subscribed to remote data source")
-                },
-                receiveOutput: { products in
-                    Logger.log("📥 REPOSITORY: Received \(products.count) products")
-                }
-            )
             .mapError { error in
                 Logger.log("❌ REPOSITORY ERROR: \(error)")
                 return ProductError.emptyItems

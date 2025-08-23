@@ -42,7 +42,8 @@ class AppDIConfiguration {
         }
         container.register(UserRepositoryProtocol.self, scope: .singleton) { container in
             UserRepository(
-                remoteDataSource: container.resolve(UserRemoteDataSourceProtocol.self)
+                userRemoteDataSource: container.resolve(UserRemoteDataSourceProtocol.self),
+                productRemoteDataSource: container.resolve(ProductRemoteDataSourceProtocol.self)
             )
         }
         container.register(ProductRepositoryProtocol.self, scope: .singleton) { container in

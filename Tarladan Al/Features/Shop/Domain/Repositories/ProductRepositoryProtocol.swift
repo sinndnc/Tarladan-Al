@@ -9,5 +9,6 @@ import Combine
 protocol ProductRepositoryProtocol {
     
     func listenProducts() -> AnyPublisher<[Product], ProductError>
+    func getProductById(id: String) -> AnyPublisher<Product, ProductError>
     
 }

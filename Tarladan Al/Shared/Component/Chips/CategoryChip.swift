@@ -10,6 +10,7 @@ struct CategoryChip: View {
     let title: String
     let count: Int
     let isSelected: Bool
+    var showZeroCount: Bool = false
     let action: () -> Void
     
     var body: some View {
@@ -19,7 +20,7 @@ struct CategoryChip: View {
                     .font(.subheadline)
                     .fontWeight(.medium)
                 
-                if count > 0 {
+                if showZeroCount || count > 0 {
                     Text("(\(count))")
                         .font(.caption)
                         .foregroundColor(isSelected ? .white.opacity(0.8) : .secondary)

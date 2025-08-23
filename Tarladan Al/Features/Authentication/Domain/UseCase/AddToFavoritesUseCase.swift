@@ -10,7 +10,7 @@ import Combine
 
 protocol AddToFavoritesUseCaseProtocol{
     
-    func execute(id: String,data: [String:Any]) -> AnyPublisher<Void, UserError>
+    func execute(id: String, productId: String) -> AnyPublisher<Void, UserError>
     
 }
 
@@ -21,8 +21,8 @@ final class AddToFavoritesUseCase : AddToFavoritesUseCaseProtocol{
         self.repository = repository
     }
     
-    func execute(id: String,data: [String:Any]) -> AnyPublisher<Void, UserError>{
-        return repository.addToFavorites(id: id, data: data)
+    func execute(id: String, productId: String) -> AnyPublisher<Void, UserError>{
+        return repository.addToFavorites(id: id,productId: productId)
             .eraseToAnyPublisher()
     }
 }

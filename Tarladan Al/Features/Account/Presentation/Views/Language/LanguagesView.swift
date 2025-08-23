@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct LanguageSelectionView: View {
+struct LanguagesView: View {
     
     @EnvironmentObject private var languageManager: LanguageManager
     @Environment(\.dismiss) private var dismiss
