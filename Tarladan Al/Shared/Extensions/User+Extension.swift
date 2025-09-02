@@ -7,13 +7,13 @@
 
 import Foundation
 
-
 extension User {
     
     init(fromDTO dto: SignInResponseDTO) {
         let now = Date()
         let displayNameParts = dto.displayName?.components(separatedBy: " ") ?? ["", ""]
         
+        self.id = dto.uid
         self.email = dto.email ?? ""
         self.firstName = displayNameParts.first ?? ""
         self.lastName = displayNameParts.dropFirst().joined(separator: " ")

@@ -94,8 +94,8 @@ struct ProductCardView: View {
                     }
                     .padding(10)
                     .withHaptic()
-                    .background(.green)
-                    .foregroundStyle(.white)
+                    .background(Colors.System.primary)
+                    .foregroundStyle(Colors.System.surface)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }

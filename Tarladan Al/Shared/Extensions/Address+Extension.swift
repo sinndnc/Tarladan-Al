@@ -11,7 +11,7 @@ extension Address {
     func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
         
-        dict["id"] = self.id.uuidString
+        dict["id"] = self.id
         dict["city"] = self.city
         dict["title"] = self.title
         dict["district"] = self.district

@@ -9,7 +9,16 @@ import SwiftUI
 
 struct NotificationView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            Text("Hello, World!")
+        }
+        .toolbarRole(.editor)
+        .navigationTitle("Bildirimler")
+        .background(Colors.System.background)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
     }
 }
 

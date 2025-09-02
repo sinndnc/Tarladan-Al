@@ -28,6 +28,10 @@ struct DeliveryView: View {
                 }
                 .padding()
             }
+            .background(Colors.System.background)
+            .toolbarColorScheme(.dark, for:.navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     VStack(alignment: .leading){
@@ -81,7 +85,7 @@ struct DeliveryView: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color(.systemGray6))
+                .background(Colors.System.surface)
                 .cornerRadius(10)
             }
         }
@@ -202,14 +206,9 @@ struct CurrentDeliveryCard: View {
                 }
             }
             .padding(20)
-            .background(
-                LinearGradient(
-                    colors: [Color.blue.opacity(0.1), Color.blue.opacity(0.05)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
+            .background(Colors.System.surface)
             .cornerRadius(15)
+            .shadow(color: .black.opacity(0.05), radius: 5)
         }
         .buttonStyle(PlainButtonStyle())
     }
@@ -280,9 +279,9 @@ struct DeliveryCard: View {
                 }
             }
             .padding(16)
-            .background(Color(.systemBackground))
+            .background(Colors.System.surface)
             .cornerRadius(12)
-            .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+            .shadow(color: .black.opacity(0.05), radius: 5)
         }
         .buttonStyle(PlainButtonStyle())
     }
@@ -349,8 +348,9 @@ struct NextDeliveryCard: View {
             }
         }
         .padding(20)
-        .background(Color(.systemGray6))
+        .background(Colors.System.surface)
         .cornerRadius(12)
+        .shadow(color: .black.opacity(0.05), radius: 5)
     }
 }
 
@@ -398,17 +398,30 @@ struct WeeklyScheduleView: View {
 struct DeliveryPreferencesCard: View {
     var body: some View {
         VStack(spacing: 15) {
-            PreferenceRow(icon: "location.fill", title: "Teslimat Adresi",
-                         subtitle: "Atatürk Mah. 123. Sk. No:45", color: .blue)
-            
-            PreferenceRow(icon: "clock.fill", title: "Tercih Edilen Zaman",
-                         subtitle: "10:00 - 14:00 arası", color: .orange)
-            
-            PreferenceRow(icon: "bell.fill", title: "Bildirimler",
-                         subtitle: "SMS ve Push bildirimleri", color: .purple)
-            
-            PreferenceRow(icon: "note.text", title: "Özel Talimatlar",
-                         subtitle: "Kapıya bırakın", color: .green)
+            PreferenceRow(
+                icon: "location.fill",
+                title: "Teslimat Adresi",
+                subtitle: "Atatürk Mah. 123. Sk. No:45",
+                color: .blue
+            )
+            PreferenceRow(
+                icon: "clock.fill",
+                title: "Tercih Edilen Zaman",
+                subtitle: "10:00 - 14:00 arası",
+                color: .orange
+            )
+            PreferenceRow(
+                icon: "bell.fill",
+                title: "Bildirimler",
+                subtitle: "SMS ve Push bildirimleri",
+                color: .purple
+            )
+            PreferenceRow(
+                icon: "note.text",
+                title: "Özel Talimatlar",
+                subtitle: "Kapıya bırakın",
+                color: .green
+            )
         }
         .padding()
         .background(Color(.systemBackground))

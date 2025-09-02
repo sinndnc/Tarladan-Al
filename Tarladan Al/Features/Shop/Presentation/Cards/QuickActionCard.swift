@@ -30,7 +30,8 @@ struct QuickActionCard: View {
             }
             .frame(width: 120)
             .padding(.vertical, 16)
-            .background(Color(.systemGray6).opacity(0.5))
+            .background(Colors.System.surface)
             .cornerRadius(16)
+            .shadow(color: .black.opacity(0.1), radius: 8)
     }
 }

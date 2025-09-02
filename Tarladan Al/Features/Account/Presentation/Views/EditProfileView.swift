@@ -9,7 +9,7 @@ import SwiftUI
 struct EditProfileView: View {
     
     @Environment(\.dismiss) private var  dismiss
-    @StateObject var viewModel: AccountViewModel
+    @EnvironmentObject var viewModel: AccountViewModel
     
     var body: some View {
         NavigationView {

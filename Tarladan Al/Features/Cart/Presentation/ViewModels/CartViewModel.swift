@@ -5,6 +5,7 @@
 //  Created by Sinan Dinç on 8/7/25.
 //
 import Foundation
+import Combine
 
 class CartViewModel: ObservableObject {
     
@@ -12,6 +13,9 @@ class CartViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     @Published var items: [CartItem] = []
+    
+    private var cancellables: Set<AnyCancellable> = []
+    @Injected private var createOrderUseCase: CreateOrderUseCaseProtocol
     
     var totalItems: Int {
         items.reduce(0) { $0 + $1.quantity }
@@ -58,5 +62,16 @@ class CartViewModel: ObservableObject {
     
     func clearCart() {
         items.removeAll()
+    }
+    
+    func createOrder(order: Order){
+        createOrderUseCase.execute(order: order)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                
+            } receiveValue: { documentId in
+                print("\(documentId)")
+            }
+            .store(in: &cancellables)
     }
 }

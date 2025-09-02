@@ -14,11 +14,20 @@ struct LocationPickerView: View {
     
     var body: some View {
         NavigationStack{
-            VStack(alignment:.leading){
-                Text("Siparişinizi nereye göndermek istediğinizi seçiniz.")
-                    .font(.headline)
+            VStack(alignment:.leading,spacing: 0){
+                HStack{
+                    Text("Siparişinizi nereye göndermek istediğinizi seçiniz.")
+                        .font(.headline)
+                        .foregroundStyle(Colors.System.surface)
+                    Spacer()
+                }
+                .padding()
+                .background(Colors.UI.tabBackground)
+                
                 Divider()
+                
                 Spacer()
+                
                 VStack(alignment:.leading,spacing: 20){
                     ForEach(addresses.sortedByDefault) { address in
                         Button {
@@ -32,17 +41,20 @@ struct LocationPickerView: View {
                         .tint(.primary)
                     }
                 }
+                .padding(.horizontal)
+                
                 Spacer()
+                
                 NavigationLink{
                     NewAddressFormView()
                 } label: {
                     AddNewLocationRow()
                 }
                 .haptic()
+                .padding(.horizontal)
             }
-            .padding()
             .presentationDragIndicator(.visible)
-            .presentationDetents([.fraction(0.35)])
+            .presentationDetents([.fraction(0.3)])
         }
        
     }
@@ -71,8 +83,10 @@ struct LocationPickerRow : View{
                     .font(.subheadline)
                     .fontWeight(.medium)
                 Text(address.fullAddress)
+                    .lineLimit(2)
                     .font(.footnote)
                     .foregroundStyle(.gray)
+                    .multilineTextAlignment(.leading)
             }
             Spacer()
             if address.isDefault{

@@ -49,7 +49,7 @@ class UserRemoteDataSource: FirebaseManager<UserDTO>, UserRemoteDataSourceProtoc
                 
                 // Belirtilen adresi default yap
                 guard let index = mutableUser.addresses.firstIndex(where: { address in
-                    return address.id.uuidString == addressId
+                    return address.id == addressId
                 }) else {
                     return Fail(error: ServiceErrorFactory.documentNotFound(for: FirebaseManager<UserDTO>.self, id: "", operation: ""))
                         .eraseToAnyPublisher()

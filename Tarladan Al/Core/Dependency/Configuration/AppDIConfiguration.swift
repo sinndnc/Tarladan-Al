@@ -14,46 +14,16 @@ class AppDIConfiguration {
     static func configure() {
         let container = DIContainer.shared
         
-        //MARK: - Data Sources (Singletons)
+        
+        //MARK: - Auth Configuration
         container.register(AuthRemoteDataSourceProtocol.self,scope: .singleton) { _ in
             AuthRemoteDataSource(auth: .auth())
         }
-        container.register(DeliveryRemoteDataSourceProtocol.self, scope: .singleton) { container in
-            DeliveryRemoteDataSource(firestore: .firestore())
-        }
-        container.register(UserRemoteDataSourceProtocol.self, scope: .singleton) { container in
-            UserRemoteDataSource(db: .firestore())
-        }
-        container.register(ProductRemoteDataSourceProtocol.self, scope: .singleton) { container in
-            ProductRemoteDataSource(db: .firestore())
-        }
-        
-        
-        //MARK: - Repositories (Singletons)
         container.register(AuthRepositoryProtocol.self, scope: .singleton) { container in
             AuthRepository(
                 remoteDataSource:  container.resolve(AuthRemoteDataSourceProtocol.self)
             )
         }
-        container.register(DeliveryRepositoryProtocol.self, scope: .singleton) { container in
-            DeliveryRepository(
-                remoteDataSource:  container.resolve(DeliveryRemoteDataSourceProtocol.self)
-            )
-        }
-        container.register(UserRepositoryProtocol.self, scope: .singleton) { container in
-            UserRepository(
-                userRemoteDataSource: container.resolve(UserRemoteDataSourceProtocol.self),
-                productRemoteDataSource: container.resolve(ProductRemoteDataSourceProtocol.self)
-            )
-        }
-        container.register(ProductRepositoryProtocol.self, scope: .singleton) { container in
-            ProductRepository(
-                remoteDataSource: container.resolve(ProductRemoteDataSourceProtocol.self)
-            )
-        }
-        
-        
-        //MARK: - UseCases (Singletons)
         container.register(CheckUserUseCaseProtocol.self, scope: .singleton) { container in
             CheckUserUseCase(
                 repository: container.resolve(AuthRepositoryProtocol.self)
@@ -65,15 +35,20 @@ class AppDIConfiguration {
             )
         }
         
-        //MARK: - User Classes
+        
+        //MARK: - User Configuration
+        container.register(UserRemoteDataSourceProtocol.self, scope: .singleton) { container in
+            UserRemoteDataSource(db: .firestore())
+        }
+        container.register(UserRepositoryProtocol.self, scope: .singleton) { container in
+            UserRepository(
+                userRemoteDataSource: container.resolve(UserRemoteDataSourceProtocol.self),
+                productRemoteDataSource: container.resolve(ProductRemoteDataSourceProtocol.self)
+            )
+        }
         container.register(ListenUserUseCaseProtocol.self, scope: .singleton) { container in
             ListenUserUseCase(
                 repository: container.resolve(UserRepositoryProtocol.self)
-            )
-        }
-        container.register(CreateDeliveryUseCaseProtocol.self, scope: .singleton) { container in
-            CreateDeliveryUseCase(
-                repository: container.resolve(DeliveryRepositoryProtocol.self)
             )
         }
         container.register(UpdateDefaultAddressUseCaseProtocol.self, scope: .singleton) { container in
@@ -88,7 +63,20 @@ class AppDIConfiguration {
         }
         
         
-        //MARK: Delivery Classes
+        //MARK: - Delivery Configuration
+        container.register(DeliveryRemoteDataSourceProtocol.self, scope: .singleton) { container in
+            DeliveryRemoteDataSource(firestore: .firestore())
+        }
+        container.register(DeliveryRepositoryProtocol.self, scope: .singleton) { container in
+            DeliveryRepository(
+                remoteDataSource:  container.resolve(DeliveryRemoteDataSourceProtocol.self)
+            )
+        }
+        container.register(CreateDeliveryUseCaseProtocol.self, scope: .singleton) { container in
+            CreateDeliveryUseCase(
+                repository: container.resolve(DeliveryRepositoryProtocol.self)
+            )
+        }
         container.register(ListenDeliveriesUseCaseProtocol.self, scope: .singleton) { container in
             ListenDeliveriesUseCase(
                 repository: container.resolve(DeliveryRepositoryProtocol.self)
@@ -105,14 +93,43 @@ class AppDIConfiguration {
             )
         }
         
-        //MARK: - Product Classes
+        
+        //MARK: - Product Configuration
+        container.register(ProductRemoteDataSourceProtocol.self, scope: .singleton) { container in
+            ProductRemoteDataSource(db: .firestore())
+        }
+        container.register(ProductRepositoryProtocol.self, scope: .singleton) { container in
+            ProductRepository(
+                remoteDataSource: container.resolve(ProductRemoteDataSourceProtocol.self)
+            )
+        }
         container.register(ListenProductsUseCaseProtocol.self, scope: .singleton) { container in
             ListenProductsUseCase(
                 repository: container.resolve(ProductRepositoryProtocol.self)
             )
         }
+        
+        
+        //MARK: - Order Configuration
+        container.register(OrderRemoteDataSourceProtocol.self, scope: .singleton) { container in
+            OrderRemoteDataSource(db: .firestore())
+        }
+        container.register(OrderRepositoryProtocol.self, scope: .singleton) { container in
+            OrderRepository(
+                remoteDataSource: container.resolve(OrderRemoteDataSourceProtocol.self)
+            )
+        }
+        container.register(CreateOrderUseCaseProtocol.self, scope: .singleton) { container in
+            CreateOrderUseCase(
+                repository: container.resolve(OrderRepositoryProtocol.self)
+            )
+        }
+        container.register(ListenOrdersOfUserUseCaseProtocol.self, scope: .singleton) { container in
+            ListenOrdersOfUserUseCase(
+                repository: container.resolve(OrderRepositoryProtocol.self)
+            )
+        }
+        
     }
-    
-    
     
 }

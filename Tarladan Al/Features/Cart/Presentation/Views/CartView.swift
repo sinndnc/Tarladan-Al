@@ -48,7 +48,11 @@ struct CartView: View {
                 }
             }
             .navigationTitle("Shopping Cart")
+            .background(Colors.System.background)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .toolbar {
                 if !cartViewModel.items.isEmpty {
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -114,12 +118,12 @@ struct CartView: View {
             .foregroundColor(.white)
             .padding(.horizontal, 32)
             .padding(.vertical, 12)
-            .background(Color.blue)
+            .background(Colors.System.primary)
             .cornerRadius(12)
             
             Spacer()
         }
-        .padding()
+        .frame(maxWidth: .infinity)
     }
     
     private var cartSummaryView: some View {
@@ -130,10 +134,12 @@ struct CartView: View {
                 HStack {
                     Text("Subtotal (\(cartViewModel.totalItems) items)")
                         .font(.subheadline)
+                        .foregroundStyle(Colors.System.surface)
                     Spacer()
                     Text("₺\(cartViewModel.totalPrice, specifier: "%.2f")")
                         .font(.subheadline)
                         .fontWeight(.medium)
+                        .foregroundStyle(Colors.System.surface)
                 }
                 
                 if cartViewModel.totalSavings > 0 {
@@ -155,10 +161,12 @@ struct CartView: View {
                     Text("Total")
                         .font(.headline)
                         .fontWeight(.bold)
+                        .foregroundStyle(Colors.System.surface)
                     Spacer()
                     Text("₺\(cartViewModel.totalPrice, specifier: "%.2f")")
                         .font(.headline)
                         .fontWeight(.bold)
+                        .foregroundStyle(Colors.System.surface)
                 }
             }
             .padding(.horizontal)
@@ -170,12 +178,12 @@ struct CartView: View {
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding()
-            .background(Color.blue)
+            .background(Colors.System.secondary)
             .cornerRadius(12)
             .padding(.horizontal)
             .padding(.bottom)
         }
-        .background(Color(.systemBackground))
+        .background(Colors.UI.tabBackground)
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: -5)
     }
 }

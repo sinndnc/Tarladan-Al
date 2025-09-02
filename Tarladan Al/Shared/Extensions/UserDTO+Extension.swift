@@ -11,6 +11,7 @@ extension UserDTO {
     
     func toUser(favorites: [Product]) -> User {
         return User(
+            id: id,
             email: email,
             phone: phone,
             lastName: lastName,

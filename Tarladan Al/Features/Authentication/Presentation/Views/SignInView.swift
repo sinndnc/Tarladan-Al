@@ -10,8 +10,8 @@
 import SwiftUI
 
 struct SignInView: View {
-    @State private var email: String = ""
-    @State private var password: String = ""
+    @State private var email: String =  "sinandinc77@icloud.com"
+    @State private var password: String = "Snn20012004"
     @State private var isPasswordVisible = false
     
     @Environment(\.dismiss) private var  dismiss
@@ -55,7 +55,7 @@ struct SignInView: View {
             
             Button{
                 Task{
-                viewModel.signIn(email: "sinandinc77@icloud.com", password: "Snn20012004")
+                viewModel.signIn(email: email, password: password)
                 }
             }label: {
                 Text("Sign In")

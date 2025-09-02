@@ -7,7 +7,7 @@
 
 import SwiftUICore
 
-enum OrderStatus: String, CaseIterable {
+enum OrderStatus: String, Codable,CaseIterable {
     case pending = "Hazırlanıyor"
     case confirmed = "Onaylandı"
     case shipping = "Kargoda"

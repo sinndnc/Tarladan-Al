@@ -35,11 +35,9 @@ final class UserRepository : UserRepositoryProtocol {
                     return Fail(error: UserError.internalError).eraseToAnyPublisher()
                 }
                 
-                Logger.log("✅ User Repository entered - UserDTO: \(userDTO.favorites)")
                 
                 return self.fetchFavoriteProducts(userDTO.favorites)
                     .map { favorites in
-                        Logger.log("✅ Favorites fetched: \(favorites.count) items")
                         return userDTO.toUser(favorites: favorites)
                     }
                     .eraseToAnyPublisher()

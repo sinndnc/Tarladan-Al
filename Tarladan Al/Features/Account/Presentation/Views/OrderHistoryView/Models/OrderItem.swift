@@ -6,8 +6,8 @@
 //
 import Foundation
 
-struct OrderItem: Identifiable, Hashable {
-    let id = UUID()
+struct OrderItem: FirebaseModel, Hashable {
+    var id: String?
     let product: Product
     let quantity: Double
     let unitPrice: Double

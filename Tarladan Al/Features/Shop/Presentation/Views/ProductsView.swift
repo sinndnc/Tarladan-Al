@@ -19,16 +19,21 @@ struct ProductsView: View {
     @State private var selectedVarient : String? = nil
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                subcategoriesBar
-                sortAndViewBar
-                productsViewSection
-            }
+        VStack(spacing: 0) {
+            subcategoriesBar
+            sortAndViewBar
+            productsViewSection
         }
         .navigationTitle(subCategory.name)
+        .background(Colors.System.background)
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: .constant(""),prompt: Text("Search Productscard"))
+        .toolbarColorScheme(.dark, for:.navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
+        .searchable(
+            text: .constant(""),
+            prompt: Text("Search Productscard")
+        )
         .toolbar{
             ToolbarItem(placement: .topBarTrailing) {
                 shopCardSection
@@ -64,6 +69,33 @@ struct ProductsView: View {
         .withHaptic(.medium)
     }
     
+    private var subcategoriesBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                CategoryChip(
+                    title: "Tümü",
+                    count: 0,
+                    isSelected: selectedVarient == nil
+                ){
+                    selectedVarient = nil
+                }
+                
+                ForEach(subCategory.variants,id: \.self) { varient in
+                    CategoryChip(
+                        title: varient,
+                        count: 0,
+                        isSelected: selectedVarient == varient
+                    ){
+                        selectedVarient = varient
+                    }
+                }
+            }
+            .padding(.horizontal, 20)
+        }
+        .padding(8)
+        .background(Colors.UI.tabBackground)
+    }
+    
     private var sortAndViewBar: some View {
         HStack {
             Text("Sıralama: ")
@@ -92,76 +124,53 @@ struct ProductsView: View {
                 }
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 16)
+        .padding(10)
     }
     
-    private var subcategoriesBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                CategoryChip(
-                    title: "Tümü",
-                    count: 0,
-                    isSelected: selectedVarient == nil
-                ){
-                    selectedVarient = nil
-                }
-                
-                ForEach(subCategory.variants,id: \.self) { varient in
-                    CategoryChip(
-                        title: varient,
-                        count: 0,
-                        isSelected: selectedVarient == varient
-                    ){
-                        selectedVarient = varient
-                    }
-                }
-            }
-            .padding(.horizontal, 20)
-        }
-        .padding(.bottom)
-    }
     
     private var productsViewSection: some View{
-        Group {
-            if shopViewModel.viewMode == .grid {
-                LazyVGrid(columns: [
-                    GridItem(.flexible(), spacing: 12),
-                    GridItem(.flexible(), spacing: 12)
-                ], spacing: 16) {
-                    
-                    let filteredProducts = shopViewModel.getProductsSubCategory(by: subCategory.name)
-                    ForEach(filteredProducts,id:\.self) { product in
-                        NavigationLink {
-                            ProductDetailView(product: product)
-                        } label: {
-                            ProductCardView(product: product){
-                                cartViewModel.addItem(product: product)
-                                shopViewModel.addToCart(product: product)
+        ScrollView {
+            
+            Group {
+                if shopViewModel.viewMode == .grid {
+                    LazyVGrid(columns: [
+                        GridItem(.flexible(), spacing: 12),
+                        GridItem(.flexible(), spacing: 12)
+                    ], spacing: 16) {
+                        
+                        let filteredProducts = shopViewModel.getProductsSubCategory(by: subCategory.name)
+                        ForEach(filteredProducts,id:\.self) { product in
+                            NavigationLink {
+                                ProductDetailView(product: product)
+                            } label: {
+                                ProductCardView(product: product){
+                                    cartViewModel.addItem(product: product)
+                                    shopViewModel.addToCart(product: product)
+                                }
                             }
+                            .tint(.primary)
+                            .haptic(.medium)
                         }
-                        .tint(.primary)
-                        .haptic(.medium)
                     }
-                }
-                .padding(.horizontal, 20)
-            } else {
-                LazyVStack(spacing: 12) {
-                    let filteredProducts = shopViewModel.getProductsSubCategory(by: subCategory.name)
-                    ForEach(filteredProducts,id:\.self) { product in
-                        NavigationLink {
-                            ProductDetailView(product: product)
-                        } label: {
-                            ProductCardView(product: product){
-                                cartViewModel.addItem(product: product)
-                                shopViewModel.addToCart(product: product)
+                    .padding(.horizontal, 20)
+                } else {
+                    LazyVStack(spacing: 12) {
+                        let filteredProducts = shopViewModel.getProductsSubCategory(by: subCategory.name)
+                        ForEach(filteredProducts,id:\.self) { product in
+                            NavigationLink {
+                                ProductDetailView(product: product)
+                            } label: {
+                                ProductCardView(product: product){
+                                    cartViewModel.addItem(product: product)
+                                    shopViewModel.addToCart(product: product)
+                                }
                             }
+                            .tint(.primary)
+                            .haptic(.medium)
                         }
-                        .tint(.primary)
-                        .haptic(.medium)
                     }
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
             }
         }
     }

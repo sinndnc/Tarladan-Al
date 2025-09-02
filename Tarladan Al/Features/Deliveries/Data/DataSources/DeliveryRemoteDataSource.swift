@@ -33,7 +33,6 @@ final class DeliveryRemoteDataSource : DeliveryRemoteDataSourceProtocol {
             }
             
             self.firestore.collection(collection)
-//                .order(by: "created_at", descending: true)
                 .getDocuments { snapshot, error in
                     if let error = error {
                         promise(.failure(.firebaseError(error.localizedDescription)))

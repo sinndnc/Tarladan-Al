@@ -23,7 +23,7 @@ extension Color {
         default:
             (a, r, g, b) = (1, 1, 1, 0)
         }
-
+        
         self.init(
             .sRGB,
             red: Double(r) / 255,
@@ -31,5 +31,51 @@ extension Color {
             blue:  Double(b) / 255,
             opacity: Double(a) / 255
         )
+    }
+    
+    
+    // MARK: Ana Sistem Renkleri
+    static var myPrimary: Color {
+        Color("Primary")
+    }
+    
+    static var mySecondary: Color {
+        Color("Secondary")
+    }
+    
+    static var myBackground: Color {
+        Color("Background")
+    }
+    
+    static var mySurface: Color {
+        Color("Surface")
+    }
+    
+    static var myBackgroundSecondary: Color {
+        Color("BackgroundSecondary")
+    }
+    
+    // MARK: Metin Renkleri
+    static var myTextPrimary: Color {
+        Color("TextPrimary")
+    }
+    
+    static var myTextSecondary: Color {
+        Color("TextSecondary")
+    }
+    // MARK: Durum Renkleri
+    static var mySuccess: Color {
+        Color("Success")
+    }
+    static var myWarning: Color {
+        Color("Warning")
+    }
+    
+    static var myError: Color {
+        Color("Error")
+    }
+    
+    static var myInfo: Color {
+        Color("Info")
     }
 }

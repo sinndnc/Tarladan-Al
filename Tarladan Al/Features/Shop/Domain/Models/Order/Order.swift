@@ -5,17 +5,19 @@
 //  Created by Sinan Dinç on 8/18/25.
 //
 import Foundation
+import FirebaseFirestore
 
-struct Order: Identifiable {
-    let id = UUID()
-    let orderNumber: String
-    let items: [OrderItem]
+struct Order : FirebaseModel {
+    @DocumentID var id: String?
     let orderDate: Date
-    let deliveryDate: Date?
+    let owner_id: String
+    let items: [OrderItem]
+    let orderNumber: String
     let status: OrderStatus
-    let deliveryAddress: Address
+    let deliveryDate: Date?
     let totalAmount: Double
     let shippingCost: Double
+    let deliveryAddress: Address
     
     var itemCount: Int {
         items.count

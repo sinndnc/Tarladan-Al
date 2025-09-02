@@ -59,7 +59,11 @@ struct CheckOutView: View {
                 .padding()
             }
             .navigationTitle("Ödeme")
+            .background(Colors.System.background)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .alert("Sipariş Onaylandı!", isPresented: $showingOrderConfirmation) {
                 Button("Tamam") { }
             } message: {
@@ -71,8 +75,11 @@ struct CheckOutView: View {
                         dismiss()
                     }label: {
                         HStack{
-                            Image(systemName: "arrow.left")
-                            Text("To Cart")
+                            Image(systemName: "chevron.left")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            Text("Cart")
+                                .font(.subheadline)
                         }
                     }
                 }
@@ -395,7 +402,18 @@ struct CheckOutView: View {
     // MARK: - Sipariş Ver Butonu
     private var checkoutButton: some View {
         Button{
-            
+            var newOrder = Order(
+                orderDate: Date(),
+                owner_id: userViewModel.user?.id ?? "",
+                items:  cartViewModel.items.map({ item in OrderItem(product: item.product, quantity: Double(item.quantity), unitPrice: item.totalPrice)}),
+                orderNumber: UUID().uuidString,
+                status: .pending,
+                deliveryDate: Date() ,
+                totalAmount: total,
+                shippingCost: shippingCost,
+                deliveryAddress: userViewModel.user!.defaultAddress!
+            )
+            cartViewModel.createOrder(order: newOrder)
         }label: {
             HStack {
                 if isProcessingOrder {
@@ -409,11 +427,15 @@ struct CheckOutView: View {
                 Text(isProcessingOrder ? "İşleniyor..." : "Siparişi Tamamla")
                     .fontWeight(.semibold)
             }
-            .padding()
-            .background(.blue)
-            .cornerRadius(10)
-            .foregroundColor(.white)
         }
+        .font(.headline)
+        .foregroundColor(.white)
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Colors.System.secondary)
+        .cornerRadius(12)
+        .padding(.horizontal)
+        .padding(.bottom)
     }
     
     // MARK: - Helper Functions

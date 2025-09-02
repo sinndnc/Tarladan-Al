@@ -42,5 +42,4 @@ class AccountViewModel: ObservableObject {
             localProducerSupport: 0.8
         )
     }
-    
 }

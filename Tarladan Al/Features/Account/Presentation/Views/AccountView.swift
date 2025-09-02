@@ -11,14 +11,15 @@ struct AccountView: View {
     @EnvironmentObject private var themeManager: ThemeManager
     @EnvironmentObject private var languageManager: LanguageManager
     
-    @StateObject private var viewModel = AccountViewModel()
+    @EnvironmentObject private var accountViewModel : AccountViewModel
     
     var body: some View {
         NavigationStack {
-            List {
+            List{
                 Section {
                     profileHeaderView
                 }
+                .listRowBackground(Color.clear)
                 
                 Section("Bu Ay"){
                     quickStatsView
@@ -198,9 +199,14 @@ struct AccountView: View {
                     .buttonStyle(PlainButtonStyle())
                 }
             }
-            .listStyle(InsetGroupedListStyle())
             .navigationTitle("Hesap")
+            .scrollContentBackground(.hidden)
+            .listStyle(InsetGroupedListStyle())
+            .background(Colors.System.background)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for:.navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .navigationDestination(for: AccountDestination.self) { destination in
                 destinationView(for: destination)
             }
@@ -245,7 +251,7 @@ struct AccountView: View {
                     ))
                     .frame(width: 80, height: 80)
                     .overlay(
-                        Text(String(viewModel.userProfile.name.prefix(2)).uppercased())
+                        Text(String(accountViewModel.userProfile.name.prefix(2)).uppercased())
                             .font(.title)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
@@ -253,17 +259,17 @@ struct AccountView: View {
             }
             
             VStack(alignment: .leading, spacing: 8) {
-                Text(viewModel.userProfile.name)
+                Text(accountViewModel.userProfile.name)
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(.primary)
                 
-                Text(viewModel.userProfile.email)
+                Text(accountViewModel.userProfile.email)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
                 
-                if viewModel.userProfile.isPremium {
+                if accountViewModel.userProfile.isPremium {
                     Text("Premium Üye")
                         .font(.caption)
                         .fontWeight(.semibold)
@@ -283,29 +289,27 @@ struct AccountView: View {
             StatCardCompact(
                 icon: "shippingbox.fill",
                 title: "Teslimat",
-                value: "\(viewModel.monthlyStats.deliveries)",
+                value: "\(accountViewModel.monthlyStats.deliveries)",
                 subtitle: "kutu",
                 color: .blue
             )
             
             Divider()
-                .frame(height: 40)
             
             StatCardCompact(
                 icon: "leaf.fill",
                 title: "CO² Tasarrufu",
-                value: String(format: "%.1f", viewModel.monthlyStats.co2Savings),
+                value: String(format: "%.1f", accountViewModel.monthlyStats.co2Savings),
                 subtitle: "kg",
                 color: .green
             )
             
             Divider()
-                .frame(height: 40)
             
             StatCardCompact(
                 icon: "heart.fill",
                 title: "Favori",
-                value: "\(viewModel.monthlyStats.favoriteProducts)",
+                value: "\(accountViewModel.monthlyStats.favoriteProducts)",
                 subtitle: "ürün",
                 color: .red
             )
@@ -326,12 +330,12 @@ struct AccountView: View {
                             .fontWeight(.semibold)
                     }
                     
-                    Text("Bu ay \(viewModel.sustainabilityScore.totalScore) puan topladın!")
+                    Text("Bu ay \(accountViewModel.sustainabilityScore.totalScore) puan topladın!")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     
                     HStack(spacing: 4) {
-                        let rating = viewModel.sustainabilityScore.rating
+                        let rating = accountViewModel.sustainabilityScore.rating
                         let fullStars = Int(rating)
                         let hasHalfStar = rating - Double(fullStars) >= 0.5
                         
@@ -351,7 +355,7 @@ struct AccountView: View {
                 Spacer()
                 
                 VStack(spacing: 4) {
-                    Text("\(viewModel.sustainabilityScore.totalScore)")
+                    Text("\(accountViewModel.sustainabilityScore.totalScore)")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.green)
@@ -365,17 +369,17 @@ struct AccountView: View {
             VStack(spacing: 12) {
                 ProgressRowView(
                     title: "Organik Ürün Tercihi",
-                    progress: viewModel.sustainabilityScore.organicPreference,
+                    progress: accountViewModel.sustainabilityScore.organicPreference,
                     color: .green
                 )
                 ProgressRowView(
                     title: "Ambalaj Azaltımı",
-                    progress: viewModel.sustainabilityScore.packagingReduction,
+                    progress: accountViewModel.sustainabilityScore.packagingReduction,
                     color: .blue
                 )
                 ProgressRowView(
                     title: "Yerel Üretici Desteği",
-                    progress: viewModel.sustainabilityScore.localProducerSupport,
+                    progress: accountViewModel.sustainabilityScore.localProducerSupport,
                     color: .orange
                 )
             }

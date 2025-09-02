@@ -73,7 +73,7 @@ struct CategoryCardView: View {
         }
         .padding(20)
         .frame(height: 150)
-        .background(Color(.systemBackground))
+        .background(Colors.System.surface)
         .cornerRadius(20)
         .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
         .overlay(

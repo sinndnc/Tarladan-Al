@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct SubCategoriesView: View {
+struct SubShopView: View {
     
     @State var category : ProductCategory
     
@@ -23,7 +23,11 @@ struct SubCategoriesView: View {
         }
         .navigationTitle("Alt Kategoriler")
         .navigationBarBackButtonHidden()
+        .background(Colors.System.background)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(.dark, for:.navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {

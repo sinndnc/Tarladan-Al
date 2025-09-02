@@ -32,6 +32,10 @@ struct ShopView: View {
                     footerInfo
                 }
             }
+            .background(Colors.System.background)
+            .toolbarColorScheme(.dark, for:.navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     headerSection
@@ -154,7 +158,7 @@ struct ShopView: View {
             ], spacing: 16) {
                 ForEach(shopViewModel.categories) { category in
                     NavigationLink {
-                        SubCategoriesView(category: category)
+                        SubShopView(category: category)
                     } label: {
                         CategoryCardView(category: category)
                     }

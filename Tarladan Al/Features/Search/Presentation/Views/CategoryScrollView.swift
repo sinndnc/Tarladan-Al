@@ -13,25 +13,49 @@ struct CategoryScrollView: View {
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                CategoryChip(
-                    title: "Tümü",
-                    count: viewModel.products.count,
-                    isSelected: selectedCategory == nil
-                ){
-                    selectedCategory = nil
+            HStack(spacing: 20) {
+                VStack{
+                    Button {
+                        withAnimation {
+                            selectedCategory = nil
+                        }
+                    } label: {
+                        Text("Tümü")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundStyle(selectedCategory == nil ? .white : .gray)
+                    }
+                    if selectedCategory == nil {
+                        Divider()
+                            .frame(height: 2)
+                            .background(Colors.System.surface)
+                    }
                 }
-                
                 ForEach(categories, id: \.name) { category in
-                    CategoryChip(
-                        title: category.name,
-                        count: category.subCategories.count,
-                        isSelected: selectedCategory?.name == category.name
-                    ){
-                        selectedCategory = category
+                    VStack{
+                        Button {
+                            withAnimation {
+                                selectedCategory = category
+                            }
+                        } label: {
+                            Text(category.name)
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundStyle(
+                                    selectedCategory?.name == category.name ? .white : .gray
+                                    
+                                )
+                        }
+                        if selectedCategory?.name == category.name{
+                            Divider()
+                                .frame(height: 2)
+                                .background(Colors.System.surface)
+                        }
                     }
                 }
             }
         }
+        .padding(8)
+        .background(Colors.UI.tabBackground)
     }
 }

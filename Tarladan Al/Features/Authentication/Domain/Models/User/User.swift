@@ -8,8 +8,8 @@
 import Foundation
 import FirebaseFirestore
 
-struct User : FirebaseModel{
-    @DocumentID var id: String?
+struct User : FirebaseModel {
+    var id: String?
     let email: String
     var phone: String
     let lastName: String
@@ -53,7 +53,7 @@ struct User : FirebaseModel{
     var referredBy: Int?
     
     enum CodingKeys: String, CodingKey {
-        case id, email, phone, language, currency, referralCode
+        case email, phone, language, currency, referralCode
         case firstName = "first_name"
         case lastName = "last_name"
         case isActive = "is_active"

@@ -7,19 +7,17 @@
 import SwiftUI
 
 struct SearchView: View {
-
     
     @EnvironmentObject private var viewModel : SearchViewModel
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    CategoryScrollView(
-                        categories: viewModel.categories,
-                        selectedCategory: $viewModel.selectedCategory
-                    )
-                    
+        NavigationStack {
+            VStack(spacing: 0) {
+                CategoryScrollView(
+                    categories: viewModel.categories,
+                    selectedCategory: $viewModel.selectedCategory
+                )
+                ScrollView{
                     ProductGridView(
                         products: viewModel.filteredProducts(
                             category: viewModel.selectedCategory,
@@ -30,9 +28,18 @@ struct SearchView: View {
                     }
                 }
                 .padding(.horizontal)
+                .padding(.vertical,10)
             }
+            .background(Colors.System.background)
+            .toolbarColorScheme(.dark, for:.navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
-            .searchable(text: $viewModel.searchText,isPresented: $viewModel.isShowingSearchable, prompt: "Search for products")
+            .searchable(
+                text: $viewModel.searchText,
+                isPresented: $viewModel.isShowingSearchable,
+                prompt: "Search for products"
+            )
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     VStack(alignment: .leading) {

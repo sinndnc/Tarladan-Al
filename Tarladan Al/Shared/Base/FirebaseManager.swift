@@ -48,7 +48,6 @@ class FirebaseManager<T: FirebaseModel> {
             
             var model = model
             let docRef = self.db.collection(self.collectionName).document()
-            model.id = docRef.documentID
             
             do {
                 try docRef.setData(from: model) { error in
@@ -83,8 +82,6 @@ class FirebaseManager<T: FirebaseModel> {
                 return
             }
             
-            var model = model
-            model.id = id
             
             do {
                 try self.db.collection(self.collectionName).document(id).setData(from: model) { error in
@@ -419,7 +416,8 @@ class FirebaseManager<T: FirebaseModel> {
             
             if document.exists {
                 do {
-                    let model = try document.data(as: T.self)
+                    var model = try document.data(as: T.self)
+                    model.id = document.documentID
                     subject?.send(model)
                 } catch {
                     let serviceError = ServiceErrorFactory.serializationFailed(
@@ -455,86 +453,98 @@ class FirebaseManager<T: FirebaseModel> {
     
     
     func listen(where field: String, isEqualTo value: Any) -> AnyPublisher<[T], ServiceError> {
-        return PassthroughSubject<[T], ServiceError>()
-            .handleEvents(receiveSubscription: { [weak self] subscription in
+        let subject = PassthroughSubject<[T], ServiceError>()
+        
+        let listener = db.collection(collectionName)
+            .whereField(field, isEqualTo: value)
+            .addSnapshotListener { [weak self, weak subject] snapshot, error in
                 guard let self = self else { return }
                 
-                let listener = self.db.collection(self.collectionName)
-                    .whereField(field, isEqualTo: value)
-                    .addSnapshotListener { snapshot, error in
-                        let subject = subscription as? PassthroughSubject<[T], ServiceError>
-                        
-                        if let error = error {
-                            let serviceError = self.handleError(error, operation: "LISTEN_WHERE")
-                            subject?.send(completion: .failure(serviceError))
-                            return
-                        }
-                        
-                        guard let documents = snapshot?.documents else {
-                            subject?.send([])
-                            return
-                        }
-                        
-                        do {
-                            let models = try documents.compactMap { document -> T? in
-                                try document.data(as: T.self)
-                            }
-                            subject?.send(models)
-                        } catch {
-                            let serviceError = ServiceErrorFactory.serializationFailed(
-                                for: FirebaseManager<T>.self,
-                                operation: "LISTEN_WHERE",
-                                underlyingError: error
-                            )
-                            self.logError(serviceError)
-                            subject?.send(completion: .failure(serviceError))
-                        }
-                    }
+                if let error = error {
+                    let serviceError = self.handleError(error, operation: "LISTEN_WHERE")
+                    subject?.send(completion: .failure(serviceError))
+                    return
+                }
                 
-                // Store listener for cleanup if needed
+                guard let documents = snapshot?.documents else {
+                    subject?.send([])
+                    return
+                }
+                
+                do {
+                    let models = try documents.compactMap { document -> T? in
+                        try document.data(as: T.self)
+                    }
+                    subject?.send(models)
+                } catch {
+                    let serviceError = ServiceErrorFactory.serializationFailed(
+                        for: FirebaseManager<T>.self,
+                        operation: "LISTEN_WHERE",
+                        underlyingError: error
+                    )
+                    self.logError(serviceError)
+                    subject?.send(completion: .failure(serviceError))
+                }
+            }
+        
+        // Listener'ı sakla (unique key gerekebilir)
+        let listenerKey = "\(field)_\(value)"
+        listeners[listenerKey] = listener
+        
+        return subject
+            .handleEvents(receiveCancel: { [weak self] in
+                // Cancel edildiğinde listener'ı temizle
+                self?.listeners[listenerKey]?.remove()
+                self?.listeners.removeValue(forKey: listenerKey)
             })
             .eraseToAnyPublisher()
     }
     
     func listen(where field: String, isEqualTo value: Any, limit: Int) -> AnyPublisher<[T], ServiceError> {
-        return PassthroughSubject<[T], ServiceError>()
-            .handleEvents(receiveSubscription: { [weak self] subscription in
+        let subject = PassthroughSubject<[T], ServiceError>()
+        
+        let listener = db.collection(collectionName)
+            .whereField(field, isEqualTo: value)
+            .limit(to: limit)
+            .addSnapshotListener { [weak self, weak subject] snapshot, error in
                 guard let self = self else { return }
                 
-                self.db.collection(self.collectionName)
-                    .whereField(field, isEqualTo: value)
-                    .limit(to: limit)
-                    .addSnapshotListener { snapshot, error in
-                        let subject = subscription as? PassthroughSubject<[T], ServiceError>
-                        
-                        if let error = error {
-                            let serviceError = self.handleError(error, operation: "LISTEN_WHERE_LIMIT")
-                            subject?.send(completion: .failure(serviceError))
-                            return
-                        }
-                        
-                        guard let documents = snapshot?.documents else {
-                            subject?.send([])
-                            return
-                        }
-                        
-                        do {
-                            let models = try documents.compactMap { document -> T? in
-                                try document.data(as: T.self)
-                            }
-                            subject?.send(models)
-                        } catch {
-                            let serviceError = ServiceErrorFactory.serializationFailed(
-                                for: FirebaseManager<T>.self,
-                                operation: "LISTEN_WHERE_LIMIT",
-                                underlyingError: error
-                            )
-                            self.logError(serviceError)
-                            subject?.send(completion: .failure(serviceError))
-                        }
-                    }
+                if let error = error {
+                    let serviceError = self.handleError(error, operation: "LISTEN_WHERE")
+                    subject?.send(completion: .failure(serviceError))
+                    return
+                }
                 
-                // Store listener for cleanup if needed
+                guard let documents = snapshot?.documents else {
+                    subject?.send([])
+                    return
+                }
+                
+                do {
+                    let models = try documents.compactMap { document -> T? in
+                        try document.data(as: T.self)
+                    }
+                    subject?.send(models)
+                } catch {
+                    let serviceError = ServiceErrorFactory.serializationFailed(
+                        for: FirebaseManager<T>.self,
+                        operation: "LISTEN_WHERE",
+                        underlyingError: error
+                    )
+                    self.logError(serviceError)
+                    subject?.send(completion: .failure(serviceError))
+                }
+            }
+        
+        // Listener'ı sakla (unique key gerekebilir)
+        let listenerKey = "\(field)_\(value)"
+        listeners[listenerKey] = listener
+        
+        return subject
+            .handleEvents(receiveCancel: { [weak self] in
+                // Cancel edildiğinde listener'ı temizle
+                self?.listeners[listenerKey]?.remove()
+                self?.listeners.removeValue(forKey: listenerKey)
             })
             .eraseToAnyPublisher()
     }

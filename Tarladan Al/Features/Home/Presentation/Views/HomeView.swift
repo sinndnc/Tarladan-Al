@@ -39,6 +39,10 @@ struct HomeView: View {
                     recipesSection
                 }
             }
+            .background(Colors.System.background)
+            .toolbarColorScheme(.dark, for:.navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     headerSection
@@ -47,9 +51,7 @@ struct HomeView: View {
                     tralingSection
                 }
             }
-            .refreshable {
-                
-            }
+            .refreshable {}
             .sheet(isPresented: $homeViewModel.showingLocation) {
                 if let user =  userViewModel.user {
                     LocationPickerView(addresses: user.addresses)
@@ -85,7 +87,7 @@ struct HomeView: View {
                         Text("\(defaultAddress.fullAddress)")
                             .font(.caption)
                             .fontWeight(.medium)
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.primary)
                         
                         Image(systemName: "chevron.down")
                             .font(.caption2)
@@ -126,6 +128,8 @@ struct HomeView: View {
             Text("Sonraki Teslimat")
                 .font(.headline)
                 .fontWeight(.bold)
+                .foregroundStyle(Colors.Text.primary)
+                
             VStack(spacing: 12) {
                 if let delivery = delivery{
                     HStack {
@@ -217,7 +221,7 @@ struct HomeView: View {
                 }
             }
             .padding(16)
-            .background(Color(.systemBackground))
+            .background(.white)
             .cornerRadius(12)
             .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
         }
@@ -290,7 +294,7 @@ struct HomeView: View {
                 Text("Hızlı Erişim")
                     .font(.headline)
                     .fontWeight(.semibold)
-                
+                    
                 Spacer()
             }
             .padding(.horizontal, 20)
@@ -340,6 +344,7 @@ struct HomeView: View {
                             color: .blue
                         ){}
                     )
+                    
                 }
                 .padding(.horizontal, 20)
             }
@@ -369,7 +374,7 @@ struct HomeView: View {
                 HStack(spacing: 16) {
                     ForEach(shopViewModel.categories){ category in
                         NavigationLink {
-                            SubCategoriesView(category: category)
+                            SubShopView(category: category)
                         } label: {
                             CategoryCardView(category: category)
                         }

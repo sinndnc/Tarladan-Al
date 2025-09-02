@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 // MARK: - Address Model
-struct Address: Identifiable, Codable , Hashable {
-    let id : UUID
+struct Address: FirebaseModel {
+    var id: String?
     let title: String
     let fullAddress: String
     let city: String

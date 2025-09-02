@@ -156,7 +156,6 @@ class MockDataGenerator {
         
         for i in 0..<count {
             let address = Address(
-                id: UUID(),
                 title: ["Ev Adresi", "İş Adresi", "Tatil Evi"].randomElement()!,
                 fullAddress: "\(turkishCities.randomElement()!) Mahallesi, \(Int.random(in: 1...50)). Sokak No: \(Int.random(in: 1...200))",
                 city: turkishCities.randomElement()!,
