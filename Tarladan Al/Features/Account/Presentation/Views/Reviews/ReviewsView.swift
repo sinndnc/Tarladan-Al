@@ -34,7 +34,11 @@ struct ReviewsView: View {
             }
         }
         .listStyle(InsetGroupedListStyle())
+        .background(Colors.System.background)
         .navigationTitle("Değerlendirmelerim")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(.dark, for:.navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
     }
 }

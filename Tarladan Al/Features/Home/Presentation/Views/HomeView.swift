@@ -39,6 +39,7 @@ struct HomeView: View {
                     recipesSection
                 }
             }
+            .toolbarTitleDisplayMode(.inline)
             .background(Colors.System.background)
             .toolbarColorScheme(.dark, for:.navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)

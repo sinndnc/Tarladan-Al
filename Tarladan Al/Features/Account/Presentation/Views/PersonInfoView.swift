@@ -109,7 +109,11 @@ struct PersonInfoView: View {
                 }
             }
             .navigationTitle("Kişisel Bilgiler")
-            .navigationBarTitleDisplayMode(.inline)
+            .toolbarTitleDisplayMode(.inline)
+            .background(Colors.System.background)
+            .toolbarColorScheme(.dark, for:.navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .toolbar{
                 ToolbarItem(placement: .topBarTrailing) {
                     Button{

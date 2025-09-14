@@ -45,9 +45,6 @@ struct FavoritesView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Search Bar
-            searchSection
-            
             // Category Filter
             categoryFilterSection
             
@@ -62,34 +59,17 @@ struct FavoritesView: View {
             }
         }
         .navigationTitle("Favorilerim")
-        .navigationBarTitleDisplayMode(.inline)
+        .toolbarTitleDisplayMode(.inline)
+        .background(Colors.System.background)
+        .toolbarColorScheme(.dark, for:.navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
+        .searchable(text: .constant(""), prompt: "Search products")
         .sheet(item: $showingProductDetail) { product in
             ProductDetailView(product: product)
         }
     }
     
-    // MARK: - Search Section
-    private var searchSection: some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
-            
-            TextField("Ürün, çiftçi veya konum ara...", text: $searchText)
-                .textFieldStyle(PlainTextFieldStyle())
-            
-            if !searchText.isEmpty {
-                Button("Temizle") {
-                    searchText = ""
-                }
-                .font(.caption)
-                .foregroundColor(.blue)
-            }
-        }
-        .padding(7)
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
-        .padding(.horizontal)
-    }
     
     // MARK: - Category Filter
     private var categoryFilterSection: some View {
@@ -115,6 +95,7 @@ struct FavoritesView: View {
             .padding(.horizontal)
         }
         .padding(.vertical, 8)
+        .background(Colors.UI.tabBackground)
     }
     
     // MARK: - View Toggle
@@ -123,7 +104,7 @@ struct FavoritesView: View {
             HStack {
                 Text("\(filteredProducts.count) favori ürün")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.white)
                 
                 Spacer()
                 
@@ -145,6 +126,7 @@ struct FavoritesView: View {
             .padding(.vertical,10)
             Divider()
         }
+        .background(Colors.UI.tabBackground)
     }
     
     // MARK: - Loading View
