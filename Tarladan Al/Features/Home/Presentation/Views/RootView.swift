@@ -5,6 +5,7 @@
 //  Created by Sinan Dinç on 8/7/25.
 //
 import SwiftUI
+import FirebaseFirestore
 
 class RootViewModel: ObservableObject {
     @Published var selectedTab: TabEnum = .home
@@ -17,6 +18,8 @@ struct RootView: View {
     @StateObject private var cartViewModel = CartViewModel()
     @StateObject private var orderViewModel = OrderViewModel()
     @StateObject private var searchViewModel = SearchViewModel()
+    @StateObject private var recipeViewModel = RecipeViewModel()
+    @StateObject private var productViewModel = ProductViewModel()
     @StateObject private var accountViewModel = AccountViewModel()
     @StateObject private var deliveryViewModel = DeliveryViewModel()
     
@@ -75,13 +78,33 @@ struct RootView: View {
         .environmentObject(cartViewModel)
         .environmentObject(orderViewModel)
         .environmentObject(searchViewModel)
+        .environmentObject(recipeViewModel)
+        .environmentObject(productViewModel)
         .environmentObject(accountViewModel)
         .environmentObject(deliveryViewModel)
         .onAppear {
+//            let recipesData = RecipeMockData.convertToFirebaseData()
+//            let db = Firestore.firestore()
+//            let batch = db.batch()
+//
+//            for recipeData in recipesData {
+//                let docRef = db.collection("recipes").document()
+//                batch.setData(recipeData, forDocument: docRef)
+//            }
+//
+//            batch.commit { error in
+//                if let error = error {
+//                    print("Error writing batch: \(error)")
+//                } else {
+//                    print("Batch write succeeded.")
+//                }
+//            }
             orderViewModel.setUser(userViewModel.user)
+            shopViewModel.setUser(userViewModel.user)
         }
         .onChange(of: userViewModel.user) { oldUser, newUser in
             orderViewModel.setUser(newUser)
+            shopViewModel.setUser(newUser)
         }
     }
 }

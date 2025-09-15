@@ -20,7 +20,6 @@ class ShopViewModel: ObservableObject {
     @Published var cartItemCount = 0
     @Published var searchText = ""
     
-    @Published var products: [Product] = []
     @Published var quickActions: [QuickAction] = []
     @Published var categories: [ProductCategory] = []
     @Published var selectedCategory: ProductCategory?
@@ -29,15 +28,16 @@ class ShopViewModel: ObservableObject {
     @Published var featuredDescription = "Taze yaz sebzeleri ve meyvelerinde %30'a varan indirimler"
     @Published var showFeaturedBanner = true
     
+    private var currentUser: User?
     private var cancellables = Set<AnyCancellable>()
     
-    private let userID = "02BFE90C-5079-4D24-ACA7-3993B40E6CEB"
+    func setUser(_ user: User?) {
+        self.currentUser = user
+    }
     
-    @Injected private var listenProductsUseCase: ListenProductsUseCaseProtocol
     @Injected private var addToFavoritesUseCase: AddToFavoritesUseCaseProtocol
     
     init() {
-        self.loadProducts()
         self.categories = setupCategories()
         self.quickActions = setupQuickActions()
     }
@@ -50,24 +50,6 @@ class ShopViewModel: ObservableObject {
         showCart.toggle()
     }
     
-    func loadProducts() {
-        listenProductsUseCase.execute()
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .finished:
-                        Logger.log("✅ VIEW MODEL: Completed successfully")
-                    case .failure(let error):
-                        Logger.log("❌ VIEW MODEL: Error: \(error)")
-                    }
-                },
-                receiveValue: { [weak self] products in
-                    self?.products = products
-                }
-            )
-            .store(in: &cancellables)
-    }
     
     private func handleQuickAction(_ action: QuickActionType) {
         // Implement quick action logic
@@ -98,7 +80,11 @@ class ShopViewModel: ObservableObject {
     
     
     func addToFavorites(for productId: String){
-        addToFavoritesUseCase.execute(id: userID, productId: productId)
+        guard let currentUser = currentUser,
+              let id = currentUser.id else {
+            return
+        }
+        addToFavoritesUseCase.execute(id: id, productId: productId)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { completion in
@@ -114,7 +100,6 @@ class ShopViewModel: ObservableObject {
             )
             .store(in: &cancellables)
     }
-    
 }
 
 extension ShopViewModel{
@@ -136,11 +121,6 @@ extension ShopViewModel{
         return nil
     }
     
-    func getProductsSubCategory(by name: String) -> [Product] {
-        return products.filter({
-            return $0.subCategoryName == name
-        })
-    }
     
     func getCategoryAndSubCategory(by subCategoryId: String) -> (category: ProductCategory, subCategory: ProductSubCategory)? {
         for category in categories {

@@ -15,6 +15,7 @@ struct ProductsView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var cartViewModel: CartViewModel
     @EnvironmentObject private var shopViewModel: ShopViewModel
+    @EnvironmentObject private var productViewModel: ProductViewModel
     
     @State private var selectedVarient : String? = nil
     
@@ -130,15 +131,13 @@ struct ProductsView: View {
     
     private var productsViewSection: some View{
         ScrollView {
-            
+            let filteredProducts = productViewModel.products.getProductsSubCategory(by: subCategory.name)
             Group {
                 if shopViewModel.viewMode == .grid {
                     LazyVGrid(columns: [
                         GridItem(.flexible(), spacing: 12),
                         GridItem(.flexible(), spacing: 12)
                     ], spacing: 16) {
-                        
-                        let filteredProducts = shopViewModel.getProductsSubCategory(by: subCategory.name)
                         ForEach(filteredProducts,id:\.self) { product in
                             NavigationLink {
                                 ProductDetailView(product: product)
@@ -155,7 +154,6 @@ struct ProductsView: View {
                     .padding(.horizontal, 20)
                 } else {
                     LazyVStack(spacing: 12) {
-                        let filteredProducts = shopViewModel.getProductsSubCategory(by: subCategory.name)
                         ForEach(filteredProducts,id:\.self) { product in
                             NavigationLink {
                                 ProductDetailView(product: product)

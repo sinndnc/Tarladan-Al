@@ -13,6 +13,8 @@ struct HomeView: View {
     @EnvironmentObject private var rootViewModel: RootViewModel
     @EnvironmentObject private var userViewModel: UserViewModel
     @EnvironmentObject private var shopViewModel: ShopViewModel
+    @EnvironmentObject private var recipeViewModel: RecipeViewModel
+    @EnvironmentObject private var productViewModel: ProductViewModel
     @EnvironmentObject private var deliveryViewModel: DeliveryViewModel
     
     var body: some View {
@@ -33,8 +35,6 @@ struct HomeView: View {
                     categoriesSection
                     
                     seasonalHighlightsSection
-                    
-                    popularProductsSection
                     
                     recipesSection
                 }
@@ -353,7 +353,6 @@ struct HomeView: View {
         .padding(.top, 24)
     }
     
-    // MARK: - Categories Section
     private var categoriesSection: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -388,7 +387,6 @@ struct HomeView: View {
         .padding(.top)
     }
     
-    // MARK: - Seasonal Highlights
     private var seasonalHighlightsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
@@ -408,15 +406,17 @@ struct HomeView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-//                    ForEach(products){ product in
-//                        NavigationLink {
-//                            ProductDetailView(product: product)
-//                        } label: {
-//                            ProductCard(product: product)
-//                        }
-//                        .tint(.primary)
-//                        .haptic(.medium)
-//                    }
+                    ForEach(productViewModel.products.filter{$0.subCategory?.isInSeason ?? false }) { product in
+                        NavigationLink {
+                            ProductDetailView(product: product)
+                        } label: {
+                            ProductCard(product: product){
+                                
+                            }
+                        }
+                        .tint(.primary)
+                        .haptic(.medium)
+                    }
                 }
                 .padding(.horizontal, 20)
             }
@@ -424,63 +424,6 @@ struct HomeView: View {
         .padding(.top, 24)
     }
     
-    // MARK: - Popular Products
-    private var popularProductsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("Popüler Ürünler")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                Spacer()
-                
-                Button("Tümü") {
-                    // Action
-                }
-                .font(.subheadline)
-                .foregroundColor(.green)
-            }
-            .padding(.horizontal, 20)
-            
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 2), spacing: 16) {
-                PopularProductItem(
-                    name: "Organik Yumurta",
-                    price: "₺25,00",
-                    unit: "/10'lu",
-                    rating: 4.8,
-                    reviews: 124
-                )
-                
-                PopularProductItem(
-                    name: "Organik Süt",
-                    price: "₺12,50",
-                    unit: "/1L",
-                    rating: 4.9,
-                    reviews: 89
-                )
-                
-                PopularProductItem(
-                    name: "Tam Buğday Ekmek",
-                    price: "₺8,00",
-                    unit: "/adet",
-                    rating: 4.7,
-                    reviews: 156
-                )
-                
-                PopularProductItem(
-                    name: "Organik Peynir",
-                    price: "₺35,00",
-                    unit: "/250g",
-                    rating: 4.6,
-                    reviews: 67
-                )
-            }
-            .padding(.horizontal, 20)
-        }
-        .padding(.top, 24)
-    }
-    
-    // MARK: - Recipe Section
     private var recipesSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
@@ -499,24 +442,10 @@ struct HomeView: View {
             .padding(.horizontal, 20)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    RecipeCard(
-                        title: "Organik Sebze Çorbası",
-                        duration: "30 dk",
-                        difficulty: "Kolay"
-                    )
-                    
-                    RecipeCard(
-                        title: "Mevsim Salatası",
-                        duration: "15 dk",
-                        difficulty: "Çok Kolay"
-                    )
-                    
-                    RecipeCard(
-                        title: "Organik Smoothie",
-                        duration: "5 dk",
-                        difficulty: "Çok Kolay"
-                    )
+                HStack(spacing: 10) {
+                    ForEach(recipeViewModel.recipes){ recipe in
+                        RecipeCardView(recipe: recipe)
+                    }
                 }
                 .padding(.horizontal, 20)
             }
@@ -524,133 +453,3 @@ struct HomeView: View {
         .padding(.top, 24)
     }
 }
-
-struct PopularProductItem: View {
-    let name: String
-    let price: String
-    let unit: String
-    let rating: Double
-    let reviews: Int
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Product Image Placeholder
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.gray.opacity(0.1))
-                .frame(height: 100)
-                .overlay(
-                    Image(systemName: "photo")
-                        .font(.title2)
-                        .foregroundColor(.gray)
-                )
-            
-            VStack(alignment: .leading, spacing: 8) {
-                Text(name)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .lineLimit(2)
-                
-                HStack(spacing: 4) {
-                    Image(systemName: "star.fill")
-                        .font(.caption2)
-                        .foregroundColor(.yellow)
-                    
-                    Text(String(format: "%.1f", rating))
-                        .font(.caption)
-                        .fontWeight(.medium)
-                    
-                    Text("(\(reviews))")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                }
-                
-                HStack(alignment: .bottom, spacing: 4) {
-                    Text(price)
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                    
-                    Text(unit)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                Button(action: {}) {
-                    HStack {
-                        Image(systemName: "plus")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                        
-                        Text("Ekle")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                    }
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .background(Color.green)
-                    .cornerRadius(8)
-                }
-            }
-        }
-        .padding(12)
-        .background(Color(.systemBackground))
-        .cornerRadius(16)
-        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
-    }
-}
-
-struct RecipeCard: View {
-    let title: String
-    let duration: String
-    let difficulty: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Recipe Image Placeholder
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.orange.opacity(0.1))
-                .frame(height: 100)
-                .overlay(
-                    Image(systemName: "photo")
-                        .font(.title2)
-                        .foregroundColor(.orange)
-                )
-            
-            VStack(alignment: .leading, spacing: 6) {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .lineLimit(2)
-                
-                HStack(spacing: 12) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "clock")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                        
-                        Text(duration)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    HStack(spacing: 4) {
-                        Image(systemName: "chart.bar")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                        
-                        Text(difficulty)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
-        }
-        .frame(width: 140)
-        .padding(12)
-        .background(Color(.systemBackground))
-        .cornerRadius(16)
-        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
-    }
-}
-

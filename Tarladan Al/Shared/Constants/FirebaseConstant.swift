@@ -11,6 +11,7 @@ struct FirebaseConstants {
     //MARK: - Collection
     static let users = "users"
     static let orders = "orders"
+    static let recipes = "recipes"
     static let farmers = "farmers"
     static let products = "products"
     static let favorites = "favorites"
@@ -18,5 +19,6 @@ struct FirebaseConstants {
     
     //MARK: - Fields
     static let owner_id = "owner_id"
+    
     
 }

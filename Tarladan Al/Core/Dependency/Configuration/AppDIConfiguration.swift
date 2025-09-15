@@ -93,6 +93,21 @@ class AppDIConfiguration {
             )
         }
         
+        //MARK: - Recipe Configuration
+        container.register(RecipeRemoteDataSourceProtocol.self, scope: .singleton) { container in
+            RecipeRemoteDataSource(db: .firestore())
+        }
+        container.register(RecipeRepositoryProtocol.self, scope: .singleton) { container in
+            RecipeRepository(
+                remoteDataSource: container.resolve(RecipeRemoteDataSourceProtocol.self)
+            )
+        }
+        container.register(ListenRecipesUseCaseProtocol.self, scope: .singleton) { container in
+            ListenRecipesUseCase(
+                repository: container.resolve(RecipeRepositoryProtocol.self)
+            )
+        }
+        
         
         //MARK: - Product Configuration
         container.register(ProductRemoteDataSourceProtocol.self, scope: .singleton) { container in

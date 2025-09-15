@@ -26,7 +26,7 @@ class ProductRepository: ProductRepositoryProtocol {
     }
     
     func listenProducts() -> AnyPublisher<[Product], ProductError> {
-        return remoteDataSource.listenToProducts()
+        return remoteDataSource.listenProducts()
             .mapError { error in
                 Logger.log("❌ REPOSITORY ERROR: \(error)")
                 return ProductError.emptyItems

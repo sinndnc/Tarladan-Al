@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct Product: FirebaseModel ,Hashable {
+struct Product: FirebaseModel {
     @DocumentID var id: String?
     let farmerId: String
     let farmerName: String

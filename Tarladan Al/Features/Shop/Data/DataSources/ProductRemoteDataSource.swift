@@ -8,7 +8,7 @@ import FirebaseFirestore
 import Combine
 
 protocol ProductRemoteDataSourceProtocol{
-    func listenToProducts() -> AnyPublisher<[Product], BaseServiceError<FirebaseManager<Product>>>
+    func listenProducts() -> AnyPublisher<[Product], BaseServiceError<FirebaseManager<Product>>>
     func getProductById(id: String) -> AnyPublisher<Product, BaseServiceError<FirebaseManager<Product>>>
 }
 
@@ -25,7 +25,7 @@ final class ProductRemoteDataSource: FirebaseManager<Product> ,ProductRemoteData
             .eraseToAnyPublisher()
     }
     
-    func listenToProducts() -> AnyPublisher<[Product], BaseServiceError<FirebaseManager<Product>>> {
+    func listenProducts() -> AnyPublisher<[Product], BaseServiceError<FirebaseManager<Product>>> {
         self.listen()
             .eraseToAnyPublisher()
     }

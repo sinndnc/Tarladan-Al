@@ -42,3 +42,13 @@ extension Product {
         return dict
     }
 }
+
+extension [Product] {
+    
+    func getProductsSubCategory(by name: String) -> [Product] {
+        return self.filter({
+            return $0.subCategoryName == name
+        })
+    }
+    
+}
