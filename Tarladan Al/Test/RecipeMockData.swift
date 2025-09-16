@@ -5,12 +5,12 @@
 //  Created by Sinan Dinç on 9/16/25.
 //
 import Foundation
+import FirebaseFirestore
 
 // MARK: - Recipe Mock Data Generator
 class RecipeMockData {
     
-    // MARK: - Firebase-Ready Mock Recipes
-    static let mockRecipes: [Recipe] = [
+    private let mockRecipes: [Recipe] = [
         Recipe(
             title: "Klasik Pankek",
             description: "Kahvaltı sofranızın vazgeçilmezi! Yumuşacık ve lezzetli pankek tarifi.",
@@ -353,50 +353,13 @@ class RecipeMockData {
         )
     ]
     
-    // MARK: - Firebase Collection Converter
-    static func convertToFirebaseData() -> [[String: Any]] {
-        return mockRecipes.map { recipe in
-            [
-                "title": recipe.title,
-                "description": recipe.description,
-                "imageName": recipe.imageName,
-                "prepTime": recipe.prepTime,
-                "cookTime": recipe.cookTime,
-                "servings": recipe.servings,
-                "difficulty": recipe.difficulty.rawValue,
-                "category": recipe.category.rawValue,
-                "ingredients": recipe.ingredients.map { ingredient in
-                    [
-                        "id": ingredient.id.uuidString,
-                        "name": ingredient.name,
-                        "amount": ingredient.amount,
-                        "unit": ingredient.unit
-                    ]
-                },
-                "instructions": recipe.instructions,
-                "nutritionInfo": recipe.nutritionInfo.map { nutrition in
-                    [
-                        "calories": nutrition.calories,
-                        "protein": nutrition.protein,
-                        "carbs": nutrition.carbs,
-                        "fat": nutrition.fat,
-                        "fiber": nutrition.fiber ?? 0
-                    ]
-                } ?? [:],
-                "tags": recipe.tags,
-            ]
+    
+    func upload(){
+        for recipe in mockRecipes {
+            let db = Firestore.firestore()
+            try? db.collection(FirebaseConstants.recipes)
+                .addDocument(from: recipe)
         }
     }
     
-    // MARK: - JSON Export for Firebase Import
-    static func generateFirebaseJSON() -> String {
-        let firebaseData = convertToFirebaseData()
-        
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: firebaseData, options: .prettyPrinted)
-            return String(data: jsonData, encoding: .utf8) ?? "JSON serialization failed"
-        } catch {
-            return "Error generating JSON: \(error.localizedDescription)"
-        }
-    }
 }

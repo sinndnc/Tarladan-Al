@@ -81,7 +81,6 @@ final class UserRepository : UserRepositoryProtocol {
         return Publishers.MergeMany(publishers)
             .collect(productIds.count)
             .map { products in
-                Logger.log("\(products)")
                 return products.compactMap { $0 }
             }
             .eraseToAnyPublisher()

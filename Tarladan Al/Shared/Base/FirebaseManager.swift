@@ -339,8 +339,17 @@ class FirebaseManager<T: FirebaseModel> {
         subjects[listenerKey] = subject
         
         // Firebase listener oluştur
-        let listener = db.collection(collectionName).addSnapshotListener { [weak self] snapshot, error in
+        let listener = db.collection(collectionName)
+            .addSnapshotListener(includeMetadataChanges: true)
+        { [weak self] snapshot, error in
             guard let self = self else { return }
+            guard let snapshot = snapshot else { return }
+            
+            
+            if snapshot.metadata.isFromCache {
+                print("Veri(\(T.self) ) cache'den geldi - internet yok")
+                return
+            }
             
             if let error = error {
                 let serviceError = self.handleError(error, operation: "LISTEN_COLLECTION")
@@ -352,14 +361,8 @@ class FirebaseManager<T: FirebaseModel> {
                 return
             }
             
-            guard let documents = snapshot?.documents else {
-                Logger.log("📝 EMPTY DOCUMENTS (\(listenerKey))")
-                subject.send([])
-                return
-            }
-            
             do {
-                let models = try documents.compactMap { document -> T? in
+                let models = try snapshot.documents.compactMap { document -> T? in
                     try document.data(as: T.self)
                 }
                 subject.send(models)

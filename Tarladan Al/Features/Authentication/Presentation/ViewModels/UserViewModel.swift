@@ -68,15 +68,13 @@ class UserViewModel : ObservableObject{
             .sink(
                 receiveCompletion: { completion in
                     switch completion {
-                    case .finished:
-                        Logger.log("")
                     case .failure(let error):
                         Logger.log("VIEW MODEL: Error: \(error)")
+                    case .finished: break
                     }
                 },
                 receiveValue: { [weak self] user in
                     self?.user = user
-                    Logger.log("USERVIEWMODEL: \(user)")
                 }
             )
             .store(in: &cancellables)

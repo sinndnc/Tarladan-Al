@@ -83,22 +83,6 @@ struct RootView: View {
         .environmentObject(accountViewModel)
         .environmentObject(deliveryViewModel)
         .onAppear {
-//            let recipesData = RecipeMockData.convertToFirebaseData()
-//            let db = Firestore.firestore()
-//            let batch = db.batch()
-//
-//            for recipeData in recipesData {
-//                let docRef = db.collection("recipes").document()
-//                batch.setData(recipeData, forDocument: docRef)
-//            }
-//
-//            batch.commit { error in
-//                if let error = error {
-//                    print("Error writing batch: \(error)")
-//                } else {
-//                    print("Batch write succeeded.")
-//                }
-//            }
             orderViewModel.setUser(userViewModel.user)
             shopViewModel.setUser(userViewModel.user)
         }

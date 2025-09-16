@@ -70,6 +70,7 @@ struct HomeView: View {
         }
     }
     
+    //MARK: - Trailing Section
     private var headerSection: some View {
         VStack(alignment: .leading,spacing: 0) {
             Text("Teslimat Adresi")
@@ -102,6 +103,7 @@ struct HomeView: View {
         }
     }
     
+    //MARK: - Trailing Section
     private var tralingSection: some View {
         HStack(spacing: 16) {
             NavigationLink {
@@ -124,6 +126,7 @@ struct HomeView: View {
         }
     }
     
+    //MARK: - Delivery Section
     private func deliveryStatusCard(_ delivery: Delivery?) -> some View {
         VStack(alignment: .leading){
             Text("Sonraki Teslimat")
@@ -288,7 +291,7 @@ struct HomeView: View {
         .padding(.top, 16)
     }
     
-    // MARK: - Quick Actions
+    // MARK: - Quick Actions Section
     private var quickActionsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
@@ -353,6 +356,7 @@ struct HomeView: View {
         .padding(.top, 24)
     }
     
+    //MARK: - Category Section
     private var categoriesSection: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -387,6 +391,7 @@ struct HomeView: View {
         .padding(.top)
     }
     
+    //MARK: - Seasonal Section
     private var seasonalHighlightsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
@@ -424,6 +429,7 @@ struct HomeView: View {
         .padding(.top, 24)
     }
     
+    //MARK: - Recipe Sections
     private var recipesSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {

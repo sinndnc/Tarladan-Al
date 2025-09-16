@@ -26,10 +26,8 @@ final class OrderViewModel: ObservableObject {
             return
         }
         
-        // Aynı user ise tekrar load etme
         guard currentUserId != userId else { return }
         
-        Logger.log("\(userId)")
         self.currentUserId = userId
         self.loadOrders(of: userId)
     }
@@ -50,7 +48,6 @@ final class OrderViewModel: ObservableObject {
                     // self.orders = []
                 }
             } receiveValue: { [weak self] orders in
-                Logger.log("ORDERS:\(orders)")
                 self?.orders = orders
             }
             .store(in: &cancellables)
