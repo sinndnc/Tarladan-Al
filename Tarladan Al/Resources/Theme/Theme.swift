@@ -5,8 +5,8 @@
 //  Created by Sinan Dinç on 8/11/25.
 //
 
+import SwiftUI
 import Foundation
-import SwiftUICore
 
 enum Theme : String, CaseIterable  {
     case light = "Light"

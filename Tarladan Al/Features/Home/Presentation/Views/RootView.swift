@@ -16,8 +16,8 @@ struct RootView: View {
     @StateObject private var rootViewModel = RootViewModel()
     @StateObject private var shopViewModel = ShopViewModel()
     @StateObject private var cartViewModel = CartViewModel()
+    @StateObject private var menuViewModel = MenuViewModel()
     @StateObject private var orderViewModel = OrderViewModel()
-    @StateObject private var searchViewModel = SearchViewModel()
     @StateObject private var recipeViewModel = RecipeViewModel()
     @StateObject private var productViewModel = ProductViewModel()
     @StateObject private var accountViewModel = AccountViewModel()
@@ -31,43 +31,23 @@ struct RootView: View {
                 Tab("Home", systemImage: "house", value: .home) {
                     HomeView()
                         .tag(TabEnum.home)
-                        .toolbarColorScheme(.dark, for: .tabBar)
-                        .toolbarBackground(.visible, for: .tabBar)
-                        .toolbarBackgroundVisibility(.visible, for: .tabBar)
-                        .toolbarBackground(Colors.UI.tabBackground, for: .tabBar)
                 }
                 Tab("Shops", systemImage:"cart.fill",value: .shop){
                     ShopView()
                         .tag(TabEnum.shop)
-                        .toolbarColorScheme(.dark, for: .tabBar)
-                        .toolbarBackground(.visible, for: .tabBar)
-                        .toolbarBackgroundVisibility(.visible, for: .tabBar)
-                        .toolbarBackground(Colors.UI.tabBackground, for: .tabBar)
                 }
-                .badge(cartViewModel.uniqueItemsCount)
-                Tab("Search",systemImage: "magnifyingglass",value: .search){
-                    SearchView()
+                .badge(cartViewModel.items.count)
+                Tab("Menu",systemImage: "line.3.horizontal",value: .search){
+                    MenuView()
                         .tag(TabEnum.search)
-                        .toolbarColorScheme(.dark, for: .tabBar)
-                        .toolbarBackground(.visible, for: .tabBar)
-                        .toolbarBackgroundVisibility(.visible, for: .tabBar)
-                        .toolbarBackground(Colors.UI.tabBackground, for: .tabBar)
                 }
                 Tab("Deliveries",systemImage: "truck.box.fill",value: .deliveries){
                     DeliveryView()
                         .tag(TabEnum.deliveries)
-                        .toolbarColorScheme(.dark, for: .tabBar)
-                        .toolbarBackground(.visible, for: .tabBar)
-                        .toolbarBackgroundVisibility(.visible, for: .tabBar)
-                        .toolbarBackground(Colors.UI.tabBackground, for: .tabBar)
                 }
                 Tab("Account", systemImage: "person.circle.fill", value: .account) {
                     AccountView()
                         .tag(TabEnum.account)
-                        .toolbarColorScheme(.dark, for: .tabBar)
-                        .toolbarBackground(.visible, for: .tabBar)
-                        .toolbarBackgroundVisibility(.visible, for: .tabBar)
-                        .toolbarBackground(Colors.UI.tabBackground, for: .tabBar)
                 }
             }
             .navigationBarBackButtonHidden(true)
@@ -77,7 +57,6 @@ struct RootView: View {
         .environmentObject(shopViewModel)
         .environmentObject(cartViewModel)
         .environmentObject(orderViewModel)
-        .environmentObject(searchViewModel)
         .environmentObject(recipeViewModel)
         .environmentObject(productViewModel)
         .environmentObject(accountViewModel)

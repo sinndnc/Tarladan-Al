@@ -28,22 +28,10 @@ struct DeliveryView: View {
                 }
                 .padding()
             }
-            .background(Colors.System.background)
-            .toolbarColorScheme(.dark, for:.navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
+            .navigationTitle(Text("Teslimatlar"))
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationSubtitleCompat("Hadi hemen kontrol et siparişlerini!")
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    VStack(alignment: .leading){
-                        Text("Teslimatlar")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                        Text("Teslimatlar hakkında her şey")
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .foregroundStyle(.gray)
-                    }
-                }
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack{
                         Button(action: {}) {
@@ -52,13 +40,14 @@ struct DeliveryView: View {
                                 .fontWeight(.medium)
                                 .foregroundColor(.primary)
                         }
-                        
-                        Button(action: {}) {
-                            Image(systemName: "line.3.horizontal")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.primary)
-                        }
+                    }
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {}) {
+                        Image(systemName: "line.3.horizontal")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
                     }
                 }
             }

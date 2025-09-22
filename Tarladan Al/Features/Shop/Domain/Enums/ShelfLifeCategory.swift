@@ -5,7 +5,7 @@
 //  Created by Sinan Dinç on 8/17/25.
 //
 
-import SwiftUICore
+import SwiftUI
 
 enum ShelfLifeCategory {
     case veryShort, short, medium, long, veryLong

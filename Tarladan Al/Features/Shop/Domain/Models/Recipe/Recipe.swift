@@ -5,8 +5,8 @@
 //  Created by Sinan Dinç on 8/7/25.
 //
 
+import SwiftUI
 import Foundation
-import SwiftUICore
 import FirebaseFirestore
 
 // MARK: - Recipe Model

@@ -61,9 +61,6 @@ struct DeliveryDetailView: View {
             .navigationTitle("Sipariş Detayı")
             .background(Colors.System.background)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
-            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
         }
     }
     

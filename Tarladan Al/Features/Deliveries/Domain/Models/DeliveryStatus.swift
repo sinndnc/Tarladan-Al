@@ -5,7 +5,7 @@
 //  Created by Sinan Dinç on 8/6/25.
 //
 
-import SwiftUICore
+import SwiftUI
 
 enum DeliveryStatus: String, CaseIterable, Codable {
     case pending = "pending"

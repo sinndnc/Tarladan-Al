@@ -93,11 +93,8 @@ struct DeliveryTrackingView: View {
                 }
                 .toolbarRole(.editor)
                 .navigationTitle("Sipariş Takip")
-                .background(Colors.System.background)
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbarColorScheme(.dark, for: .navigationBar)
-                .toolbarBackgroundVisibility(.visible, for: .navigationBar)
-                .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)            }
+            }
         }
     }
     

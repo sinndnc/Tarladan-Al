@@ -10,28 +10,30 @@ struct QuickActionCard: View {
     let quickAction: QuickAction
     
     var body: some View {
-            VStack(spacing: 12) {
-                Image(systemName: quickAction.icon)
-                    .font(.system(size: 24))
-                    .foregroundColor(quickAction.color)
-                    .frame(width: 50, height: 50)
-                    .background(quickAction.color.opacity(0.15))
-                    .clipShape(Circle())
+        VStack(spacing: 12) {
+            Image(systemName: quickAction.icon)
+                .font(.system(size: 24))
+                .foregroundColor(quickAction.color)
+                .frame(width: 50, height: 50)
+                .background(quickAction.color.opacity(0.15))
+                .clipShape(Circle())
+            
+            VStack(spacing: 4) {
+                Text(quickAction.title)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.primary)
                 
-                VStack(spacing: 4) {
-                    Text(quickAction.title)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.primary)
-                    
-                    Text(quickAction.subtitle)
-                        .font(.system(size: 12))
-                        .foregroundColor(.secondary)
-                }
+                Text(quickAction.subtitle)
+                    .font(.system(size: 12))
+                    .foregroundColor(.secondary)
             }
-            .frame(width: 120)
-            .padding(.vertical, 16)
-            .background(Colors.System.surface)
-            .cornerRadius(16)
-            .shadow(color: .black.opacity(0.1), radius: 8)
+        }
+        .frame(width: 120)
+        .padding(.vertical, 15)
+        .background(Colors.System.surface)
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.1), radius: 8)
+        .padding(.vertical,10)
     }
+    
 }

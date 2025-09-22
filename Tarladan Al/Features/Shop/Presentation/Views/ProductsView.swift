@@ -55,16 +55,8 @@ struct ProductsView: View {
             ZStack(alignment: .topTrailing) {
                 Image(systemName: "bag")
                     .foregroundColor(.primary)
-                
-                if cartViewModel.uniqueItemsCount > 0 {
-                    Text("\(cartViewModel.uniqueItemsCount)")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundColor(.white)
-                        .frame(width: 18, height: 18)
-                        .background(Color.red)
-                        .clipShape(Circle())
-                        .offset(x: 8, y: -8)
-                }
+                    .badge(cartViewModel.items.count)
+               
             }
         }
         .withHaptic(.medium)

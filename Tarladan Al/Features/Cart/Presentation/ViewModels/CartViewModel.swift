@@ -21,10 +21,6 @@ class CartViewModel: ObservableObject {
         items.reduce(0) { $0 + $1.quantity }
     }
     
-    var uniqueItemsCount: Int {
-        items.count
-    }
-    
     var totalPrice: Double {
         items.reduce(0) { $0 + $1.totalPrice }
     }

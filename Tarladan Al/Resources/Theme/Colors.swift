@@ -5,7 +5,7 @@
 //  Created by Sinan Dinç on 8/29/25.
 //
 
-import SwiftUICore
+import SwiftUI
 
 struct Colors {
     

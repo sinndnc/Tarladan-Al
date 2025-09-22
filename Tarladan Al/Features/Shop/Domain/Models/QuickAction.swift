@@ -5,8 +5,8 @@
 //  Created by Sinan Dinç on 8/14/25.
 //
 
+import SwiftUI
 import Foundation
-import SwiftUICore
 
 struct QuickAction: Identifiable {
     let id = UUID()

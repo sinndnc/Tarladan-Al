@@ -16,33 +16,46 @@ struct ShopView: View {
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    // Featured Banner
-                    if shopViewModel.showFeaturedBanner {
-                        featuredBanner
-                    }
+                VStack(spacing: 5) {
                     
-                    // Quick Actions
                     quickActionsSection
                     
-                    // Categories Grid
-                    categoriesGrid
+                    productCategoriesSection
                     
-                    // Footer Info
+                    productListSection
+                    
                     footerInfo
                 }
             }
-            .background(Colors.System.background)
-            .toolbarColorScheme(.dark, for:.navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
+            .navigationTitle("Tünaydın")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationSubtitleCompat("Hoşgeldiniz,\(userViewModel.user?.fullName ?? "")")
+            .searchable(
+                text: $shopViewModel.searchText,
+                prompt: "Search for products"
+            )
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    headerSection
+                    Button(action: { shopViewModel.showScan.toggle() }) {
+                        Image(systemName: "qrcode.viewfinder")
+                            .foregroundColor(.primary)
+                    }
+                    .withHaptic()
                 }
+                
                 ToolbarItem(placement: .topBarTrailing) {
-                    shopCardSection
+                    Button(action: {
+                        shopViewModel.toggleCart()
+                    }) {
+                        Image(systemName: "bag")
+                            .foregroundColor(.primary)
+                    }
+                    .withHaptic(.medium)
+                    .badge(cartViewModel.items.count)
                 }
+            }
+            .sheet(isPresented: $shopViewModel.showScan) {
+                ScanView()
             }
             .sheet(isPresented: $shopViewModel.showCart) {
                 CartView()
@@ -59,74 +72,6 @@ struct ShopView: View {
         }
     }
     
-    private var shopCardSection: some View {
-        Button(action: {
-            shopViewModel.toggleCart()
-        }) {
-            ZStack(alignment: .topTrailing) {
-                Image(systemName: "bag")
-                    .foregroundColor(.primary)
-                
-                if cartViewModel.uniqueItemsCount > 0 {
-                    Text("\(cartViewModel.uniqueItemsCount)")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundColor(.white)
-                        .frame(width: 18, height: 18)
-                        .background(Color.red)
-                        .clipShape(Circle())
-                        .offset(x: 8, y: -8)
-                }
-            }
-        }
-        .withHaptic(.medium)
-    }
-    
-    private var headerSection: some View {
-        VStack(alignment: .leading) {
-            Text("Tünaydın")
-                .font(.headline)
-                .fontWeight(.bold)
-            Text("Hoşgeldiniz,\(userViewModel.user?.fullName ?? "")")
-                .font(.caption)
-                .fontWeight(.medium)
-                .foregroundStyle(.gray)
-        }
-    }
-    
-    private var featuredBanner: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(shopViewModel.featuredTitle)
-                .font(.system(size: 24, weight: .bold))
-                .foregroundColor(.white)
-            
-            Text(shopViewModel.featuredDescription)
-                .font(.system(size: 16))
-                .foregroundColor(.white.opacity(0.9))
-            
-            Button(action: {
-                // Handle featured banner action
-            }) {
-                Text("Keşfet")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.green)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 10)
-                    .background(Color.white)
-                    .cornerRadius(25)
-            }
-        }
-        .padding()
-        .background(
-            LinearGradient(
-                colors: [Color.green, Color.green.opacity(0.8)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
-        .cornerRadius(20)
-        .padding(.horizontal, 20)
-        .padding(.top)
-    }
     
     private var quickActionsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -146,28 +91,59 @@ struct ShopView: View {
         .padding(.top, 24)
     }
     
-    private var categoriesGrid: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("Kategoriler")
-                .font(.system(size: 20, weight: .semibold))
-                .padding(.horizontal, 20)
-            
-            LazyVGrid(columns: [
-                GridItem(.flexible(), spacing: 12),
-                GridItem(.flexible(), spacing: 12)
-            ], spacing: 16) {
-                ForEach(shopViewModel.categories) { category in
-                    NavigationLink {
-                        SubShopView(category: category)
-                    } label: {
-                        CategoryCardView(category: category)
+    private var productCategoriesSection: some View{
+        CategoryScrollView(
+            categories: shopViewModel.categories,
+            selectedCategory: $shopViewModel.selectedCategory
+        )
+    }
+    
+    private var productListSection: some View{
+        ScrollView(.horizontal){
+            HStack{
+                ForEach(
+                    shopViewModel.filteredProducts(
+                        category: shopViewModel.selectedCategory,
+                        searchText: shopViewModel.searchText
+                    ),
+                    id:\.self
+                ){ product in
+                    NavigationLink(destination: ProductDetailView(product: product)) {
+                        ProductCardView(product: product){
+                            cartViewModel.addItem(product: product)
+                            shopViewModel.addToCart(product: product)
+                        }
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
-            .padding(.horizontal, 20)
         }
-        .padding(.top, 24)
+        .padding(.horizontal)
+        .padding(.vertical,10)
     }
+    
+//    private var categoriesGrid: some View {
+//        VStack(alignment: .leading, spacing: 20) {
+//            Text("Kategoriler")
+//                .font(.system(size: 20, weight: .semibold))
+//                .padding(.horizontal, 20)
+//            
+//            LazyVGrid(columns: [
+//                GridItem(.flexible(), spacing: 12),
+//                GridItem(.flexible(), spacing: 12)
+//            ], spacing: 16) {
+//                ForEach(shopViewModel.categories) { category in
+//                    NavigationLink {
+//                        SubShopView(category: category)
+//                    } label: {
+//                        CategoryCardView(category: category)
+//                    }
+//                }
+//            }
+//            .padding(.horizontal, 20)
+//        }
+//        .padding(.top, 24)
+//    }
     
     private var footerInfo: some View {
         VStack(spacing: 20) {
@@ -197,6 +173,7 @@ struct ShopView: View {
         }
         .padding(.vertical, 24)
     }
+    
 }
 
 #Preview{

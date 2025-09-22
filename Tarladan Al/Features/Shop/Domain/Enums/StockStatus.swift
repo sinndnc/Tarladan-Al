@@ -5,8 +5,7 @@
 //  Created by Sinan Dinç on 8/7/25.
 //
 
-import SwiftUICore
-
+import SwiftUI
 
 enum StockStatus {
     case inStock

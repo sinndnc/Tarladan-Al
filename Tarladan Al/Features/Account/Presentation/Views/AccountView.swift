@@ -200,15 +200,24 @@ struct AccountView: View {
                 }
             }
             .navigationTitle("Hesap")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationSubtitleCompat("Tüm bilgilerin tek bir sayfada!")
             .scrollContentBackground(.hidden)
             .listStyle(InsetGroupedListStyle())
-            .background(Colors.System.background)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarColorScheme(.dark, for:.navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .navigationDestination(for: AccountDestination.self) { destination in
                 destinationView(for: destination)
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    HStack{
+                        Button(action: {}) {
+                            Image(systemName: "info.circle")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.primary)
+                        }
+                    }
+                }
             }
         }
     }

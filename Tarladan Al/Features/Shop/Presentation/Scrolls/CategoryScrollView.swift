@@ -9,7 +9,7 @@ import SwiftUI
 struct CategoryScrollView: View {
     let categories: [ProductCategory]
     @Binding var selectedCategory: ProductCategory?
-    @EnvironmentObject private var viewModel : SearchViewModel
+    @EnvironmentObject private var viewModel : ShopViewModel
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -23,12 +23,12 @@ struct CategoryScrollView: View {
                         Text("Tümü")
                             .font(.subheadline)
                             .fontWeight(.medium)
-                            .foregroundStyle(selectedCategory == nil ? .white : .gray)
+                            .foregroundStyle(selectedCategory == nil ? .black : .gray)
                     }
                     if selectedCategory == nil {
                         Divider()
                             .frame(height: 2)
-                            .background(Colors.System.surface)
+                            .background(.black)
                     }
                 }
                 ForEach(categories, id: \.name) { category in
@@ -42,20 +42,19 @@ struct CategoryScrollView: View {
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                                 .foregroundStyle(
-                                    selectedCategory?.name == category.name ? .white : .gray
+                                    selectedCategory?.name == category.name ? .black : .gray
                                     
                                 )
                         }
                         if selectedCategory?.name == category.name{
                             Divider()
                                 .frame(height: 2)
-                                .background(Colors.System.surface)
+                                .background(.black)
                         }
                     }
                 }
             }
         }
         .padding(8)
-        .background(Colors.UI.tabBackground)
     }
 }

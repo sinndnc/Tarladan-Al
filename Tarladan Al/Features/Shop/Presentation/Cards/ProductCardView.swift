@@ -89,19 +89,19 @@ struct ProductCardView: View {
                         action()
                         addToCart()
                     }) {
-                        Image(systemName: showingAddedToCart ? "checkmark.seal" : "cart.badge.plus")
+                        Image(systemName: showingAddedToCart ? "checkmark" : "plus")
                             .font(.subheadline)
                     }
                     .padding(10)
                     .withHaptic()
-                    .background(Colors.System.primary)
-                    .foregroundStyle(Colors.System.surface)
+                    .background(.gray.opacity(0.2))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
             .padding(.horizontal, 8)
             .padding(.bottom, 8)
         }
+        .frame(width: 175)
         .background(Color.white)
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)

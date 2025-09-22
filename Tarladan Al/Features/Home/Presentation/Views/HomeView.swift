@@ -40,12 +40,8 @@ struct HomeView: View {
                 }
             }
             .toolbarTitleDisplayMode(.inline)
-            .background(Colors.System.background)
-            .toolbarColorScheme(.dark, for:.navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .principal) {
                     headerSection
                 }
                 ToolbarItem(placement: .topBarTrailing) {
@@ -105,25 +101,15 @@ struct HomeView: View {
     
     //MARK: - Trailing Section
     private var tralingSection: some View {
-        HStack(spacing: 16) {
-            NavigationLink {
-                NotificationView()
-            } label: {
-                Image(systemName: "bell")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.primary)
-            }
-            .haptic()
-            
-            Button(action: {}){
-                Image(systemName: "line.3.horizontal")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.primary)
-            }
-            .withHaptic()
+        NavigationLink {
+            NotificationView()
+        } label: {
+            Image(systemName: "bell")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundColor(.primary)
         }
+        .haptic()
     }
     
     //MARK: - Delivery Section

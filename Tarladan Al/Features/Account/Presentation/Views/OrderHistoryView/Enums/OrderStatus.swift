@@ -5,7 +5,7 @@
 //  Created by Sinan Dinç on 8/18/25.
 //
 
-import SwiftUICore
+import SwiftUI
 
 enum OrderStatus: String, Codable,CaseIterable {
     case pending = "Hazırlanıyor"

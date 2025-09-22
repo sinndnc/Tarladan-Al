@@ -74,7 +74,7 @@ struct ProductDetailView: View {
                     .cornerRadius(12)
                     
                     // Çiftçi bilgileri
-                    FarmerInfoCard(product: product)
+                    FarmerInfoCardView(product: product)
                     
                     // Açıklama
                     if !product.description.isEmpty {

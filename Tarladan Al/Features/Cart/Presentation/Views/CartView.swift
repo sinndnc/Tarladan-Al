@@ -48,11 +48,7 @@ struct CartView: View {
                 }
             }
             .navigationTitle("Shopping Cart")
-            .background(Colors.System.background)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
-            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
             .toolbar {
                 if !cartViewModel.items.isEmpty {
                     ToolbarItem(placement: .navigationBarTrailing) {

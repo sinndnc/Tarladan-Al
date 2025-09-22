@@ -9,6 +9,7 @@ import Combine
 
 class ShopViewModel: ObservableObject {
     
+    @Published var showScan = false
     @Published var showCart = false
     @Published var isLoading = false
     @Published var showFilters = false
@@ -24,6 +25,9 @@ class ShopViewModel: ObservableObject {
     @Published var categories: [ProductCategory] = []
     @Published var selectedCategory: ProductCategory?
     
+    @Published var products: [Product] = []
+    @Published var filteredProducts: [Product] = []
+    
     @Published var featuredTitle = "🌱 Yaz Sezonu Özel"
     @Published var featuredDescription = "Taze yaz sebzeleri ve meyvelerinde %30'a varan indirimler"
     @Published var showFeaturedBanner = true
@@ -36,10 +40,12 @@ class ShopViewModel: ObservableObject {
     }
     
     @Injected private var addToFavoritesUseCase: AddToFavoritesUseCaseProtocol
+    @Injected private var listenProductsUseCase : ListenProductsUseCaseProtocol
     
     init() {
-        self.categories = setupCategories()
+        self.loadProducts()
         self.quickActions = setupQuickActions()
+        self.categories =  setupCategories()
     }
     
     var sortOptions: [SortOption] {
@@ -50,6 +56,50 @@ class ShopViewModel: ObservableObject {
         showCart.toggle()
     }
     
+    func loadProducts() {
+        listenProductsUseCase.execute()
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        Logger.log("✅ VIEW MODEL: Completed successfully")
+                    case .failure(let error):
+                        Logger.log("❌ VIEW MODEL: Error: \(error)")
+                    }
+                },
+                receiveValue: { [weak self] products in
+                    self?.products = products
+                }
+            )
+            .store(in: &cancellables)
+    }
+    
+    func filteredProducts(category: ProductCategory?, searchText: String) -> [Product] {
+        var filtered = products
+        
+        // Kategori filtresi
+        if let category = category {
+            filtered = filtered.filter { $0.categoryName == category.name }
+        }
+        
+        // Arama filtresi
+        if !searchText.isEmpty {
+            filtered = filtered.filter { product in
+                product.title.localizedCaseInsensitiveContains(searchText) ||
+                product.description.localizedCaseInsensitiveContains(searchText) ||
+                product.farmerName.localizedCaseInsensitiveContains(searchText) ||
+                product.locationName.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+        
+        return Array(filtered.prefix(10))
+    }
+    
+    // Kategorilere göre ürün sayısı
+    func productCount(for category: ProductCategory) -> Int {
+        products.filter { $0.categoryName == category.name }.count
+    }
     
     private func handleQuickAction(_ action: QuickActionType) {
         // Implement quick action logic
@@ -168,9 +218,8 @@ extension ShopViewModel{
         ]
     }
     
-    private func setupCategories() -> [ProductCategory] {
+    func setupCategories() -> [ProductCategory] {
         return [
-            // MEYVE KATEGORİSİ
             ProductCategory(
                 name: "Meyveler",
                 icon: "🍎",

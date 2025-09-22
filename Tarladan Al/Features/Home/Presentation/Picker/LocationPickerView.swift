@@ -31,9 +31,7 @@ struct LocationPickerView: View {
                 VStack(alignment:.leading,spacing: 20){
                     ForEach(addresses.sortedByDefault) { address in
                         Button {
-                            withAnimation{
-                                userViewModel.updateDefaultAddress(address)
-                            }
+                            userViewModel.updateDefaultAddress(address)
                         } label: {
                             LocationPickerRow(address: address)
                         }
