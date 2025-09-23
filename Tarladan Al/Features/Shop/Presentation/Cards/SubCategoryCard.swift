@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct SubCategoryCardView: View {
+struct SubCategoryCard: View {
     let subCategory: ProductSubCategory
     
     var body: some View {

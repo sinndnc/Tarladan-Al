@@ -9,9 +9,17 @@ import Combine
 
 class CartViewModel: ObservableObject {
     
+    @Published var isExpanded = false
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var isProcessingOrder: Bool = false
+    @Published var showOrderConfirmation = false
+    @Published var selectedAddress: Address?
+    @Published var showAddressForm = false
+    @Published var closeSheet = false
     
+    @Published var selectedPaymentMethod: PaymentMethod.PaymentType = .card
+
     @Published var items: [CartItem] = []
     
     private var cancellables: Set<AnyCancellable> = []
@@ -60,14 +68,19 @@ class CartViewModel: ObservableObject {
         items.removeAll()
     }
     
-    func createOrder(order: Order){
+    func createOrder(order: Order, onSucces: @escaping () -> Void){
+        isProcessingOrder = true
         createOrderUseCase.execute(order: order)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 
-            } receiveValue: { documentId in
+            } receiveValue: { [weak self] documentId in
                 print("\(documentId)")
+                self?.isProcessingOrder = false
+                self?.showOrderConfirmation = true
+                onSucces()
             }
             .store(in: &cancellables)
     }
 }
+

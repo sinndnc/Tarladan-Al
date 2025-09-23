@@ -13,6 +13,7 @@ struct HomeView: View {
     @EnvironmentObject private var rootViewModel: RootViewModel
     @EnvironmentObject private var userViewModel: UserViewModel
     @EnvironmentObject private var shopViewModel: ShopViewModel
+    @EnvironmentObject private var cartViewModel: CartViewModel
     @EnvironmentObject private var recipeViewModel: RecipeViewModel
     @EnvironmentObject private var productViewModel: ProductViewModel
     @EnvironmentObject private var deliveryViewModel: DeliveryViewModel
@@ -23,7 +24,7 @@ struct HomeView: View {
                 VStack(spacing: 0) {
                     
                     if let delivery = deliveryViewModel.currentDelivery {
-                        deliveryStatusCard(delivery)
+                        DeliveryStatusCard(delivery:delivery)
                     }
                     
                     if let banner = homeViewModel.featuredBanner {
@@ -38,6 +39,7 @@ struct HomeView: View {
                     
                     recipesSection
                 }
+                .padding(.horizontal)
             }
             .toolbarTitleDisplayMode(.inline)
             .toolbar {
@@ -110,112 +112,6 @@ struct HomeView: View {
                 .foregroundColor(.primary)
         }
         .haptic()
-    }
-    
-    //MARK: - Delivery Section
-    private func deliveryStatusCard(_ delivery: Delivery?) -> some View {
-        VStack(alignment: .leading){
-            Text("Sonraki Teslimat")
-                .font(.headline)
-                .fontWeight(.bold)
-                .foregroundStyle(Colors.Text.primary)
-                
-            VStack(spacing: 12) {
-                if let delivery = delivery{
-                    HStack {
-                        VStack(alignment: .leading, spacing: 2) {
-                            HStack{
-                                Text("Güncel Teslimat Tarihi:")
-                                    .font(.footnote)
-                                    .foregroundColor(.primary)
-                                Text("\(DateFormatter.shortFormatter.string(from: delivery.actualDeliveryDate ?? .now))")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            HStack{
-                                Text("Planlanan Teslimat Tarihi:")
-                                    .font(.footnote)
-                                    .foregroundColor(.primary)
-                                Text("\(DateFormatter.shortFormatter.string(from: delivery.scheduledDeliveryDate))")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        
-                        Spacer()
-                        
-                        if delivery.status != .inTransit {
-                            Button("Değiştir") {
-                                //  viewModel.changeDeliveryTime()
-                            }
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .foregroundColor(.green)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color.green.opacity(0.1))
-                            .cornerRadius(8)
-                        }
-                        
-                    }
-                    
-                    HStack(spacing: 0) {
-                        ForEach(0..<DeliveryStatus.allCases.count, id: \.self) { index in
-                            HStack(spacing: 0) {
-                                Circle()
-                                    .fill(Double(index / 5) < delivery.status.progressValue ? Color.green : Color.gray.opacity(0.3))
-                                    .frame(width: 8, height: 8)
-                                
-                                if index < DeliveryStatus.allCases.count - 1 {
-                                    Rectangle()
-                                        .fill(Double(index / 5) < delivery.status.progressValue - 0.2 ? Color.green : Color.gray.opacity(0.3))
-                                        .frame(height: 2)
-                                        .frame(maxWidth: .infinity)
-                                }
-                            }
-                        }
-                    }
-                    .padding(.vertical, 8)
-                    
-                    HStack {
-                        Image(systemName: "truck.box.fill")
-                            .foregroundColor(.green)
-                            .font(.title3)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(delivery.status.displayName)
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundColor(.green)
-                            
-                            Text(delivery.orderNumber)
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        Spacer()
-                        
-                        NavigationLink("Detaylar") {
-                            DeliveryDetailView(delivery: delivery)
-                        }
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundColor(.green)
-                    }
-                }else{
-                    HStack{
-                        Spacer()
-                        Text("You have no pending deliveries 😔")
-                        Spacer()
-                    }
-                }
-            }
-            .padding(16)
-            .background(.white)
-            .cornerRadius(12)
-            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
-        }
-        .padding()
     }
     
     // MARK: - Featured Banner
@@ -336,7 +232,6 @@ struct HomeView: View {
                     )
                     
                 }
-                .padding(.horizontal, 20)
             }
         }
         .padding(.top, 24)
@@ -366,12 +261,11 @@ struct HomeView: View {
                         NavigationLink {
                             SubShopView(category: category)
                         } label: {
-                            CategoryCardView(category: category)
+                            CategoryCard(category: category)
                         }
                     }
                 }
                 .padding(.bottom)
-                .padding(.horizontal)
             }
         }
         .padding(.top)
@@ -402,14 +296,13 @@ struct HomeView: View {
                             ProductDetailView(product: product)
                         } label: {
                             ProductCard(product: product){
-                                
+                                cartViewModel.addItem(product: product)
                             }
                         }
                         .tint(.primary)
                         .haptic(.medium)
                     }
                 }
-                .padding(.horizontal, 20)
             }
         }
         .padding(.top, 24)
@@ -436,10 +329,13 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     ForEach(recipeViewModel.recipes){ recipe in
-                        RecipeCardView(recipe: recipe)
+                        NavigationLink {
+                            RecipeDetailView(recipe: recipe)
+                        } label: {
+                            RecipeCard(recipe: recipe)
+                        }
                     }
                 }
-                .padding(.horizontal, 20)
             }
         }
         .padding(.top, 24)

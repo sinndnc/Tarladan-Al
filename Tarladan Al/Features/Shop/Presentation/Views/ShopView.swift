@@ -12,7 +12,8 @@ struct ShopView: View {
     @EnvironmentObject private var userViewModel: UserViewModel
     @EnvironmentObject private var shopViewModel : ShopViewModel
     @EnvironmentObject private var cartViewModel : CartViewModel
-    
+    @EnvironmentObject private var recipeViewModel : RecipeViewModel
+
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
@@ -21,8 +22,10 @@ struct ShopView: View {
                     quickActionsSection
                     
                     productCategoriesSection
-                    
                     productListSection
+                    
+                    recipeCategoriesSection
+                    recipeListSection
                     
                     footerInfo
                 }
@@ -109,9 +112,8 @@ struct ShopView: View {
                     id:\.self
                 ){ product in
                     NavigationLink(destination: ProductDetailView(product: product)) {
-                        ProductCardView(product: product){
+                        ProductCard(product: product){
                             cartViewModel.addItem(product: product)
-                            shopViewModel.addToCart(product: product)
                         }
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -122,28 +124,24 @@ struct ShopView: View {
         .padding(.vertical,10)
     }
     
-//    private var categoriesGrid: some View {
-//        VStack(alignment: .leading, spacing: 20) {
-//            Text("Kategoriler")
-//                .font(.system(size: 20, weight: .semibold))
-//                .padding(.horizontal, 20)
-//            
-//            LazyVGrid(columns: [
-//                GridItem(.flexible(), spacing: 12),
-//                GridItem(.flexible(), spacing: 12)
-//            ], spacing: 16) {
-//                ForEach(shopViewModel.categories) { category in
-//                    NavigationLink {
-//                        SubShopView(category: category)
-//                    } label: {
-//                        CategoryCardView(category: category)
-//                    }
-//                }
-//            }
-//            .padding(.horizontal, 20)
-//        }
-//        .padding(.top, 24)
-//    }
+    private var recipeCategoriesSection : some View {
+        //TODO: kategori yapılacak
+        Text("")
+    }
+    
+    private var recipeListSection : some View{
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 10) {
+                ForEach(recipeViewModel.recipes){ recipe in
+                    NavigationLink {
+                        RecipeDetailView(recipe: recipe)
+                    } label: {
+                        RecipeCard(recipe: recipe)
+                    }
+                }
+            }
+        }
+    }
     
     private var footerInfo: some View {
         VStack(spacing: 20) {

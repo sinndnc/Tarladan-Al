@@ -18,11 +18,9 @@ struct LocationPickerView: View {
                 HStack{
                     Text("Siparişinizi nereye göndermek istediğinizi seçiniz.")
                         .font(.headline)
-                        .foregroundStyle(Colors.System.surface)
                     Spacer()
                 }
                 .padding()
-                .background(Colors.UI.tabBackground)
                 
                 Divider()
                 

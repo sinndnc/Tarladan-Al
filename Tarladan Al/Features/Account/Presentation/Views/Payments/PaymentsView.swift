@@ -29,10 +29,6 @@ struct PaymentsView: View {
         }
         .navigationTitle("Ödeme Yöntemleri")
         .toolbarTitleDisplayMode(.inline)
-        .background(Colors.System.background)
-        .toolbarColorScheme(.dark, for:.navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {

@@ -7,7 +7,7 @@
 import SwiftUI
 import Foundation
 
-struct RecipeCardView: View {
+struct RecipeCard: View {
     let recipe: Recipe
     
     var body: some View {

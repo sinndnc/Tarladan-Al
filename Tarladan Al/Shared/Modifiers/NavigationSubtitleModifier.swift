@@ -14,7 +14,7 @@ struct NavigationSubtitleModifier: ViewModifier {
             content
                 .navigationSubtitle(subtitle ?? "")
         } else {
-            // Fallback on earlier versions
+            content
         }
       
     }

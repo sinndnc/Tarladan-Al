@@ -14,11 +14,7 @@ struct NotificationView: View {
         }
         .toolbarRole(.editor)
         .navigationTitle("Bildirimler")
-        .background(Colors.System.background)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
-        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
     }
 }
 

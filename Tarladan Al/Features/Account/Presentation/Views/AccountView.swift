@@ -16,18 +16,13 @@ struct AccountView: View {
     var body: some View {
         NavigationStack {
             List{
-                Section {
-                    profileHeaderView
-                }
-                .listRowBackground(Color.clear)
-                
-                Section("Bu Ay"){
-                    quickStatsView
-                }
-                .listRowBackground(Color.clear)
+//                Section {
+//                    profileHeaderView
+//                }
+//                .listRowBackground(Color.clear)
                 
                 // Account Section
-                Section("Hesap") {
+                Section("Genel") {
                     NavigationMenuRow(
                         icon: "person.crop.circle",
                         title: "Kişisel Bilgiler",
@@ -162,19 +157,16 @@ struct AccountView: View {
                    
                 }
                 
-                // Sustainability Score Section
-                Section {
+                Section("Bu Ay"){
+                    quickStatsView
+                }
+                .listRowBackground(Color.clear)
+                
+                Section("Sürdürülebilirlik Skorun") {
                     sustainabilityScoreView
-                } header: {
-                    Text("Sürdürülebilirlik Skorun")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                        .textCase(nil)
                 }
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
-                
                 
                 
                 // Logout Section

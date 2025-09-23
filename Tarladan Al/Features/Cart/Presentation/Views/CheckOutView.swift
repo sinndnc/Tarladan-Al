@@ -12,16 +12,9 @@ struct CheckOutView: View {
     
     @Environment(\.dismiss) private var dismiss
     
+    @EnvironmentObject private var shopViewModel: ShopViewModel
     @EnvironmentObject private var cartViewModel: CartViewModel
     @EnvironmentObject private var userViewModel: UserViewModel
-    
-    @State private var selectedPaymentMethod: PaymentMethod.PaymentType = .card
-    @State private var showingOrderConfirmation = false
-    @State private var isProcessingOrder = false
-    
-    @State private var selectedAddress: Address?
-    @State private var showingAddressForm = false
-    @State private var isExpanded = false
     
     private var shippingCost: Double {
         cartViewModel.totalPrice > 50000 ? 0 : 49.99
@@ -36,54 +29,33 @@ struct CheckOutView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 10) {
-                    // Sepet Özeti
-                    cartSummarySection
-                    
-                    // Teslimat Adresi
-                    
-                    // Adres Listesi
-                    addressListSection
-                    
-                    // Ödeme Yöntemi
-                    paymentMethodSection
-                    
-                    // Fiyat Özeti
-                    priceSummarySection
-                    
-                    // Sipariş Ver Butonu
-                    checkoutButton
-                }
-                .padding()
+        ScrollView {
+            VStack(spacing: 10) {
+                // Sepet Özeti
+                cartSummarySection
+                
+                // Teslimat Adresi
+                
+                // Adres Listesi
+                addressListSection
+                
+                // Ödeme Yöntemi
+                paymentMethodSection
+                
+                // Fiyat Özeti
+                priceSummarySection
+                
+                // Sipariş Ver Butonu
+                checkoutButton
             }
-            .navigationTitle("Ödeme")
-            .background(Colors.System.background)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
-            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
-            .alert("Sipariş Onaylandı!", isPresented: $showingOrderConfirmation) {
-                Button("Tamam") { }
-            } message: {
-                Text("Siparişiniz başarıyla alındı. Kargo takip bilgileri e-posta adresinize gönderilecektir.")
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button{
-                        dismiss()
-                    }label: {
-                        HStack{
-                            Image(systemName: "chevron.left")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                            Text("Cart")
-                                .font(.subheadline)
-                        }
-                    }
-                }
-            }
+            .padding()
+        }
+        .navigationTitle("Ödeme")
+        .navigationBarTitleDisplayMode(.inline)
+        .alert("Sipariş Onaylandı!", isPresented: $cartViewModel.showAddressForm) {
+            Button("Tamam") { }
+        } message: {
+            Text("Siparişiniz başarıyla alındı. Kargo takip bilgileri e-posta adresinize gönderilecektir.")
         }
     }
     
@@ -285,7 +257,7 @@ struct CheckOutView: View {
     // MARK: - Yeni Adres Ekle Butonu
     private var addNewAddressButton: some View {
         Button(action: {
-            showingAddressForm = true
+            cartViewModel.showAddressForm = true
         }) {
             HStack {
                 Image(systemName: "plus.circle.fill")
@@ -324,11 +296,11 @@ struct CheckOutView: View {
             VStack(spacing: 8) {
                 ForEach(PaymentMethod.PaymentType.allCases, id: \.self) { method in
                     Button(action: {
-                        selectedPaymentMethod = method
+                        cartViewModel.selectedPaymentMethod = method
                     }) {
                         HStack {
-                            Image(systemName: selectedPaymentMethod == method ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(selectedPaymentMethod == method ? .blue : .gray)
+                            Image(systemName: cartViewModel.selectedPaymentMethod == method ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(cartViewModel.selectedPaymentMethod == method ? .blue : .gray)
                             
                             Text(method.rawValue)
                                 .foregroundColor(.primary)
@@ -342,7 +314,7 @@ struct CheckOutView: View {
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(selectedPaymentMethod == method ? Color.blue : Color.gray.opacity(0.3), lineWidth: 1)
+                                .stroke(cartViewModel.selectedPaymentMethod == method ? Color.blue : Color.gray.opacity(0.3), lineWidth: 1)
                         )
                     }
                 }
@@ -402,7 +374,7 @@ struct CheckOutView: View {
     // MARK: - Sipariş Ver Butonu
     private var checkoutButton: some View {
         Button{
-            var newOrder = Order(
+            let newOrder = Order(
                 orderDate: Date(),
                 owner_id: userViewModel.user?.id ?? "",
                 items:  cartViewModel.items.map({ item in OrderItem(product: item.product, quantity: Double(item.quantity), unitPrice: item.totalPrice)}),
@@ -413,10 +385,12 @@ struct CheckOutView: View {
                 shippingCost: shippingCost,
                 deliveryAddress: userViewModel.user!.defaultAddress!
             )
-            cartViewModel.createOrder(order: newOrder)
+            cartViewModel.createOrder(order: newOrder){
+                shopViewModel.showCart = false
+            }
         }label: {
             HStack {
-                if isProcessingOrder {
+                if cartViewModel.isProcessingOrder {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                         .scaleEffect(0.8)
@@ -424,7 +398,7 @@ struct CheckOutView: View {
                     Image(systemName: "checkmark.circle.fill")
                 }
                 
-                Text(isProcessingOrder ? "İşleniyor..." : "Siparişi Tamamla")
+                Text(cartViewModel.isProcessingOrder ? "İşleniyor..." : "Siparişi Tamamla")
                     .fontWeight(.semibold)
             }
         }
@@ -436,6 +410,7 @@ struct CheckOutView: View {
         .cornerRadius(12)
         .padding(.horizontal)
         .padding(.bottom)
+        
     }
     
     // MARK: - Helper Functions

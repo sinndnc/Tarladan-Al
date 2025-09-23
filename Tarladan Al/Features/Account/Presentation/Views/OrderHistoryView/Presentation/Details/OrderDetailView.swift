@@ -1,11 +1,12 @@
 //
-//  OrderDetailView.swift
+//  OrderDetailView 2.swift
 //  Tarladan Al
 //
-//  Created by Sinan Dinç on 8/18/25.
+//  Created by Sinan Dinç on 9/23/25.
 //
 import SwiftUI
-// MARK: - Order Detail View
+
+// MARK: - Premium Order Detail View
 struct OrderDetailView: View {
     let order: Order
     @Environment(\.presentationMode) var presentationMode
@@ -13,84 +14,131 @@ struct OrderDetailView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(spacing: 24) {
                     // Order Header
                     orderHeaderSection
                     
-                    // Status Timeline
-                    statusTimelineSection
+                    // Status Progress
+                    statusProgressSection
                     
-                    // Items
+                    // Order Items
                     orderItemsSection
                     
-                    // Delivery Address
-                    deliveryAddressSection
+                    // Delivery Info
+                    deliveryInfoSection
                     
-                    // Price Breakdown
-                    priceBreakdownSection
+                    // Price Summary
+                    priceSummarySection
                 }
-                .padding()
+                .padding(20)
             }
-            .navigationTitle("Sipariş Detayı")
+            .background(Color(.systemGroupedBackground))
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                trailing: Button("Kapat") {
-                    presentationMode.wrappedValue.dismiss()
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title3)
+                            .foregroundColor(.secondary)
+                    }
                 }
-            )
+            }
         }
     }
     
     private var orderHeaderSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(order.orderNumber)
-                .font(.title2)
-                .fontWeight(.bold)
-            
-            Text("Sipariş Tarihi: \(order.orderDate, style: .date)")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+        VStack(spacing: 16) {
+            HStack {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Sipariş")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .textCase(.uppercase)
+                        .tracking(1)
+                    
+                    Text(order.orderNumber)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                }
+                
+                Spacer()
+                
+                Text("₺\(order.totalAmount, specifier: "%.0f")")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+            }
             
             HStack {
-                Image(systemName: order.status.icon)
-                    .foregroundColor(order.status.color)
+                Text(order.orderDate, style: .date)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
                 
-                Text(order.status.rawValue)
-                    .fontWeight(.medium)
-                    .foregroundColor(order.status.color)
+                Spacer()
+                
+                HStack(spacing: 8) {
+                    Circle()
+                        .fill(order.status.color)
+                        .frame(width: 8, height: 8)
+                    
+                    Text(order.status.rawValue)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(order.status.color)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(order.status.color.opacity(0.1))
+                .clipShape(Capsule())
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(order.status.color.opacity(0.1))
-            .cornerRadius(8)
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
+        .padding(24)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
+        )
     }
     
-    private var statusTimelineSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Sipariş Durumu")
+    private var statusProgressSection: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("Sipariş Takibi")
                 .font(.headline)
+                .fontWeight(.semibold)
             
-            VStack(spacing: 16) {
-                ForEach(OrderStatus.allCases, id: \.self) { status in
+            VStack(alignment: .leading,spacing: 10) {
+                ForEach(Array(OrderStatus.allCases.enumerated()), id: \.element) { index, status in
                     let isCompleted = statusIndex(status) <= statusIndex(order.status)
                     let isCurrent = status == order.status
                     
-                    HStack {
-                        Image(systemName: isCompleted ? status.icon : "circle")
-                            .foregroundColor(isCompleted ? status.color : .gray)
-                            .font(.title3)
+                    HStack(spacing: 16) {
+                        ZStack {
+                            Circle()
+                                .fill(isCompleted ? status.color : Color(.systemGray5))
+                                .frame(width: 32, height: 32)
+                            
+                            if isCompleted {
+                                Image(systemName: isCurrent ? status.icon : "checkmark")
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                            } else {
+                                Circle()
+                                    .fill(Color(.systemGray4))
+                                    .frame(width: 12, height: 12)
+                            }
+                        }
                         
-                        VStack(alignment: .leading, spacing: 2) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text(status.rawValue)
-                                .fontWeight(isCurrent ? .semibold : .regular)
+                                .font(.subheadline)
+                                .fontWeight(isCurrent ? .semibold : .medium)
                                 .foregroundColor(isCompleted ? .primary : .secondary)
                             
-                            if isCurrent && order.deliveryDate != nil {
-                                Text("Tahmini: \(order.deliveryDate!, style: .date)")
+                            if isCurrent, let deliveryDate = order.deliveryDate {
+                                Text("Tahmini: \(deliveryDate, style: .date)")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -98,51 +146,73 @@ struct OrderDetailView: View {
                         
                         Spacer()
                     }
+                    
+                    if index < OrderStatus.allCases.count - 1 {
+                        Rectangle()
+                            .fill(isCompleted ? status.color.opacity(0.3) : Color(.systemGray5))
+                            .frame(width: 2, height: 20)
+                            .offset(x: 15)
+                    }
                 }
             }
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
+        .padding(24)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
+        )
     }
     
     private var orderItemsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Sipariş İçeriği")
-                .font(.headline)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Text("Ürünler")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+                
+                Text("\(order.items.count) ürün")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
             
-            ForEach(order.items) { item in
-                HStack {
-                    // Product Image Placeholder
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.gray.opacity(0.2))
-                        .frame(width: 60, height: 60)
+            ForEach(order.items, id: \.id) { item in
+                HStack(spacing: 16) {
+                    // Product Icon
+                    Circle()
+                        .fill(item.product.isOrganic ? .green.opacity(0.1) : .gray.opacity(0.1))
+                        .frame(width: 50, height: 50)
                         .overlay(
-                            VStack {
-                                Image(systemName: item.product.isOrganic ? "leaf.fill" : "photo")
-                                    .foregroundColor(item.product.isOrganic ? .green : .gray)
-                            }
+                            Image(systemName: item.product.isOrganic ? "leaf.fill" : "cart.fill")
+                                .font(.title3)
+                                .foregroundColor(item.product.isOrganic ? .green : .gray)
                         )
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(item.product.title)
                             .font(.subheadline)
                             .fontWeight(.medium)
+                            .lineLimit(2)
                         
-                        Text("Çiftçi: \(item.product.farmerName)")
+                        Text(item.product.farmerName)
                             .font(.caption)
                             .foregroundColor(.secondary)
                         
-                        HStack {
+                        HStack(spacing: 8) {
                             if item.product.isOrganic {
-                                HStack(spacing: 2) {
+                                HStack(spacing: 4) {
                                     Image(systemName: "leaf.fill")
-                                        .foregroundColor(.green)
-                                        .font(.caption)
+                                        .font(.caption2)
                                     Text("Organik")
-                                        .font(.caption)
-                                        .foregroundColor(.green)
+                                        .font(.caption2)
                                 }
+                                .foregroundColor(.green)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.green.opacity(0.1))
+                                .clipShape(Capsule())
                             }
                             
                             Text("\(item.quantity, specifier: "%.1f") \(item.product.unit)")
@@ -153,85 +223,145 @@ struct OrderDetailView: View {
                     
                     Spacer()
                     
-                    VStack(alignment: .trailing) {
-                        Text("₺\(item.totalPrice, specifier: "%.2f")")
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text("₺\(item.totalPrice, specifier: "%.0f")")
                             .font(.subheadline)
-                            .fontWeight(.semibold)
+                            .fontWeight(.bold)
                         
-                        Text("₺\(item.unitPrice, specifier: "%.2f")/\(item.product.unit)")
-                            .font(.caption)
+                        Text("₺\(item.unitPrice, specifier: "%.0f")/\(item.product.unit)")
+                            .font(.caption2)
                             .foregroundColor(.secondary)
                     }
                 }
                 .padding(.vertical, 4)
+                
+                if item.id != order.items.last?.id {
+                    Divider()
+                }
             }
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
+        .padding(24)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
+        )
     }
     
-    private var deliveryAddressSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Teslimat Adresi")
-                .font(.headline)
+    private var deliveryInfoSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Image(systemName: "location.circle.fill")
+                    .font(.title3)
+                    .foregroundColor(.blue)
+                
+                Text("Teslimat Adresi")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+            }
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text(order.deliveryAddress.title)
+                    .font(.subheadline)
                     .fontWeight(.medium)
                 
                 Text(order.deliveryAddress.fullAddress)
                     .font(.subheadline)
+                    .foregroundColor(.secondary)
                 
                 Text("\(order.deliveryAddress.district), \(order.deliveryAddress.city)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
+            .padding(.leading, 28)
+            
+            if let deliveryDate = order.deliveryDate {
+                Divider()
+                
+                HStack {
+                    Image(systemName: "clock.fill")
+                        .font(.subheadline)
+                        .foregroundColor(.orange)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Tahmini Teslimat")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        Text(deliveryDate, style: .date)
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                    }
+                    
+                    Spacer()
+                }
+            }
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
+        .padding(24)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
+        )
     }
     
-    private var priceBreakdownSection: some View {
-        VStack(spacing: 8) {
+    private var priceSummarySection: some View {
+        VStack(spacing: 16) {
             HStack {
-                Text("Ürün Toplamı")
+                Text("Özet")
+                    .font(.headline)
+                    .fontWeight(.semibold)
                 Spacer()
-                Text("₺\(order.totalAmount - order.shippingCost, specifier: "%.2f")")
             }
             
-            if order.shippingCost > 0 {
+            VStack(spacing: 12) {
+                HStack {
+                    Text("Ürün Tutarı")
+                        .font(.subheadline)
+                    Spacer()
+                    Text("₺\(order.totalAmount - order.shippingCost, specifier: "%.0f")")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                }
+                
                 HStack {
                     Text("Kargo")
+                        .font(.subheadline)
                     Spacer()
-                    Text("₺\(order.shippingCost, specifier: "%.2f")")
+                    if order.shippingCost > 0 {
+                        Text("₺\(order.shippingCost, specifier: "%.0f")")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                    } else {
+                        Text("Ücretsiz")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.green)
+                    }
                 }
-            } else {
+                
+                Rectangle()
+                    .fill(Color(.systemGray5))
+                    .frame(height: 1)
+                
                 HStack {
-                    Text("Kargo")
+                    Text("Toplam")
+                        .font(.title3)
+                        .fontWeight(.bold)
                     Spacer()
-                    Text("Ücretsiz")
-                        .foregroundColor(.green)
+                    Text("₺\(order.totalAmount, specifier: "%.0f")")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.blue)
                 }
-            }
-            
-            Divider()
-            
-            HStack {
-                Text("Toplam")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                Spacer()
-                Text("₺\(order.totalAmount, specifier: "%.2f")")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.blue)
             }
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
+        .padding(24)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
+        )
     }
     
     private func statusIndex(_ status: OrderStatus) -> Int {

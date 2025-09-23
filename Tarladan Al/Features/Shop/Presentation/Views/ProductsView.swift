@@ -26,11 +26,7 @@ struct ProductsView: View {
             productsViewSection
         }
         .navigationTitle(subCategory.name)
-        .background(Colors.System.background)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.dark, for:.navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
         .searchable(
             text: .constant(""),
             prompt: Text("Search Productscard")
@@ -86,7 +82,6 @@ struct ProductsView: View {
             .padding(.horizontal, 20)
         }
         .padding(8)
-        .background(Colors.UI.tabBackground)
     }
     
     private var sortAndViewBar: some View {
@@ -134,9 +129,9 @@ struct ProductsView: View {
                             NavigationLink {
                                 ProductDetailView(product: product)
                             } label: {
-                                ProductCardView(product: product){
+                                ProductCard(product: product){
                                     cartViewModel.addItem(product: product)
-                                    shopViewModel.addToCart(product: product)
+                                   
                                 }
                             }
                             .tint(.primary)
@@ -150,9 +145,8 @@ struct ProductsView: View {
                             NavigationLink {
                                 ProductDetailView(product: product)
                             } label: {
-                                ProductCardView(product: product){
+                                ProductCard(product: product){
                                     cartViewModel.addItem(product: product)
-                                    shopViewModel.addToCart(product: product)
                                 }
                             }
                             .tint(.primary)

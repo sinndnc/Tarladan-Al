@@ -5,20 +5,18 @@
 //  Created by Sinan Dinç on 8/18/25.
 //
 import SwiftUI
-
-// MARK: - Order Card
 struct OrderCard: View {
     let order: Order
     let onTap: () -> Void
     
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 12) {
-                // Header
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 16) {
+                // Header Section
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 6) {
                         Text(order.orderNumber)
-                            .font(.headline)
+                            .font(.title3)
                             .fontWeight(.semibold)
                             .foregroundColor(.primary)
                         
@@ -29,122 +27,139 @@ struct OrderCard: View {
                     
                     Spacer()
                     
-                    VStack(alignment: .trailing, spacing: 4) {
-                        HStack(spacing: 4) {
-                            Image(systemName: order.status.icon)
-                                .foregroundColor(order.status.color)
-                                .font(.caption)
+                    VStack(alignment: .trailing, spacing: 8) {
+                        // Status Badge
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(order.status.color)
+                                .frame(width: 8, height: 8)
                             
                             Text(order.status.rawValue)
                                 .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundColor(order.status.color)
                         }
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(order.status.color.opacity(0.1))
-                        .cornerRadius(8)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(order.status.color.opacity(0.1))
+                        )
                         
-                        Text("₺\(order.totalAmount, specifier: "%.2f")")
-                            .font(.subheadline)
+                        // Total Amount
+                        Text("₺\(order.totalAmount, specifier: "%.0f")")
+                            .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(.primary)
                     }
                 }
                 
-                // Ürün Önizleme
-                HStack(spacing: 8) {
-                    ForEach(Array(order.items.prefix(3)), id: \.id) { item in
-                        VStack(alignment: .leading, spacing: 4) {
-                            // Ürün görseli placeholder
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Color.gray.opacity(0.2))
-                                .frame(width: 50, height: 50)
-                                .overlay(
-                                    VStack {
-                                        Image(systemName: item.product.isOrganic ? "leaf.fill" : "photo")
-                                            .foregroundColor(item.product.isOrganic ? .green : .gray)
-                                            .font(.caption)
-                                    }
-                                )
-                            
-                            Text(item.product.title)
-                                .font(.caption)
-                                .lineLimit(2)
-                                .frame(width: 50, alignment: .leading)
-                        }
-                    }
-                    
-                    if order.items.count > 3 {
-                        VStack {
+                // Product Preview Section
+                HStack(spacing: 12) {
+                    // Product Icons
+                    HStack(spacing: -8) {
+                        ForEach(Array(order.items.prefix(4)), id: \.id) { item in
                             Circle()
-                                .fill(Color.gray.opacity(0.2))
-                                .frame(width: 50, height: 50)
+                                .fill(item.product.isOrganic ? .green.opacity(0.1) : .gray.opacity(0.1))
+                                .frame(width: 36, height: 36)
                                 .overlay(
-                                    Text("+\(order.items.count - 3)")
+                                    Image(systemName: item.product.isOrganic ? "leaf.fill" : "photo")
                                         .font(.caption)
+                                        .foregroundColor(item.product.isOrganic ? .green : .gray)
+                                )
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color(.systemBackground), lineWidth: 2)
+                                )
+                        }
+                        
+                        if order.items.count > 4 {
+                            Circle()
+                                .fill(.gray.opacity(0.1))
+                                .frame(width: 36, height: 36)
+                                .overlay(
+                                    Text("+\(order.items.count - 4)")
+                                        .font(.caption2)
                                         .fontWeight(.medium)
                                         .foregroundColor(.gray)
                                 )
-                            
-                            Text("daha")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color(.systemBackground), lineWidth: 2)
+                                )
                         }
                     }
                     
-                    Spacer()
-                }
-                
-                // Alt Bilgiler
-                HStack {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Çiftçi: \(order.items.first?.product.farmerName ?? "")")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                        Text("\(Int(order.totalQuantity)) ürün")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.primary)
                         
-                        if order.items.count > 1 {
-                            Text("ve \(order.items.count - 1) çiftçi daha")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                        if let firstFarmer = order.items.first?.product.farmerName {
+                            let uniqueFarmers = Set(order.items.map { $0.product.farmerName })
+                            if uniqueFarmers.count == 1 {
+                                Text(firstFarmer)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                Text("\(uniqueFarmers.count) farklı çiftçi")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                     
                     Spacer()
-                    
-                    HStack(spacing: 4) {
-                        Text("\(Int(order.totalQuantity))")
-                            .font(.caption)
-                            .fontWeight(.medium)
-                        Text("ürün")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
                 }
                 
-                // Delivery Info
+                // Delivery Information
                 if let deliveryDate = order.deliveryDate {
-                    HStack {
-                        Image(systemName: "location.fill")
+                    HStack(spacing: 8) {
+                        Image(systemName: "location.circle.fill")
                             .foregroundColor(.blue)
-                            .font(.caption)
+                            .font(.subheadline)
                         
-                        Text("Teslimat: \(deliveryDate, style: .date)")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        
-                        Text("• \(order.deliveryAddress.district), \(order.deliveryAddress.city)")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Teslimat")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                                .textCase(.uppercase)
+                                .tracking(0.5)
+                            
+                            HStack(spacing: 4) {
+                                Text(deliveryDate, style: .date)
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                
+                                Text("•")
+                                    .foregroundColor(.secondary)
+                                
+                                Text("\(order.deliveryAddress.district)")
+                                    .font(.caption)
+                            }
+                            .foregroundColor(.primary)
+                        }
                         
                         Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
             }
-            .padding()
-            .background(Color(.systemBackground))
-            .cornerRadius(16)
-            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+            .padding(20)
+            .background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color(.systemBackground))
+                    .shadow(
+                        color: .black.opacity(0.06),
+                        radius: 12,
+                        x: 0,
+                        y: 4
+                    )
+            )
         }
         .buttonStyle(PlainButtonStyle())
     }

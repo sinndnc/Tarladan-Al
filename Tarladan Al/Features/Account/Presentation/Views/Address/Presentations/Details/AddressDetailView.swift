@@ -73,10 +73,6 @@ struct AddressDetailView: View {
         }
         .navigationTitle("Adres Detayı")
         .toolbarTitleDisplayMode(.inline)
-        .background(Colors.System.background)
-        .toolbarColorScheme(.dark, for:.navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
         .sheet(isPresented: $showingEditView) {
             Text("Adres Düzenleme Ekranı")
                 .navigationTitle("Adresi Düzenle")

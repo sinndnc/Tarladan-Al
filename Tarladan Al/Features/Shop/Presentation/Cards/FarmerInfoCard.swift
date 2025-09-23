@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct FarmerInfoCardView: View {
+struct FarmerInfoCard: View {
     let product: Product
     
     var body: some View {

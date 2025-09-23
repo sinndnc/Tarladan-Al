@@ -23,11 +23,6 @@ struct SubShopView: View {
         }
         .navigationTitle("Alt Kategoriler")
         .navigationBarBackButtonHidden()
-        .background(Colors.System.background)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.dark, for:.navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
@@ -125,7 +120,7 @@ struct SubShopView: View {
                     NavigationLink {
                         ProductsView(category:category ,subCategory: subCategory)
                     } label: {
-                        SubCategoryCardView(subCategory: subCategory)
+                        SubCategoryCard(subCategory: subCategory)
                     }
                     .tint(.primary)
                 }

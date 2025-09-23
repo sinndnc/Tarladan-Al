@@ -8,6 +8,14 @@
 import Foundation
 
 extension DateFormatter {
+    static let detailFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        formatter.locale = Locale(identifier: "tr_TR")
+        return formatter
+    }()
+    
     static let trackingFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"

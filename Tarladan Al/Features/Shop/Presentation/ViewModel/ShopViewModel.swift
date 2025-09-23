@@ -18,7 +18,6 @@ class ShopViewModel: ObservableObject {
     @Published var viewMode: ViewMode = .grid
     @Published var sortOption: SortOption = .popularity
     
-    @Published var cartItemCount = 0
     @Published var searchText = ""
     
     @Published var quickActions: [QuickAction] = []
@@ -119,15 +118,9 @@ class ShopViewModel: ObservableObject {
         }
     }
     
-    func addToCart(product: Product) {
-        cartItemCount += 1
-        // Implement add to cart logic
-    }
-    
     func setViewMode(_ mode: ViewMode) {
         viewMode = mode
     }
-    
     
     func addToFavorites(for productId: String){
         guard let currentUser = currentUser,

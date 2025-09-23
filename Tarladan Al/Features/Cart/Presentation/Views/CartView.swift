@@ -9,7 +9,6 @@ import SwiftUI
 
 struct CartView: View {
     
-    @State private var showCheckout = false
     @State private var showClearAlert = false
     
     @Environment(\.dismiss) private var dismiss
@@ -81,9 +80,6 @@ struct CartView: View {
                 }
             } message: {
                 Text("Are you sure you want to remove all items from your cart?")
-            }
-            .sheet(isPresented: $showCheckout) {
-                CheckOutView()
             }
         }
     }
@@ -167,8 +163,8 @@ struct CartView: View {
             }
             .padding(.horizontal)
             
-            Button("Proceed to Checkout") {
-                showCheckout = true
+            NavigationLink("Proceed to Checkout") {
+                CheckOutView()
             }
             .font(.headline)
             .foregroundColor(.white)
@@ -179,7 +175,6 @@ struct CartView: View {
             .padding(.horizontal)
             .padding(.bottom)
         }
-        .background(Colors.UI.tabBackground)
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: -5)
     }
 }

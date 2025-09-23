@@ -31,7 +31,7 @@ struct NotificationSettingView: View {
                         Spacer()
                         
                         Toggle("", isOn: $notificationSettings.allNotifications)
-                            .onChange(of: notificationSettings.allNotifications) { newValue in
+                            .onChange(of: notificationSettings.allNotifications) { oldValue,newValue in
                                 if !newValue {
                                     notificationSettings.disableAll()
                                 }
@@ -225,10 +225,6 @@ struct NotificationSettingView: View {
             }
             .navigationTitle("Bildirim Ayarları")
             .toolbarTitleDisplayMode(.inline)
-            .background(Colors.System.background)
-            .toolbarColorScheme(.dark, for:.navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
         }
     }
 }

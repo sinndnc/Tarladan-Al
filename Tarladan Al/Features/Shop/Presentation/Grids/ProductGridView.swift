@@ -19,7 +19,7 @@ struct ProductGridView: View {
         LazyVGrid(columns: columns, spacing: 16) {
             ForEach(products, id: \.id) { product in
                 NavigationLink(destination: ProductDetailView(product: product)) {
-                    ProductCardView(product: product,action: action)
+                    ProductCard(product: product,action: action)
                 }
                 .buttonStyle(PlainButtonStyle())
             }

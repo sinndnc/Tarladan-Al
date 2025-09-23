@@ -42,11 +42,7 @@ struct OrderHistoryView: View {
             ordersList
         }
         .navigationTitle("Sipariş Geçmişi")
-        .background(Colors.System.background)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
-        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
         .searchable(
             text: $searchText,
             prompt: "Search for products"
@@ -89,7 +85,6 @@ struct OrderHistoryView: View {
             .padding(.horizontal)
         }
         .padding(.vertical, 8)
-        .background(Colors.UI.tabBackground)
     }
     
     // MARK: - Orders List

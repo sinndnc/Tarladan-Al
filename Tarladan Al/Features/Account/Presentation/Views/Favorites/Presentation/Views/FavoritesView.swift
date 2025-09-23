@@ -60,10 +60,6 @@ struct FavoritesView: View {
         }
         .navigationTitle("Favorilerim")
         .toolbarTitleDisplayMode(.inline)
-        .background(Colors.System.background)
-        .toolbarColorScheme(.dark, for:.navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
         .searchable(text: .constant(""), prompt: "Search products")
         .sheet(item: $showingProductDetail) { product in
             ProductDetailView(product: product)
@@ -95,7 +91,6 @@ struct FavoritesView: View {
             .padding(.horizontal)
         }
         .padding(.vertical, 8)
-        .background(Colors.UI.tabBackground)
     }
     
     // MARK: - View Toggle
@@ -104,7 +99,6 @@ struct FavoritesView: View {
             HStack {
                 Text("\(filteredProducts.count) favori ürün")
                     .font(.subheadline)
-                    .foregroundColor(.white)
                 
                 Spacer()
                 
@@ -126,7 +120,6 @@ struct FavoritesView: View {
             .padding(.vertical,10)
             Divider()
         }
-        .background(Colors.UI.tabBackground)
     }
     
     // MARK: - Loading View
@@ -175,42 +168,20 @@ struct FavoritesView: View {
         .padding()
     }
     
-    // MARK: - Products Section
+    // MARK: - Product Section
     private var productsSection: some View {
-        ScrollView {
-            if showingGrid {
-                gridLayout
-            } else {
-                listLayout
-            }
-        }
-        .background(Color(.systemGroupedBackground))
-    }
-    
-    // MARK: - Grid Layout
-    private var gridLayout: some View {
-        LazyVGrid(columns: [
-            GridItem(.flexible(), spacing: 12),
-            GridItem(.flexible(), spacing: 12)
-        ], spacing: 16) {
-            ForEach(filteredProducts,id:\.id) { product in
-                ProductGridCard(product: product) {
-                    showingProductDetail = product
+        ScrollView{
+            LazyVGrid(columns: [
+                GridItem(.flexible(), spacing: 12),
+                GridItem(.flexible(), spacing: 12)
+            ], spacing: 16) {
+                ForEach(filteredProducts,id:\.id) { product in
+                    ProductCard(product: product) {
+                        showingProductDetail = product
+                    }
                 }
             }
+            .padding()
         }
-        .padding()
-    }
-    
-    // MARK: - List Layout
-    private var listLayout: some View {
-        LazyVStack(spacing: 12) {
-            ForEach(filteredProducts,id:\.id) { product in
-                ProductCard(product: product) {
-                    showingProductDetail = product
-                }
-            }
-        }
-        .padding()
     }
 }

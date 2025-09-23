@@ -28,11 +28,7 @@ struct AddressesView: View {
             }
         }
         .navigationTitle("Adreslerim")
-        .background(Colors.System.background)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.dark, for:.navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Colors.UI.tabBackground, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
