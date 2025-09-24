@@ -25,7 +25,9 @@ class UserViewModel : ObservableObject{
     
     
     func checkAuthenticationState() {
-        isLoading = true
+        if user == nil{
+            isLoading = true
+        }
         checkUserUseCase.execute()
             .sink { completion in
                 self.isLoading = false
@@ -45,6 +47,9 @@ class UserViewModel : ObservableObject{
     func updateDefaultAddress(_ address: Address) {
         guard let userId = user?.id else { return }
         
+        if user == nil{
+            isLoading = true
+        }
         updatedefaultAddressUseCase.execute(of: userId, for: address.id ?? "")
             .receive(on: DispatchQueue.main)
             .sink(
@@ -63,6 +68,9 @@ class UserViewModel : ObservableObject{
     }
     
     private func loadUser(of id: String) {
+        if user == nil{
+            isLoading = true
+        }
         listenUserUseCase.execute(by: id)
             .receive(on: DispatchQueue.main)
             .sink(
@@ -75,6 +83,7 @@ class UserViewModel : ObservableObject{
                 },
                 receiveValue: { [weak self] user in
                     self?.user = user
+                    self?.isLoading = false
                 }
             )
             .store(in: &cancellables)
@@ -90,6 +99,7 @@ class UserViewModel : ObservableObject{
             phone: "+905094053438",
             lastName: "Dinç",
             firstName: "Simon",
+            accountType: .customer,
             profileImageUrl: nil,
             isActive: true,
             isVerified: false,

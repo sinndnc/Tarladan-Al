@@ -16,6 +16,7 @@ extension UserDTO {
             phone: phone,
             lastName: lastName,
             firstName: firstName,
+            accountType: accountType,
             profileImageUrl: profileImageUrl,
             isActive: isActive,
             isVerified: isVerified,

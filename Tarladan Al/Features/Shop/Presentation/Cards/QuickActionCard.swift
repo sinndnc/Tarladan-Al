@@ -32,8 +32,6 @@ struct QuickActionCard: View {
         .padding(.vertical, 15)
         .background(Colors.System.surface)
         .cornerRadius(16)
-        .shadow(color: .black.opacity(0.1), radius: 8)
-        .padding(.vertical,10)
     }
     
 }

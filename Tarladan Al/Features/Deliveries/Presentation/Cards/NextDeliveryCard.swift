@@ -118,7 +118,6 @@ struct NextDeliveryCard: View {
                     .padding(.vertical, 4)
                 }
             }
-            .padding(20)
             
             // Expandable Section
             if isExpanded {
@@ -149,15 +148,6 @@ struct NextDeliveryCard: View {
                 .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.white)
-                .shadow(color: .black.opacity(0.08), radius: 12, x: 0, y: 4)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.green.opacity(0.1), lineWidth: 1)
-        )
     }
     
     private func actionButton(

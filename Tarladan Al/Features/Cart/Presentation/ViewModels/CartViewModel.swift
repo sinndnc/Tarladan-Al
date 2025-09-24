@@ -76,6 +76,7 @@ class CartViewModel: ObservableObject {
                 
             } receiveValue: { [weak self] documentId in
                 print("\(documentId)")
+                self?.items.removeAll()
                 self?.isProcessingOrder = false
                 self?.showOrderConfirmation = true
                 onSucces()

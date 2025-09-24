@@ -8,8 +8,6 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @StateObject private var homeViewModel = HomeViewModel()
-    
     @EnvironmentObject private var rootViewModel: RootViewModel
     @EnvironmentObject private var userViewModel: UserViewModel
     @EnvironmentObject private var shopViewModel: ShopViewModel
@@ -20,27 +18,22 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack{
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    
-                    if let delivery = deliveryViewModel.currentDelivery {
+            List{
+                if let delivery = deliveryViewModel.currentDelivery {
+                    Section{
                         DeliveryStatusCard(delivery:delivery)
                     }
-                    
-                    if let banner = homeViewModel.featuredBanner {
-                        featuredBanner(banner)
-                    }
-                    
-                    quickActionsSection
-                    
-                    categoriesSection
-                    
-                    seasonalHighlightsSection
-                    
-                    recipesSection
                 }
-                .padding(.horizontal)
+                
+                quickActionsSection
+                
+                categoriesSection
+                
+                seasonalHighlightsSection
+                
+                recipesSection
             }
+            .background(Color(.systemGray6))
             .toolbarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -50,19 +43,9 @@ struct HomeView: View {
                     tralingSection
                 }
             }
-            .refreshable {}
-            .sheet(isPresented: $homeViewModel.showingLocation) {
+            .sheet(isPresented: $rootViewModel.showingLocation) {
                 if let user =  userViewModel.user {
                     LocationPickerView(addresses: user.addresses)
-                }
-            }
-            .alert("Hata", isPresented: $homeViewModel.showingError) {
-                Button("Tamam"){
-                    
-                }
-            } message: {
-                if let errorMessage = homeViewModel.errorMessage {
-                    Text(errorMessage)
                 }
             }
         }
@@ -76,7 +59,7 @@ struct HomeView: View {
                 .fontWeight(.bold)
             
             Button {
-                homeViewModel.showingLocation = true
+                rootViewModel.showingLocation = true
             }label: {
                 if let user = userViewModel.user,
                 let defaultAddress = user.defaultAddress{
@@ -114,79 +97,11 @@ struct HomeView: View {
         .haptic()
     }
     
-    // MARK: - Featured Banner
-    private func featuredBanner(_ banner: Banner) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(banner.title)
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundColor(.white.opacity(0.9))
-                    
-                    Text(banner.subtitle)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.leading)
-                    
-                    if let discountText = banner.discountText {
-                        Text(discountText)
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.yellow)
-                    }
-                    
-                    Button(banner.buttonText) {
-//                        viewModel.purchaseFeaturedOffer()
-                    }
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 8)
-                    .background(Color.white.opacity(0.2))
-                    .cornerRadius(20)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
-                    )
-                }
-                
-                Spacer()
-                
-                Image(systemName: "leaf.fill")
-                    .font(.system(size: 60))
-                    .foregroundColor(.white.opacity(0.3))
-            }
-        }
-        .padding(20)
-        .background(
-            LinearGradient(
-                colors: [Color.green, Color.green.opacity(0.8)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
-        .cornerRadius(16)
-        .padding(.horizontal, 20)
-        .padding(.top, 16)
-    }
-    
     // MARK: - Quick Actions Section
     private var quickActionsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("Hızlı Erişim")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    
-                Spacer()
-            }
-            .padding(.horizontal, 20)
-            
+        Section(header: Text("Hızlı Erişim")){
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
+                HStack(spacing: 10) {
                     NavigationLink {
                         OrderHistoryView()
                     } label: {
@@ -230,33 +145,17 @@ struct HomeView: View {
                             color: .blue
                         ){}
                     )
-                    
                 }
             }
         }
-        .padding(.top, 24)
+        .listRowBackground(Color.clear)
     }
     
     //MARK: - Category Section
     private var categoriesSection: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text("Kategoriler")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                Spacer()
-                
-                Button("Tümü") {
-                    // Action
-                }
-                .font(.subheadline)
-                .foregroundColor(.green)
-            }
-            .padding(.horizontal, 20)
-            
+        Section(header: Text("Kategoriler") ){
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
+                HStack(spacing: 10) {
                     ForEach(shopViewModel.categories){ category in
                         NavigationLink {
                             SubShopView(category: category)
@@ -265,30 +164,14 @@ struct HomeView: View {
                         }
                     }
                 }
-                .padding(.bottom)
             }
         }
-        .padding(.top)
+        .listRowBackground(Color.clear)
     }
     
     //MARK: - Seasonal Section
     private var seasonalHighlightsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("Mevsimin Favorileri")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                Spacer()
-                
-                Button("Tümü") {
-                    // Action
-                }
-                .font(.subheadline)
-                .foregroundColor(.green)
-            }
-            .padding(.horizontal, 20)
-            
+        Section(header: Text("Mevsimin Favorileri")){
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(productViewModel.products.filter{$0.subCategory?.isInSeason ?? false }) { product in
@@ -305,27 +188,12 @@ struct HomeView: View {
                 }
             }
         }
-        .padding(.top, 24)
+        .listRowBackground(Color.clear)
     }
     
     //MARK: - Recipe Sections
     private var recipesSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("Tarif İlhamı")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                Spacer()
-                
-                Button("Tümü") {
-                    // Action
-                }
-                .font(.subheadline)
-                .foregroundColor(.green)
-            }
-            .padding(.horizontal, 20)
-            
+        Section(header:Text("Tarif İlhamı")){
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     ForEach(recipeViewModel.recipes){ recipe in
@@ -338,6 +206,48 @@ struct HomeView: View {
                 }
             }
         }
-        .padding(.top, 24)
+        .listRowBackground(Color.clear)
+    }
+}
+
+
+extension HomeView{
+    
+    
+    var quickActions: [QuickAction] {
+        [
+            QuickAction(
+                icon: "clock.arrow.circlepath",
+                title: "Tekrar Sipariş",
+                subtitle: "Önceki siparişin",
+                color: .blue
+            ) {
+                
+            },
+            QuickAction(
+                icon: "heart.fill",
+                title: "Favoriler",
+                subtitle: "Beğendiğin ürünler",
+                color: .blue)
+            {
+                
+            },
+            QuickAction(
+                icon: "percent",
+                title: "İndirimler",
+                subtitle: "Özel fırsatlar",
+                color: .blue
+            ) {
+                
+            },
+            QuickAction(
+                icon: "gift.fill",
+                title: "Hediye Kutusu",
+                subtitle: "Özel paketler",
+                color: .blue
+            ) {
+                
+            }
+        ]
     }
 }

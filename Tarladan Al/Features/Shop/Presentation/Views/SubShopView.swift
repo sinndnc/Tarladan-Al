@@ -21,27 +21,9 @@ struct SubShopView: View {
                 subCategoriesSection
             }
         }
-        .navigationTitle("Alt Kategoriler")
-        .navigationBarBackButtonHidden()
+        .navigationTitle(category.name)
+        .navigationSubtitleCompat("\(category.subCategories.count) Ürün mevcut")
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    HStack {
-                        Image(systemName: "chevron.left")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                        VStack(alignment: .leading) {
-                            Text(category.name)
-                                .font(.headline)
-                            Text("\(shopViewModel.categories.count) ürün mevcut")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
-            }
             ToolbarItem(placement: .topBarTrailing) {
                 shopCardSection
             }

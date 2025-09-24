@@ -47,9 +47,7 @@ struct DeliveryStatusCard : View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 20)
-            .padding(.bottom, 16)
+            .padding(.vertical,10)
             
             if let delivery = delivery {
                 VStack(alignment: .leading,spacing: 16) {
@@ -67,58 +65,40 @@ struct DeliveryStatusCard : View {
                             isActual: false
                         )
                     }
-                    .padding(.horizontal, 20)
                     
                     // Progress Bar
                     progressBar(for: delivery.status)
-                        .padding(.horizontal, 20)
                     
                     // Status and Order Info
-                    HStack(spacing: 12) {
-                        // Status Icon
-                        ZStack {
-                            Circle()
-                                .fill(delivery.status.color.opacity(0.1))
-                                .frame(width: 44, height: 44)
-                            
-                            Image(systemName: delivery.status.icon)
-                                .font(.system(size: 18, weight: .medium))
-                                .foregroundColor(delivery.status.color)
-                        }
-                        
-                        // Status Info
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(delivery.status.displayName)
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.primary)
-                            
-                            Text("Sipariş #\(delivery.orderNumber)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        Spacer()
-                        
-                        // Details Button
-                        NavigationLink(destination: DeliveryDetailView(delivery: delivery)) {
-                            HStack(spacing: 6) {
-                                Text("Detaylar")
-                                    .font(.caption)
-                                    .fontWeight(.medium)
+                    NavigationLink(destination: DeliveryDetailView(delivery: delivery)) {
+                        HStack(spacing: 12) {
+                            // Status Icon
+                            ZStack {
+                                Circle()
+                                    .fill(delivery.status.color.opacity(0.1))
+                                    .frame(width: 44, height: 44)
                                 
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 10, weight: .medium))
+                                Image(systemName: delivery.status.icon)
+                                    .font(.system(size: 18, weight: .medium))
+                                    .foregroundColor(delivery.status.color)
                             }
-                            .foregroundColor(.blue)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(Color.blue.opacity(0.1))
-                            .clipShape(Capsule())
+                            
+                            // Status Info
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(delivery.status.displayName)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+                                
+                                Text("Sipariş #\(delivery.orderNumber)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
                         }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 20)
+                    .buttonStyle(PlainButtonStyle())
                 }
             } else {
                 // Empty State
@@ -141,16 +121,6 @@ struct DeliveryStatusCard : View {
                 .padding(.horizontal, 20)
             }
         }
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.white)
-                .shadow(
-                    color: .black.opacity(0.06),
-                    radius: 12,
-                    x: 0,
-                    y: 4
-                )
-        )
     }
     
     

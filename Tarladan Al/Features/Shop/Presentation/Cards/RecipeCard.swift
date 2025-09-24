@@ -55,7 +55,8 @@ struct RecipeCard: View {
                 Text(recipe.description)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                    .lineLimit(3)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
                 
                 HStack {
                     // Kategori

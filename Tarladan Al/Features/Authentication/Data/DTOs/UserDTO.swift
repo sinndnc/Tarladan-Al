@@ -14,6 +14,7 @@ struct UserDTO : FirebaseModel{
     var phone: String
     let lastName: String
     let firstName: String
+    let accountType : AccountType
     let profileImageUrl: String?
     
     var isActive: Bool
@@ -56,6 +57,7 @@ struct UserDTO : FirebaseModel{
         case email, phone, language, currency, referralCode
         case firstName = "first_name"
         case lastName = "last_name"
+        case accountType = "account_type"
         case isActive = "is_active"
         case isVerified = "is_verified"
         case emailVerified = "email_verified"

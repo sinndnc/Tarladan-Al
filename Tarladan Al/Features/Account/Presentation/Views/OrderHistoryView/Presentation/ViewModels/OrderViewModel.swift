@@ -11,6 +11,7 @@ import Combine
 final class OrderViewModel: ObservableObject {
     
     @Published var orders: [Order] = []
+    @Published var isLoading : Bool = false
     
     private var currentUserId: String?
     private var cancellables: Set<AnyCancellable> = []
@@ -33,22 +34,24 @@ final class OrderViewModel: ObservableObject {
     }
     
     private func loadOrders(of userId: String) {
-        // Önceki subscription'ları iptal et
+        isLoading = true
         cancellables.removeAll()
-        
         listenOrdersOfUserUseCase.execute(of: userId)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
                 case .finished:
+                    self.isLoading = false
                     Logger.log("finish")
                 case .failure(let error):
+                    self.orders = []
+                    self.isLoading = false
                     Logger.log("Error loading orders: \(error)")
                     // Hata durumunda orders'ı temizleyebilirsiniz
-                    // self.orders = []
                 }
             } receiveValue: { [weak self] orders in
                 self?.orders = orders
+                self?.isLoading = false
             }
             .store(in: &cancellables)
     }

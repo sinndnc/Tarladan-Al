@@ -79,6 +79,7 @@ class MockDataGenerator {
                 phone: generateTurkishPhone(),
                 lastName: turkishLastNames.randomElement()!,
                 firstName: turkishFirstNames.randomElement()!,
+                accountType: .customer,
                 profileImageUrl: Bool.random() ? profileImageUrls.randomElement() : nil,
                 
                 isActive: Double.random(in: 0...1) > 0.15, // 85% active (subscription business)

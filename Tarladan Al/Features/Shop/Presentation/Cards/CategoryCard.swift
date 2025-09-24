@@ -16,9 +16,9 @@ struct CategoryCard: View {
                 VStack(alignment: .leading, spacing: 8) {
                     // Category Name
                     Text(category.name)
-                        .font(.title3)
+                        .lineLimit(1)
+                        .font(.headline)
                         .fontWeight(.bold)
-                        .lineLimit(2)
                         .foregroundColor(.primary)
                         .multilineTextAlignment(.leading)
                     
@@ -43,16 +43,11 @@ struct CategoryCard: View {
                         .font(.system(size: 32))
                 }
             }
-            .padding(.horizontal, 24)
-            .padding(.top, 24)
-            
-            Spacer()
             
             // Divider Line
             Rectangle()
                 .fill(category.color.opacity(0.1))
                 .frame(height: 1)
-                .padding(.horizontal, 24)
             
             // Bottom Section
             HStack(alignment: .center, spacing: 12) {
@@ -94,12 +89,13 @@ struct CategoryCard: View {
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(.secondary)
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 16)
+            .padding(.vertical, 10)
         }
+        .padding(.vertical,10)
+        .padding(.horizontal,20)
+        .frame(width: 300)
         .background(Color(.systemBackground))
         .cornerRadius(16)
-        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 0)
         
         // New Badge (when applicable)
         if shouldShowNewBadge {

@@ -58,7 +58,7 @@ struct Recipe: FirebaseModel{
         
         var icon: String {
             switch self {
-            case .breakfast: return "sun.rise"
+            case .breakfast: return "sun.max"
             case .lunch: return "sun.max"
             case .dinner: return "moon"
             case .dessert: return "birthday.cake"

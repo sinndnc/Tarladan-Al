@@ -18,6 +18,7 @@ extension User {
         self.firstName = displayNameParts.first ?? ""
         self.lastName = displayNameParts.dropFirst().joined(separator: " ")
         self.phone = ""
+        self.accountType = .customer
         
         // Account Status
         self.isActive = true

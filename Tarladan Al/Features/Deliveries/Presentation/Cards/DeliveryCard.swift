@@ -198,12 +198,6 @@ struct DeliveryCard: View {
        }
        .padding(.horizontal, 8)
        .padding(.vertical, 6)
-       .background(Color.blue.opacity(0.05))
-       .clipShape(RoundedRectangle(cornerRadius: 6))
-       .overlay(
-           RoundedRectangle(cornerRadius: 6)
-               .stroke(Color.blue.opacity(0.1), lineWidth: 1)
-       )
    }
    
    private func moreItemsCard(count: Int) -> some View {

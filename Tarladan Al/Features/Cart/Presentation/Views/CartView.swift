@@ -6,23 +6,26 @@
 //
 
 import SwiftUI
-
 struct CartView: View {
     
     @State private var showClearAlert = false
-    
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var cartViewModel : CartViewModel
+    @EnvironmentObject private var cartViewModel: CartViewModel
     
     var body: some View {
         NavigationStack {
-            ZStack{
+            ZStack {
+                // Background
+                Color(.systemGroupedBackground)
+                    .ignoresSafeArea()
+                
                 if cartViewModel.items.isEmpty {
                     emptyCartView
                 } else {
                     VStack(spacing: 0) {
+                        // Cart Items
                         ScrollView {
-                            LazyVStack(spacing: 16) {
+                            LazyVStack(spacing: 12) {
                                 ForEach(cartViewModel.items) { item in
                                     CartItemRow(
                                         item: item,
@@ -30,43 +33,52 @@ struct CartView: View {
                                             cartViewModel.updateQuantity(for: item, quantity: newQuantity)
                                         },
                                         onRemove: {
-                                            withAnimation(.easeInOut) {
+                                            withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
                                                 cartViewModel.removeItem(item)
                                             }
                                         }
                                     )
                                 }
                             }
-                            .padding(.horizontal)
-                            .padding(.top, 16)
+                            .padding(.horizontal, 20)
+                            .padding(.top, 8)
+                            .padding(.bottom, 120)
                         }
-                        
-                        // Cart Summary
+                        .scrollIndicators(.hidden)
+                    }
+                    
+                    // Floating Cart Summary
+                    VStack {
+                        Spacer()
                         cartSummaryView
                     }
                 }
             }
-            .navigationTitle("Shopping Cart")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Cart")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                if !cartViewModel.items.isEmpty {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Clear") {
-                            showClearAlert = true
-                        }
-                        .foregroundColor(.red)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.primary)
+                            .frame(width: 32, height: 32)
+                            .background(.ultraThinMaterial, in: Circle())
                     }
                 }
-                ToolbarItem(placement: .topBarLeading) {
-                    Button{
-                        dismiss()
-                    }label: {
-                        HStack{
-                            Image(systemName: "chevron.left")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                            Text("Shop")
-                            .font(.subheadline)
+                
+                if !cartViewModel.items.isEmpty {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            showClearAlert = true
+                        } label: {
+                            Image(systemName: "trash")
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(.red)
+                                .frame(width: 32, height: 32)
+                                .background(.ultraThinMaterial, in: Circle())
                         }
                     }
                 }
@@ -74,44 +86,68 @@ struct CartView: View {
             .alert("Clear Cart", isPresented: $showClearAlert) {
                 Button("Cancel", role: .cancel) { }
                 Button("Clear All", role: .destructive) {
-                    withAnimation(.easeInOut) {
+                    withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
                         cartViewModel.clearCart()
                     }
                 }
             } message: {
-                Text("Are you sure you want to remove all items from your cart?")
+                Text("This will remove all items from your cart")
             }
         }
     }
     
     private var emptyCartView: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 32) {
             Spacer()
             
-            Image(systemName: "cart")
-                .font(.system(size: 80))
-                .foregroundColor(.gray.opacity(0.5))
-            
-            VStack(spacing: 8) {
-                Text("Your cart is empty")
-                    .font(.title2)
-                    .fontWeight(.medium)
+            // Icon with subtle animation
+            ZStack {
+                Circle()
+                    .fill(.ultraThinMaterial)
+                    .frame(width: 120, height: 120)
                 
-                Text("Add some products to get started")
-                    .font(.subheadline)
+                Image(systemName: "cart")
+                    .font(.system(size: 48, weight: .light))
                     .foregroundColor(.secondary)
             }
             
-            Button("Continue Shopping") {
-                dismiss()
-                // Navigate to products
+            VStack(spacing: 12) {
+                Text("Your cart is empty")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary)
+                
+                Text("Discover amazing products and\nadd them to your cart")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
             }
-            .font(.headline)
-            .foregroundColor(.white)
-            .padding(.horizontal, 32)
-            .padding(.vertical, 12)
-            .background(Colors.System.primary)
-            .cornerRadius(12)
+            
+            Button {
+                dismiss()
+            } label: {
+                HStack(spacing: 8) {
+                    Text("Start Shopping")
+                        .font(.system(size: 16, weight: .semibold))
+                    
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                .foregroundColor(.white)
+                .frame(height: 52)
+                .frame(maxWidth: .infinity)
+                .background(
+                    LinearGradient(
+                        colors: [.blue, .blue.opacity(0.8)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .cornerRadius(16)
+                .shadow(color: .blue.opacity(0.3), radius: 8, y: 4)
+            }
+            .padding(.horizontal, 40)
             
             Spacer()
         }
@@ -119,62 +155,74 @@ struct CartView: View {
     }
     
     private var cartSummaryView: some View {
-        VStack(spacing: 16) {
-            Divider()
-            
-            VStack(spacing: 12) {
-                HStack {
-                    Text("Subtotal (\(cartViewModel.totalItems) items)")
-                        .font(.subheadline)
-                        .foregroundStyle(Colors.System.surface)
-                    Spacer()
-                    Text("₺\(cartViewModel.totalPrice, specifier: "%.2f")")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundStyle(Colors.System.surface)
-                }
-                
-                if cartViewModel.totalSavings > 0 {
+        VStack(spacing: 0) {
+            // Summary Card
+            VStack(spacing: 16) {
+                // Order Summary
+                VStack(spacing: 12) {
                     HStack {
-                        Text("Savings")
-                            .font(.subheadline)
-                            .foregroundColor(.green)
+                        Text("Items (\(cartViewModel.totalItems))")
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundColor(.secondary)
                         Spacer()
-                        Text("-₺\(cartViewModel.totalSavings, specifier: "%.2f")")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.green)
+                        Text("₺\(cartViewModel.totalPrice, specifier: "%.2f")")
+                            .font(.system(size: 15, weight: .semibold))
+                    }
+                    
+                    if cartViewModel.totalSavings > 0 {
+                        HStack {
+                            Text("Savings")
+                                .font(.system(size: 15, weight: .medium))
+                                .foregroundColor(.green)
+                            Spacer()
+                            Text("-₺\(cartViewModel.totalSavings, specifier: "%.2f")")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(.green)
+                        }
+                    }
+                    
+                    Divider()
+                        .background(.quaternary)
+                    
+                    HStack {
+                        Text("Total")
+                            .font(.system(size: 18, weight: .bold))
+                        Spacer()
+                        Text("₺\(cartViewModel.totalPrice, specifier: "%.2f")")
+                            .font(.system(size: 18, weight: .bold))
                     }
                 }
+                .padding(20)
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
                 
-                Divider()
-                
-                HStack {
-                    Text("Total")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .foregroundStyle(Colors.System.surface)
-                    Spacer()
-                    Text("₺\(cartViewModel.totalPrice, specifier: "%.2f")")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .foregroundStyle(Colors.System.surface)
+                // Checkout Button
+                NavigationLink {
+                    CheckOutView()
+                } label: {
+                    HStack(spacing: 8) {
+                        Text("Proceed to Checkout")
+                            .font(.system(size: 17, weight: .semibold))
+                        
+                        Image(systemName: "arrow.right")
+                            .font(.system(size: 14, weight: .semibold))
+                    }
+                    .foregroundColor(.white)
+                    .frame(height: 56)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        LinearGradient(
+                            colors: [.black, .black.opacity(0.8)],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(16)
+                    .shadow(color: .black.opacity(0.2), radius: 8, y: 4)
                 }
             }
-            .padding(.horizontal)
-            
-            NavigationLink("Proceed to Checkout") {
-                CheckOutView()
-            }
-            .font(.headline)
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Colors.System.secondary)
-            .cornerRadius(12)
-            .padding(.horizontal)
-            .padding(.bottom)
+            .padding(20)
+            .background(.thinMaterial)
         }
-        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: -5)
+        .background(.clear)
     }
 }

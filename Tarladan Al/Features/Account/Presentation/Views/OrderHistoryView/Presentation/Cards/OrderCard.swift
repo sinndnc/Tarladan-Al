@@ -15,8 +15,13 @@ struct OrderCard: View {
                 // Header Section
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text(order.orderNumber)
+                        Text("Sipariş No:")
                             .font(.title3)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        Text(order.orderNumber)
+                            .lineLimit(2)
+                            .font(.headline)
                             .fontWeight(.semibold)
                             .foregroundColor(.primary)
                         

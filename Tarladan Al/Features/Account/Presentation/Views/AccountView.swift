@@ -192,10 +192,11 @@ struct AccountView: View {
                 }
             }
             .navigationTitle("Hesap")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationSubtitleCompat("Tüm bilgilerin tek bir sayfada!")
+            .background(Color(.systemGray6))
             .scrollContentBackground(.hidden)
             .listStyle(InsetGroupedListStyle())
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationSubtitleCompat("Tüm bilgilerin tek bir sayfada!")
             .navigationDestination(for: AccountDestination.self) { destination in
                 destinationView(for: destination)
             }

@@ -22,8 +22,8 @@ final class DeliveryRepository: DeliveryRepositoryProtocol {
 //        self.localDataSource = localDataSource
     }
     
-    func listenDeliveries() -> AnyPublisher<[Delivery], DeliveryError> {
-        return remoteDataSource.getDeliveries()
+    func listenDeliveries(for id: String) -> AnyPublisher<[Delivery], DeliveryError> {
+        return remoteDataSource.getDeliveries(for: id)
             .map { dtos in
                 dtos.compactMap { self.mapToDelivery($0) }
             }

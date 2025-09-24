@@ -56,19 +56,23 @@ class ShopViewModel: ObservableObject {
     }
     
     func loadProducts() {
+        isLoading = true
         listenProductsUseCase.execute()
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { completion in
                     switch completion {
                     case .finished:
+                        self.isLoading = false
                         Logger.log("✅ VIEW MODEL: Completed successfully")
                     case .failure(let error):
+                        self.isLoading = false
                         Logger.log("❌ VIEW MODEL: Error: \(error)")
                     }
                 },
                 receiveValue: { [weak self] products in
                     self?.products = products
+                    self?.isLoading = false
                 }
             )
             .store(in: &cancellables)

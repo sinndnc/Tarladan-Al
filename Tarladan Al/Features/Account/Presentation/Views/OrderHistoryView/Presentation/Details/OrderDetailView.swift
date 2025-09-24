@@ -32,6 +32,7 @@ struct OrderDetailView: View {
                 }
                 .padding(20)
             }
+            .navigationTitle("Sipariş Detayları")
             .background(Color(.systemGroupedBackground))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

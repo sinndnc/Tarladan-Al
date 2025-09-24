@@ -54,7 +54,6 @@ class RecipeViewModel: ObservableObject {
             .sink { completion in
                 self.isLoading = false
             } receiveValue: { recipes in
-                Logger.log("\(recipes)")
                 self.recipes = recipes
                 self.isLoading = false
             }

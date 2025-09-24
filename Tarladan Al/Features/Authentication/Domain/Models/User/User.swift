@@ -14,6 +14,7 @@ struct User : FirebaseModel {
     var phone: String
     let lastName: String
     let firstName: String
+    let accountType: AccountType
     let profileImageUrl: String?
     
     var isActive: Bool
@@ -55,6 +56,7 @@ struct User : FirebaseModel {
     enum CodingKeys: String, CodingKey {
         case email, phone, language, currency, referralCode
         case firstName = "first_name"
+        case accountType = "account_type"
         case lastName = "last_name"
         case isActive = "is_active"
         case isVerified = "is_verified"
@@ -79,4 +81,11 @@ struct User : FirebaseModel {
         case averageOrder = "average_order"
         case lastOrderDate = "last_order_date"
     }
+}
+
+
+enum AccountType : String , Codable {
+    case customer = "customer"
+    case merchant = "merchant"
+    case farmer = "farmer"
 }

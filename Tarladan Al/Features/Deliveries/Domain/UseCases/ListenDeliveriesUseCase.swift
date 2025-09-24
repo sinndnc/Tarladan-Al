@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol ListenDeliveriesUseCaseProtocol {
-    func execute() -> AnyPublisher<[Delivery], DeliveryError>
+    func execute(for id: String) -> AnyPublisher<[Delivery], DeliveryError>
 }
 
 final class ListenDeliveriesUseCase : ListenDeliveriesUseCaseProtocol{
@@ -19,7 +19,7 @@ final class ListenDeliveriesUseCase : ListenDeliveriesUseCaseProtocol{
         self.repository = repository
     }
     
-    func execute() -> AnyPublisher<[Delivery], DeliveryError>{
-        return repository.listenDeliveries()
+    func execute(for id: String) -> AnyPublisher<[Delivery], DeliveryError>{
+        return repository.listenDeliveries(for: id)
     }
 }

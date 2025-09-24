@@ -10,7 +10,7 @@ import CoreLocation
 import Combine
 
 protocol DeliveryRepositoryProtocol {
-    func listenDeliveries() -> AnyPublisher<[Delivery], DeliveryError>
+    func listenDeliveries(for id: String) -> AnyPublisher<[Delivery], DeliveryError>
     func getDeliveryById(_ id: String) -> AnyPublisher<Delivery, DeliveryError>
     func createDelivery(_ delivery: Delivery) async throws -> Delivery
     func updateDeliveryStatus(_ id: String, status: DeliveryStatus) async throws

@@ -14,26 +14,30 @@ struct DeliveryView: View {
     
     var body: some View {
         NavigationStack{
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading,spacing: 20) {
-                    if let currentDelivery = deliveryViewModel.currentDelivery {
-                        DeliveryStatusCard(delivery: currentDelivery)
-                    }
-                    
-                    DeliveryMapCard()
-                    
-                    NextDeliveryCard()
-                    
-                    WeeklyScheduleCard()
-                    
-                    activeDeliveriesView
-                    
-                    deliveryHistoryView
-                    
-                    deliveryPreferenecesView
+            List{
+                if let currentDelivery = deliveryViewModel.currentDelivery {
+                    DeliveryStatusCard(delivery: currentDelivery)
                 }
-                .padding(.horizontal)
+                
+                Section{
+                    DeliveryMapCard()
+                }
+                
+                Section{
+                    NextDeliveryCard()
+                }
+                
+                Section{
+                    WeeklyScheduleCard()
+                }
+                
+                activeDeliveriesView
+                
+                deliveryHistoryView
+                
+                deliveryPreferenecesView
             }
+            .background(Color(.systemGray6))
             .navigationTitle(Text("Teslimatlar"))
             .navigationBarTitleDisplayMode(.inline)
             .navigationSubtitleCompat("Hadi hemen kontrol et siparişlerini!")
@@ -65,40 +69,46 @@ struct DeliveryView: View {
     
    
     private var activeDeliveriesView: some View {
-        VStack(alignment: .leading){
-            Text("Aktif Teslimatlar")
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            ForEach(activeDeliveries) { delivery in
-                DeliveryCard(delivery: delivery) {
-                    selectedDelivery = delivery
+        Section{
+            VStack(alignment: .leading){
+                Text("Aktif Teslimatlar")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                ForEach(activeDeliveries) { delivery in
+                    DeliveryCard(delivery: delivery) {
+                        selectedDelivery = delivery
+                    }
                 }
             }
         }
     }
     
     private var deliveryHistoryView: some View {
-        VStack(alignment: .leading){
-            Text("Geçmiş Teslimatlar")
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            ForEach(completedDeliveries) { delivery in
-                DeliveryCard(delivery: delivery) {
-                    selectedDelivery = delivery
+        Section{
+            VStack(alignment: .leading){
+                Text("Geçmiş Teslimatlar")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                ForEach(completedDeliveries) { delivery in
+                    DeliveryCard(delivery: delivery) {
+                        selectedDelivery = delivery
+                    }
                 }
             }
         }
     }
     
     private var deliveryPreferenecesView: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            Text("Teslimat Tercihleri")
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            DeliveryPreferencesCard()
+        Section{
+            VStack(alignment: .leading, spacing: 15) {
+                Text("Teslimat Tercihleri")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                DeliveryPreferencesCard()
+            }
         }
     }
     

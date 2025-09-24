@@ -43,7 +43,6 @@ struct DeliveryMapCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Header
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Teslimat Haritası")
@@ -151,12 +150,6 @@ struct DeliveryMapCard: View {
                 Spacer()
             }
         }
-        .padding(20)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
-        )
         .fullScreenCover(isPresented: $showingFullScreenMap) {
             FullScreenMapView(
                 deliveryLocations: deliveryLocations,

@@ -19,6 +19,6 @@ struct FirebaseConstants {
     
     //MARK: - Fields
     static let owner_id = "owner_id"
-    
+    static let customerId = "customerId"
     
 }

@@ -11,14 +11,13 @@ import FirebaseFirestore
 
 final class DeliveryViewModel: ObservableObject {
     
-    @Published var user: User? = nil
+    private var currentUserId: String?
     @Published var deliveries: [Delivery] = []
-    @Published var filteredDeliveries: [Delivery] = []
     
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     
-    private var cancellables = Set<AnyCancellable>()
+    private var cancellables: Set<AnyCancellable> = []
     
     @Injected private var createDeliveriesUseCase: CreateDeliveryUseCaseProtocol
     @Injected private var listenDeliveriesUseCase: ListenDeliveriesUseCaseProtocol
@@ -33,19 +32,34 @@ final class DeliveryViewModel: ObservableObject {
             .first
     }
     
-    init(){
-        listenDeliveries(by: "")
+    func setUser(_ user: User?) {
+        guard let user = user, let userId = user.id else {
+            self.deliveries = []
+            self.currentUserId = nil
+            self.cancellables.removeAll()
+            return
+        }
+        
+        guard currentUserId != userId else { return }
+        
+        self.currentUserId = userId
+        self.loadDeliveries(of: userId)
     }
     
-    func listenDeliveries(by id: String) {
-        listenDeliveriesUseCase.execute()
+   
+    func loadDeliveries(of id: String) {
+        if deliveries.isEmpty{
+            isLoading = true
+        }
+        listenDeliveriesUseCase.execute(for: id)
             .receive(on: DispatchQueue.main)
             .sink(
-                receiveCompletion: { completion in
-                    
+                receiveCompletion: { [weak self] completion in
+                    self?.isLoading = false
                 },
                 receiveValue: { [weak self] deliveries in
                     self?.deliveries = deliveries
+                    self?.isLoading = false
                 }
             )
             .store(in: &cancellables)

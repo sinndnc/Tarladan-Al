@@ -124,7 +124,7 @@ struct ProductsView: View {
                     LazyVGrid(columns: [
                         GridItem(.flexible(), spacing: 12),
                         GridItem(.flexible(), spacing: 12)
-                    ], spacing: 16) {
+                    ], spacing: 10) {
                         ForEach(filteredProducts,id:\.self) { product in
                             NavigationLink {
                                 ProductDetailView(product: product)
@@ -134,11 +134,12 @@ struct ProductsView: View {
                                    
                                 }
                             }
+                            .padding(10)
                             .tint(.primary)
                             .haptic(.medium)
                         }
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal,10)
                 } else {
                     LazyVStack(spacing: 12) {
                         ForEach(filteredProducts,id:\.self) { product in

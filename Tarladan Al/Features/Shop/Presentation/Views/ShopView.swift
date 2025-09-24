@@ -31,6 +31,7 @@ struct ShopView: View {
                 }
             }
             .navigationTitle("Tünaydın")
+            .background(Color(.systemGray6))
             .navigationBarTitleDisplayMode(.inline)
             .navigationSubtitleCompat("Hoşgeldiniz,\(userViewModel.user?.fullName ?? "")")
             .searchable(
@@ -99,6 +100,7 @@ struct ShopView: View {
             categories: shopViewModel.categories,
             selectedCategory: $shopViewModel.selectedCategory
         )
+        .padding(.horizontal)
     }
     
     private var productListSection: some View{
@@ -140,6 +142,8 @@ struct ShopView: View {
                     }
                 }
             }
+            .padding(.horizontal)
+            .padding(.vertical,10)
         }
     }
     

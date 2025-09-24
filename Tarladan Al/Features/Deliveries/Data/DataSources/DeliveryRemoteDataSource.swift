@@ -9,7 +9,7 @@ import FirebaseFirestore
 import Combine
 
 protocol DeliveryRemoteDataSourceProtocol{
-    func getDeliveries() -> AnyPublisher<[DeliveryDTO],DeliveryError>
+    func getDeliveries(for id: String) -> AnyPublisher<[DeliveryDTO],DeliveryError>
     func getDeliveryById(_ id: String) ->  AnyPublisher<DeliveryDTO,DeliveryError>
     func createDelivery(_ delivery: DeliveryDTO)
     func updateDeliveryStatus(_ id: String, status: String)
@@ -25,14 +25,16 @@ final class DeliveryRemoteDataSource : DeliveryRemoteDataSourceProtocol {
         self.firestore = firestore
     }
     
-    func getDeliveries() -> AnyPublisher<[DeliveryDTO],DeliveryError>{
+    func getDeliveries(for id: String) -> AnyPublisher<[DeliveryDTO],DeliveryError>{
         return Future<[DeliveryDTO], DeliveryError> { [weak self] promise in
             guard let self = self else {
                 promise(.failure(.unkownError))
                 return
             }
             
-            self.firestore.collection(collection)
+            self.firestore
+                .collection(collection)
+                .whereField(FirebaseConstants.customerId, isEqualTo: id)
                 .getDocuments { snapshot, error in
                     if let error = error {
                         promise(.failure(.firebaseError(error.localizedDescription)))

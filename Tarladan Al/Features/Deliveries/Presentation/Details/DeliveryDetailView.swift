@@ -36,9 +36,10 @@ struct DeliveryDetailView: View {
             }
             .padding(20)
         }
-        .background(Color(.systemGroupedBackground))
-        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
+        .navigationTitle("Sipariş Detayları")
+        .navigationBarTitleDisplayMode(.inline)
+        .background(Color(.systemGroupedBackground))
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
