@@ -12,15 +12,12 @@ struct DeliveryStatusCard : View {
     let delivery: Delivery?
     
     var body : some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Header
+        VStack(alignment: .leading) {
             HStack {
                 Text("Sıradaki Teslimat")
-                    .font(.title3)
+                    .font(.headline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(Colors.Text.primary)
-                
-                Spacer()
+                    .foregroundStyle(.secondary)
                 
                 if let delivery = delivery, delivery.status != .inTransit {
                     Button(action: {
@@ -47,7 +44,6 @@ struct DeliveryStatusCard : View {
                     }
                 }
             }
-            .padding(.vertical,10)
             
             if let delivery = delivery {
                 VStack(alignment: .leading,spacing: 16) {
@@ -70,36 +66,62 @@ struct DeliveryStatusCard : View {
                     progressBar(for: delivery.status)
                     
                     // Status and Order Info
-                    NavigationLink(destination: DeliveryDetailView(delivery: delivery)) {
-                        HStack(spacing: 12) {
-                            // Status Icon
-                            ZStack {
-                                Circle()
-                                    .fill(delivery.status.color.opacity(0.1))
-                                    .frame(width: 44, height: 44)
-                                
-                                Image(systemName: delivery.status.icon)
-                                    .font(.system(size: 18, weight: .medium))
-                                    .foregroundColor(delivery.status.color)
-                            }
+                    HStack(spacing: 12) {
+                        // Status Icon
+                        ZStack {
+                            Circle()
+                                .fill(delivery.status.color.opacity(0.1))
+                                .frame(width: 44, height: 44)
                             
-                            // Status Info
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(delivery.status.displayName)
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.primary)
-                                
-                                Text("Sipariş #\(delivery.orderNumber)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            Spacer()
+                            Image(systemName: delivery.status.icon)
+                                .font(.system(size: 18, weight: .medium))
+                                .foregroundColor(delivery.status.color)
                         }
+                        
+                        // Status Info
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(delivery.status.displayName)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.primary)
+                            
+                            Text("Sipariş #\(delivery.orderNumber)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        // Details Button
+                        NavigationLink(destination: DeliveryDetailView(delivery: delivery)) {
+                            HStack(spacing: 6) {
+                                Text("Detaylar")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 10, weight: .medium))
+                            }
+                            .foregroundColor(.blue)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(Color.blue.opacity(0.1))
+                            .clipShape(Capsule())
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
-                    .buttonStyle(PlainButtonStyle())
                 }
+                .padding(10)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color(.systemBackground))
+                        .shadow(
+                            color: .black.opacity(0.06),
+                            radius: 12,
+                            x: 0,
+                            y: 4
+                        )
+                )
             } else {
                 // Empty State
                 VStack(spacing: 12) {

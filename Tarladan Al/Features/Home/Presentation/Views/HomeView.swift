@@ -18,21 +18,22 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack{
-            List{
-                if let delivery = deliveryViewModel.currentDelivery {
-                    Section{
+            ScrollView(showsIndicators: false){
+                VStack(spacing: 20){
+                    if let delivery = deliveryViewModel.currentDelivery {
                         DeliveryStatusCard(delivery:delivery)
                     }
+                    
+                    quickActionsSection
+                    
+                    categoriesSection
+                    
+                    seasonalHighlightsSection
+                    
+                    recipesSection
                 }
-                
-                quickActionsSection
-                
-                categoriesSection
-                
-                seasonalHighlightsSection
-                
-                recipesSection
             }
+            .padding(.horizontal)
             .background(Color(.systemGray6))
             .toolbarTitleDisplayMode(.inline)
             .toolbar {
@@ -99,7 +100,12 @@ struct HomeView: View {
     
     // MARK: - Quick Actions Section
     private var quickActionsSection: some View {
-        Section(header: Text("Hızlı Erişim")){
+        VStack(alignment: .leading){
+            Text("Hızlı Erişim")
+                .font(.headline)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     NavigationLink {
@@ -153,7 +159,12 @@ struct HomeView: View {
     
     //MARK: - Category Section
     private var categoriesSection: some View {
-        Section(header: Text("Kategoriler") ){
+        VStack(alignment: .leading){
+            Text("Kategoriler")
+                .font(.headline)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     ForEach(shopViewModel.categories){ category in
@@ -171,7 +182,12 @@ struct HomeView: View {
     
     //MARK: - Seasonal Section
     private var seasonalHighlightsSection: some View {
-        Section(header: Text("Mevsimin Favorileri")){
+        VStack(alignment: .leading){
+            Text("Mevsimin Favorileri")
+                .font(.headline)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(productViewModel.products.filter{$0.subCategory?.isInSeason ?? false }) { product in
@@ -193,7 +209,12 @@ struct HomeView: View {
     
     //MARK: - Recipe Sections
     private var recipesSection: some View {
-        Section(header:Text("Tarif İlhamı")){
+        VStack(alignment: .leading){
+            Text("Tarif İlhamı")
+                .font(.headline)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     ForEach(recipeViewModel.recipes){ recipe in

@@ -118,6 +118,17 @@ struct NextDeliveryCard: View {
                     .padding(.vertical, 4)
                 }
             }
+            .padding(10)
+            .background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color(.systemBackground))
+                    .shadow(
+                        color: .black.opacity(0.06),
+                        radius: 12,
+                        x: 0,
+                        y: 4
+                    )
+            )
             
             // Expandable Section
             if isExpanded {

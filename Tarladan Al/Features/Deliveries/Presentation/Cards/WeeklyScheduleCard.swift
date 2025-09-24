@@ -157,6 +157,17 @@ struct WeeklyScheduleCard: View {
                 }
             }
         }
+        .padding(10)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.systemBackground))
+                .shadow(
+                    color: .black.opacity(0.06),
+                    radius: 12,
+                    x: 0,
+                    y: 4
+                )
+        )
     }
     
     private func quickActionButton(
