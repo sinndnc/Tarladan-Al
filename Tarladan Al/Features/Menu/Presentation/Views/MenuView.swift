@@ -13,17 +13,15 @@ struct MenuView: View {
     var body: some View {
         NavigationStack{
             List{
-                ForEach(menuViewModel.menuItems){ menuItem in
-                    ForEach(menuViewModel.getSectionsForCategory(menuItem.category), id: \.self) { section in
-                        Section {
-                            ForEach(section.items, id: \.self) { subItem in
-                                MenuRowView(subMenuItem: subItem)
-                            }
-                        } header: {
-                            Text(section.title)
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
+                ForEach(menuViewModel.menuItems, id: \.self) { section in
+                    Section {
+                        ForEach(section.items, id: \.self) { item in
+                            MenuRowView(menuItem: item)
                         }
+                    } header: {
+                        Text(section.title)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                     }
                 }
             }

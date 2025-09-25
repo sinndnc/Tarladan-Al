@@ -7,17 +7,17 @@
 import SwiftUI
 
 struct MenuRowView: View {
-    let subMenuItem: SubMenuItem
+    let menuItem: MenuItem
     
     var body: some View {
-        NavigationLink(value: subMenuItem.action){
+        NavigationLink(value: menuItem.action){
             HStack {
-                Image(systemName: subMenuItem.icon)
+                Image(systemName: menuItem.icon)
                     .font(.title3)
                     .foregroundColor(.blue)
                     .frame(width: 25)
                 
-                Text(subMenuItem.title)
+                Text(menuItem.title)
                     .font(.body)
                     .foregroundColor(.primary)
                 

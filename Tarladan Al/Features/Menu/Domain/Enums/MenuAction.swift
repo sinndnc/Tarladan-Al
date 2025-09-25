@@ -8,6 +8,7 @@ import SwiftUI
 
 enum MenuAction: String, CaseIterable {
     // Üretici İşlemleri - Stok Yönetimi
+    case myProducts = "myProducts"
     case addNewProduct = "addNewProduct"
     case updateStock = "updateStock"
     case closeToSale = "closeToSale"
@@ -51,7 +52,9 @@ enum MenuAction: String, CaseIterable {
     case microbiologicalTests = "microbiologicalTests"
     
     // Kalite - Ürün Geçmişi (QR Kod ile)
-    case farmInfo = "farmInfo"
+    case myFarms = "farmInfo"
+    case addNewFarm = "addNewFarm"
+    case farmDetail = "farmDetail"
     case harvestDate = "harvestDate"
     case storageConditions = "storageConditions"
 }

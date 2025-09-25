@@ -6,9 +6,7 @@
 //
 import SwiftUI
 
-struct MenuSection: Identifiable, Hashable {
-    let id = UUID()
+struct MenuSection:  Hashable {
     let title: String
-    let icon: String
-    let items: [SubMenuItem]
+    let items: [MenuItem]
 }
